@@ -22,5 +22,5 @@ Markdown supports HTML code and comments as well.
 -->
 
 #Operating System Lab
-##CSC 341, Spring 2016
-###Aaron Baker, Andrew Ballard, Dylan Jager-Kujawa
+###CSC 341, Spring 2016
+####by Aaron Baker, Andrew Ballard, and Dylan Jager-Kujawa
