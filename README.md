@@ -21,6 +21,6 @@ text
 Markdown supports HTML code and comments as well.
 -->
 
-##Operating System Lab
+#Operating System Lab
 ###CSC 341, Spring 2016
 ####by Aaron Baker, Andrew Ballard, and Dylan Jager-Kujawa
