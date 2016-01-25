@@ -85,6 +85,8 @@ bool LOD()
 	}
 	return true;
 }
+
+/* Stores a value from a register to a memory location*/
 bool STO() 
 {
 	short int reg = getRegCode(machine.IR);
