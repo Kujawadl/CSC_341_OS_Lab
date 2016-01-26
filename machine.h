@@ -3,6 +3,19 @@
 #ifndef MACHINE
 #define MACHINE
 
+/* Define condition codes for hardware functions
+	 > : 001
+	 < : 100
+	 = : 010
+	>= : 011
+	<= : 110
+*/
+#define GRT 1
+#define LST 4
+#define EQL 2
+#define GEQ 3
+#define LEQ 6
+
 /* Define boolean type */
 typedef enum { false, true } bool;
 
@@ -60,5 +73,12 @@ bool JLT();
 bool CMP();
 bool CLR();
 bool HLT();
+
+/* Condition codes unneeded outside hardware */
+#undef GRT
+#undef LST
+#undef EQL
+#undef GEQ
+#undef LEQ
 
 #endif
