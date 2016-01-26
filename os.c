@@ -14,3 +14,8 @@ void scheduler()
 {
 	/* Scheduler code */
 }
+
+int main(int argc, char** argv)
+{
+
+}

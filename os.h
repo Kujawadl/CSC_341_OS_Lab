@@ -25,4 +25,7 @@ void dump() { dump(false); } /* default */
 /* Round-robin scheduler */
 void scheduler();
 
+/* Main function (O/S Initialization) */
+int main(int argc, char** argv);
+
 #endif
