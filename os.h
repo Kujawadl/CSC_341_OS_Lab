@@ -20,7 +20,6 @@ something by testing the opcode of the IR for HLT (1111).
 
 /* Dump contents of main memory */
 void dump(bool dumpRegs);
-void dump() { dump(false); } /* default */
 
 /* Round-robin scheduler */
 void scheduler();
