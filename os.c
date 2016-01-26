@@ -9,3 +9,8 @@ void dump(bool dumpRegs)
 
 	/* Dump memory */
 }
+
+void scheduler()
+{
+	/* Scheduler code */
+}
