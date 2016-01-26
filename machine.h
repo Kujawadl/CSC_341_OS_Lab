@@ -19,7 +19,12 @@ typedef enum { false, true } bool;
 
 /* Define registers type */
 typedef struct registers {
-	short int r1, r2, r3, rA, IR, PC:8;
+	short int r1;
+	short int r2;
+	short int r3;
+	short int rA;
+	short int IR;
+	short int PC:8;
 } registers;
 
 /* Declare and initialize machine registers */
