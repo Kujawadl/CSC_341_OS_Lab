@@ -5,9 +5,9 @@
 #ifndef OS
 #define OS
 
-registers U1, U2, SYS;
-U1.IR = 61440;
-U2.IR = 61440;
+registers U1 = {0, 0, 0, 0, 61440, 0};
+registers U2 = {0, 0, 0, 0, 61440, 0};
+registers SYS;
 /* 
 Note: U1 & U2 instruction registers contain 61440 (HLT) 
 while user is not running any program. The run function
