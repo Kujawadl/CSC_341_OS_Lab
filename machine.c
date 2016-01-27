@@ -1,6 +1,7 @@
 #include "machine.h"
 
-
+/* Initialize machine registers */
+registers machine = {0, 0, 0, 0, 0, 0};
 
 /* Uses value in IR to determine course of action */
 /* Returns false if errors */

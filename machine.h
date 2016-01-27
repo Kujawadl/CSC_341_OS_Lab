@@ -23,14 +23,7 @@ typedef struct {
 } registers;
 
 /* Declare and initialize machine registers */
-registers machine = {
-	.r1 = 0,
-	.r2 = 0,
-	.r3 = 0,
-	.rA = 0,
-	.IR = 0,
-	.PC = 0
-};
+extern registers machine;
 
 /* Declare main memory */
 short int main_memory[256];
