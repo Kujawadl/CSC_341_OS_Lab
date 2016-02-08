@@ -5,7 +5,7 @@ registers machine = {0, 0, 0, 0, 0, 0};
 
 /* Uses value in IR to determine course of action */
 /* Returns false if errors */
-bool interpreter() 
+bool interpreter()
 {
 	machine.PC++; /* Increment Program Counter */
 	short int op = getOpcode(machine.IR);
@@ -87,8 +87,8 @@ bool LOD()
 	return true;
 }
 
-/* Stores a value from a register to a memory location*/
-bool STO() 
+/* Stores a value from a register to a memory location */
+bool STO()
 {
 	short int reg = getRegCode(machine.IR);
 	switch (reg) {
@@ -100,10 +100,55 @@ bool STO()
 	};
 	return true;
 }
-bool ADD() {return false;}
-bool SUB() {return false;}
-bool ADR() {return false;}
-bool SUR() {return false;}
+
+/* Adds the input to rA */
+/* TODO: test for overflow; return false to indicate error if necessary */
+bool ADD()
+{
+	short int operand = getOperand(machine.IR);
+	short int addr = getAddrMode(machine.IR);
+	machine.rA += (addr == 0 ?? operand : main_memory[operand]);
+	return true;
+}
+
+/* Subtracts the input from rA */
+/* TODO: test for overflow; return false to indicate error if necessary */
+bool SUB()
+{
+	short int operand = getOperand(machine.IR);
+	short int addr = getAddrMode(machine.IR);
+	machine.rA -= (addr == 0 ?? operand : main_memory[operand]);
+	return true;
+}
+
+/* Adds the contents of the specified register to rA */
+/* TODO: test for overflow; return false to indicate error if necessary */
+bool ADR()
+{
+	short int reg = getOperand(machine.IR);
+	switch (reg) {
+		case 1: machine.rA += machine.r1; break;
+		case 2: machine.rA += machine.r2; break;
+		case 3: machine.rA += machine.r3; break;
+		default: return false; break;
+	}
+	return true;
+}
+
+/* Subtracts the contents of the specified register from rA */
+/* TODO: test for overflow; return false to indicate error if necessary */
+bool SUR()
+{
+	short int reg = getOperand(machine.IR);
+	switch (reg) {
+		case 1: machine.rA -= machine.r1; break;
+		case 2: machine.rA -= machine.r2; break;
+		case 3: machine.rA -= machine.r3; break;
+		default: return false; break;
+	}
+	return true;
+}
+
 bool AND() {return false;}
 bool IOR() {return false;}
 bool NOT() {return false;}
