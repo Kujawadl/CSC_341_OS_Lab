@@ -107,7 +107,7 @@ bool ADD()
 {
 	short int operand = getOperand(machine.IR);
 	short int addr = getAddrMode(machine.IR);
-	machine.rA += (addr == 0 ?? operand : main_memory[operand]);
+	machine.rA += (addr == 0 ? operand : main_memory[operand]);
 	return true;
 }
 
@@ -117,7 +117,7 @@ bool SUB()
 {
 	short int operand = getOperand(machine.IR);
 	short int addr = getAddrMode(machine.IR);
-	machine.rA -= (addr == 0 ?? operand : main_memory[operand]);
+	machine.rA -= (addr == 0 ? operand : main_memory[operand]);
 	return true;
 }
 
