@@ -60,6 +60,7 @@ short int getOperand(short int num)
 
 /* Loads a value into a register */
 bool LOD() 
+bool LOD()
 {
 	short int addr = getAddrMode(machine.IR);
 	short int operand = getOperand(machine.IR);
@@ -152,10 +153,62 @@ bool SUR()
 bool AND() {return false;}
 bool IOR() {return false;}
 bool NOT() {return false;}
-bool JMP() {return false;}
-bool JEQ() {return false;}
-bool JGT() {return false;}
-bool JLT() {return false;}
+
+/* Unconditional Jump */
+bool JMP()
+{
+	machine.PC = getOperand(machine.IR);
+	return true;
+}
+
+/* Jump if rA is equal to the specified register */
+bool JEQ()
+{
+	short int operand;
+	switch (getRegCode(machine.IR)) {
+		case 1: operand = machine.r1; break;
+		case 2: operand = machine.r2; break;
+		case 3: operand = machine.r3; break;
+		default: return false; break;
+	}
+	if (machine.rA == operand)
+		machine.PC = getOperand(machine.IR);
+	return true;
+}
+
+/* Jump if rA is greater than the specified register */
+/* TODO: Verify that the above statement is correct,
+	i.e. if the comparison should be rA < r? instead. */
+bool JGT()
+{
+	short int operand;
+	switch (getRegCode(machine.IR)) {
+		case 1: operand = machine.r1; break;
+		case 2: operand = machine.r2; break;
+		case 3: operand = machine.r3; break;
+		default: return false; break;
+	}
+	if (machine.rA > operand)
+		machine.PC = getOperand(machine.IR);
+	return true;
+}
+
+/* Jump if rA is less than the specified register */
+/* TODO: Verify that the above statement is correct,
+	i.e. if the comparison should be rA > r? instead. */
+bool JLT()
+{
+	short int operand;
+	switch (getRegCode(machine.IR)) {
+		case 1: operand = machine.r1; break;
+		case 2: operand = machine.r2; break;
+		case 3: operand = machine.r3; break;
+		default: return false; break;
+	}
+	if (machine.rA < operand)
+		machine.PC = getOperand(machine.IR);
+	return true;
+}
 bool CMP() {return false;}
 bool CLR() {return false;}
 bool HLT() {return false;}
