@@ -59,7 +59,6 @@ short int getOperand(short int num)
 }
 
 /* Loads a value into a register */
-bool LOD() 
 bool LOD()
 {
 	short int addr = getAddrMode(machine.IR);
