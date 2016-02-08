@@ -102,51 +102,99 @@ bool STO()
 }
 
 /* Adds the input to rA */
-/* TODO: test for overflow; return false to indicate error if necessary */
+/* TODO: Verify overflow checking */
 bool ADD()
 {
 	short int operand = getOperand(machine.IR);
 	short int addr = getAddrMode(machine.IR);
+	int over = (int)machine.rA;
 	machine.rA += (addr == 0 ? operand : main_memory[operand]);
-	return true;
+	over += (int)(addr == 0 ? operand : main_memory[operand]);
+
+	/* If overflow occurs, return false */
+	if (over == (int)machine.rA)
+		return true;
+	else
+		return false;
 }
 
 /* Subtracts the input from rA */
-/* TODO: test for overflow; return false to indicate error if necessary */
+/* TODO: Verify overflow checking */
 bool SUB()
 {
 	short int operand = getOperand(machine.IR);
 	short int addr = getAddrMode(machine.IR);
+	int over = (int)machine.rA;
 	machine.rA -= (addr == 0 ? operand : main_memory[operand]);
-	return true;
+	over -= (int)(addr == 0 ? operand : main_memory[operand]);
+
+	/* If overflow occurs, return false */
+	if (over == (int)machine.rA)
+		return true;
+	else
+		return false;
 }
 
 /* Adds the contents of the specified register to rA */
-/* TODO: test for overflow; return false to indicate error if necessary */
+/* TODO: Verify overflow checking */
 bool ADR()
 {
 	short int reg = getOperand(machine.IR);
+	int over = (int)machine.rA;
 	switch (reg) {
-		case 1: machine.rA += machine.r1; break;
-		case 2: machine.rA += machine.r2; break;
-		case 3: machine.rA += machine.r3; break;
-		default: return false; break;
+		case 1:
+			machine.rA += machine.r1;
+			over += (int)machine.r1;
+			break;
+		case 2:
+			machine.rA += machine.r2;
+			over += (int)machine.r2;
+			break;
+		case 3:
+			machine.rA += machine.r3;
+			over += (int)machine.r3;
+			break;
+		default:
+			return false;
+			break;
 	}
-	return true;
+
+	/* If overflow occurs, return false */
+	if (over == (int)machine.rA)
+		return true;
+	else
+		return false;
 }
 
 /* Subtracts the contents of the specified register from rA */
-/* TODO: test for overflow; return false to indicate error if necessary */
+/* TODO: Verify overflow checking */
 bool SUR()
 {
 	short int reg = getOperand(machine.IR);
+	int over = (int)machine.rA;
 	switch (reg) {
-		case 1: machine.rA -= machine.r1; break;
-		case 2: machine.rA -= machine.r2; break;
-		case 3: machine.rA -= machine.r3; break;
-		default: return false; break;
+		case 1:
+			machine.rA -= machine.r1;
+			over -= (int)machine.r1;
+			break;
+		case 2:
+			machine.rA -= machine.r2;
+			over -= (int)machine.r2;
+			break;
+		case 3:
+			machine.rA -= machine.r3;
+			over -= (int)machine.r3;
+			break;
+		default:
+			return false;
+			break;
 	}
-	return true;
+
+	/* If overflow occurs, return false */
+	if (over == (int)machine.rA)
+		return true;
+	else
+		return false;
 }
 
 bool AND() {return false;}
