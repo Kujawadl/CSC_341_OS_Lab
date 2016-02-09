@@ -19,4 +19,6 @@ int main(int argc, char** argv)
 {
 	/* Initialize main_memory with given data */
 	/* Call scheduler */
+
+	int i = 1;
 }
