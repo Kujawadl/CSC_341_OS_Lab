@@ -290,31 +290,41 @@ bool CMP() {
 
 	short int reg = getRegCode(machine.IR);
 	short int operand = getOperand(machine.IR);
-	short int regOperand;
+	short int addr = getAddrMode(machine.IR);
+	short int registerValue;
 	switch (reg) {
 		case 0:
-			regOperand = machine.rA;
+			registerValue = machine.rA;
 			break;
 		case 1:
-			regOperand = machine.r1;
+			registerValue = machine.r1;
 			break;
 		case 2:
-			regOperand = machine.r2;
+			registerValue = machine.r2;
 			break;
 		case 3:
-			regOperand = machine.r3;
+			registerValue = machine.r3;
 			break;
 		default:
 			return false;
 			break;
 	}
-
-	if (regOperand < operand) {
-		machine.CR = LST;
-	} else if (regOperand == operand) {
-		machine.CR = EQL;
-	} else if (regOperand > operand) {
-		machine.CR = GRT;
+	if (addr == DIRECT) {
+		if (registerValue < main_memory[operand]) {
+			machine.CR = LST;
+		} else if (registerValue == main_memory[operand]) {
+			machine.CR = EQL;
+		} else if (registerValue > main_memory[operand]) {
+			machine.CR = GRT;
+		}
+	} else if (addr == IMMEDIATE) {
+		if (registerValue < operand) {
+			machine.CR = LST;
+		} else if (registerValue == operand) {
+			machine.CR = EQL;
+		} else if (registerValue > operand) {
+			machine.CR = GRT;
+		}
 	}
 
 	return true;
