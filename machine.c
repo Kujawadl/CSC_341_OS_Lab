@@ -199,7 +199,34 @@ bool SUR()
 
 bool AND() {return false;}
 bool IOR() {return false;}
-bool NOT() {return false;}
+
+/* This is the bitwise NOT, or compliment function. This performs logical */
+/* negation on each bit, forming the ones' complement of the given binary */
+/* value. Bits that are 0 become 1, and those that are 1 become 0. */
+bool NOT() {
+
+	short int operand = getOperand(machine.IR);
+	short int reg = getRegCode(machine.IR);
+	switch (reg) {
+		case 1:
+			machine.rA = ~machine.rA;
+			break;
+		case 1:
+			machine.r1 = ~machine.r1;
+			break;
+		case 2:
+			machine.r2 = ~machine.r2;
+			break;
+		case 3:
+			machine.r3 = ~machine.r3;
+			break;
+		default:
+			return false;
+			break;
+	}
+
+	return true;
+}
 
 /* Unconditional Jump */
 bool JMP()
