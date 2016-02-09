@@ -65,20 +65,20 @@ bool LOD()
 	short int operand = getOperand(machine.IR);
 	short int reg = getRegCode(machine.IR);
 
-	if (addr == 0) {
-		switch (reg) {
-			case 0: machine.rA = getOperand(machine.IR); break;
-			case 1: machine.r1 = getOperand(machine.IR); break;
-			case 2: machine.r2 = getOperand(machine.IR); break;
-			case 3: machine.r3 = getOperand(machine.IR); break;
-			default: return false; break;
-		};
-	} else if (addr == 1) {
+	if (addr == DIRECT) {
 		switch (reg) {
 			case 0: machine.rA = main_memory[getOperand(machine.IR)]; break;
 			case 1: machine.r1 = main_memory[getOperand(machine.IR)]; break;
 			case 2: machine.r2 = main_memory[getOperand(machine.IR)]; break;
 			case 3: machine.r3 = main_memory[getOperand(machine.IR)]; break;
+			default: return false; break;
+		};
+	} else if (addr == IMMEDIATE) {
+		switch (reg) {
+			case 0: machine.rA = getOperand(machine.IR); break;
+			case 1: machine.r1 = getOperand(machine.IR); break;
+			case 2: machine.r2 = getOperand(machine.IR); break;
+			case 3: machine.r3 = getOperand(machine.IR); break;
 			default: return false; break;
 		};
 	} else {
@@ -108,8 +108,8 @@ bool ADD()
 	short int operand = getOperand(machine.IR);
 	short int addr = getAddrMode(machine.IR);
 	int over = (int)machine.rA;
-	machine.rA += (addr == 0 ? operand : main_memory[operand]);
-	over += (int)(addr == 0 ? operand : main_memory[operand]);
+	machine.rA += (addr == DIRECT ? main_memory[operand] : operand);
+	over += (int)(addr == DIRECT ? main_memory[operand] : operand);
 
 	/* If overflow occurs, return false */
 	if (over == (int)machine.rA)
@@ -125,8 +125,8 @@ bool SUB()
 	short int operand = getOperand(machine.IR);
 	short int addr = getAddrMode(machine.IR);
 	int over = (int)machine.rA;
-	machine.rA -= (addr == 0 ? operand : main_memory[operand]);
-	over -= (int)(addr == 0 ? operand : main_memory[operand]);
+	machine.rA -= (addr == DIRECT ? main_memory[operand] : operand);
+	over -= (int)(addr == DIRECT ? main_memory[operand] : operand);
 
 	/* If overflow occurs, return false */
 	if (over == (int)machine.rA)
