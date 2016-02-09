@@ -227,9 +227,27 @@ bool NOT() {
 }
 
 /* Unconditional Jump */
+/* Direct addressing is allowed, provided the value in the memory location
+	is actually only using 8 bits. If the 8 highest-order bits contain anything,
+	that would be a reference to a memory location that does not exist (PC: 8bits)
+	and thus the JMP would return an error (essentially OutOfBounds) */
 bool JMP()
 {
-	machine.PC = getOperand(machine.IR);
+	short int addr = getAddrMode(machine.IR)
+	short int jmpTo;
+	if (addr == DIRECT) {
+		jmpTo = main_memory[getOperand(machine.IR)];
+		/* Check high-order bits */
+		if (jmpTo & 65280 != 0)
+			return false;
+	} else if (addr == IMMEDIATE) {
+		jmpTo = getOperand(machine.IR);
+	} else {
+		return false;
+	}
+
+	/* Set program counter to new address */
+	machine.PC = jmpTo;
 	return true;
 }
 
