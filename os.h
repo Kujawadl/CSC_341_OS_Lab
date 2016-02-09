@@ -5,15 +5,15 @@
 #ifndef OS
 #define OS
 
-registers U1 = {0, 0, 0, 0, 61440, 0};
-registers U2 = {0, 0, 0, 0, 61440, 0};
-registers SYS;
-/* 
-Note: U1 & U2 instruction registers contain 61440 (HLT) 
+user_registers U1 = {0, 0, 0, 0, 61440, 0};
+user_registers U2 = {0, 0, 0, 0, 61440, 0};
+user_registers SYS;
+/*
+Note: U1 & U2 instruction registers contain 61440 (HLT)
 while user is not running any program. The run function
 will later assign the IR to the value of the starting
 memory address of the program.
-   
+
 The scheduler can quickly determine if a user is running
 something by testing the opcode of the IR for HLT (1111).
 */
@@ -28,4 +28,3 @@ void scheduler();
 int main(int argc, char** argv);
 
 #endif
-

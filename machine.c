@@ -1,7 +1,7 @@
 #include "machine.h"
 
 /* Initialize machine registers */
-registers machine = {0, 0, 0, 0, 0, 0};
+machine_registers machine = {0, 0, 0, 0, 0, 0, 0};
 
 /* Uses value in IR to determine course of action */
 /* Returns false if errors */
@@ -205,10 +205,9 @@ bool IOR() {return false;}
 /* value. Bits that are 0 become 1, and those that are 1 become 0. */
 bool NOT() {
 
-	short int operand = getOperand(machine.IR);
 	short int reg = getRegCode(machine.IR);
 	switch (reg) {
-		case 1:
+		case 0:
 			machine.rA = ~machine.rA;
 			break;
 		case 1:
@@ -224,7 +223,6 @@ bool NOT() {
 			return false;
 			break;
 	}
-
 	return true;
 }
 
