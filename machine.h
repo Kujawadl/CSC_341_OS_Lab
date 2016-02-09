@@ -16,6 +16,10 @@
 #define GEQ 3
 #define LEQ 6
 
+/* Define addressing modes */
+#define DIRECT 0
+#define IMMEDIATE 1
+
 /* Define boolean type */
 typedef enum { false, true } bool;
 
