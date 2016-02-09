@@ -5,22 +5,30 @@
 	 > : 001
 	 < : 100
 	 = : 010
+	!= : 101
 	>= : 011
 	<= : 110
 */
 #define GRT 1
 #define LST 4
 #define EQL 2
+#define NEQ 5
 #define GEQ 3
 #define LEQ 6
 
 /* Define boolean type */
 typedef enum { false, true } bool;
 
-/* Define registers type */
+/* Define user registers type */
+/* user_registers is used to save/restore registers on user switch */
 typedef struct {
 	short int r1, r2, r3, rA, IR, PC:8;
-} registers;
+} user_registers;
+/* Define machine registers type */
+/* Machine register type also has a condition code register */
+typedef struct {
+	short int r1, r2, r3, rA, IR, PC:8, CR:3;
+} machine_registers;
 
 /* Declare and initialize machine registers */
 extern registers machine;
