@@ -251,7 +251,6 @@ bool CMP() {
 
 	return true;
 }
-<<<<<<< Updated upstream
 
 /* Will clear the specified regiester with 0s */
 bool CLR() {
@@ -260,11 +259,9 @@ bool CLR() {
 	machine.CR = 0;
 	return true;
 }
-bool HLT() {return false;}
-=======
-bool CLR() {return false;}
+
 bool HLT(bool exit_clean) {return exit_clean;}
->>>>>>> Stashed changes
+
 
 /* Determine if a resultant value is positive, negative, or 0 */
 /* Takes a short integer, returns a condition code (short integer) */
