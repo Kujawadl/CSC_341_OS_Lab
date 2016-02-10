@@ -113,9 +113,10 @@ bool ADD() {
 /* Subtracts the input from rA */
 /* TODO: Verify overflow checking */
 bool SUB() {
-	short int operand = getOperand(machine.IR);
 	short int addr = getAddrMode(machine.IR);
+	short int operand = getOperand(machine.IR);
 	int over = (int)machine.rA;
+
 	machine.rA -= (addr == DIRECT ? main_memory[operand] : operand);
 	over -= (int)(addr == DIRECT ? main_memory[operand] : operand);
 
@@ -129,61 +130,50 @@ bool SUB() {
 /* Adds the input to the specified register */
 /* TODO: Verify overflow checking */
 bool ADR() {
-	short int reg = getOperand(machine.IR);
-	int over = (int)machine.rA;
-	switch (reg) {
-		case 1:
-			machine.rA += machine.r1;
-			over += (int)machine.r1;
-			break;
-		case 2:
-			machine.rA += machine.r2;
-			over += (int)machine.r2;
-			break;
-		case 3:
-			machine.rA += machine.r3;
-			over += (int)machine.r3;
-			break;
-		default:
-			return false;
-			break;
-	}
+	short int *reg = getRegister(getRegCode(machine.IR));
+	short int addr = getAddrMode(machine.IR);
+	short int operand = getOperand(machine.IR);
+	int over = (int)*reg;
 
-	/* If overflow occurs, return false */
-	if (over == (int)machine.rA)
+	*reg += (addr == DIRECT ? main_memory[operand] : operand);
+	over += (int)(addr == DIRECT ? main_memory[operand] : operand);
+
+	/* Effect condition code; return false if overflow */
+	if (over == (int)*reg) {
+		machine.CR = getCondCode(*reg);
 		return true;
-	else
-		return false;
+	} else {
+		return false
+	}
 }
 
 /* Subtracts the input from the specified register */
 /* TODO: Verify overflow checking */
 bool SUR() {
-	short int *reg;
-	int over = (int)machine.rA;
-	switch (getOperand(machine.IR)) {
-		case 1:
-			reg = &
-			over -= (int)machine.r1;
+	short int *reg = getRegister(getRegCode(machine.IR));
+	int over = (int)*reg;
+
+	switch (getAddrMode(machine.IR)) {
+		case DIRECT:
+			*reg -= main_memory[getOperand(machine.IR)];
+			over -= (int)main_memory[getOperand(machine.IR)];
 			break;
-		case 2:
-			machine.rA -= machine.r2;
-			over -= (int)machine.r2;
+		case IMMEDIATE:
+			*reg -= getOperand(machine.IR);
+			over -= (int)getOperand(machine.IR);
 			break;
-		case 3:
-			machine.rA -= machine.r3;
-			over -= (int)machine.r3;
-			break;
-		default:
+		case default:
 			return false;
 			break;
 	}
 
-	/* If overflow occurs, return false */
-	if (over == (int)machine.rA)
+	/* Effect condition code; return false if overflow */
+	if (over == (int)*reg) {
+		machine.CR = getCondCode(*reg);
 		return true;
-	else
-		return false;
+	} else {
+		return false
+	}
 }
 
 /* The And fuction will do the bitwise operation AND using the specified */
@@ -289,6 +279,7 @@ bool CMP() {
 
 	return true;
 }
+<<<<<<< Updated upstream
 
 /* Will clear the specified regiester with 0s */
 bool CLR() {
@@ -298,6 +289,10 @@ bool CLR() {
 	return true;
 }
 bool HLT() {return false;}
+=======
+bool CLR() {return false;}
+bool HLT(bool exit_clean) {return exit_clean;}
+>>>>>>> Stashed changes
 
 /* Determine if a resultant value is positive, negative, or 0 */
 /* Takes a short integer, returns a condition code (short integer) */
@@ -317,5 +312,6 @@ short int* getRegister(short int regCode) {
 		case 1: return &machine.r1; break;
 		case 2: return &machine.r2; break;
 		case 3: return &machine.r3; break;
+		case default: HLT(false); break;
 	}
 }
