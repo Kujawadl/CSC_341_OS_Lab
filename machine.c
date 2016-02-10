@@ -104,10 +104,12 @@ bool ADD() {
 	over += (int)(addr == DIRECT ? main_memory[operand] : operand);
 
 	/* If overflow occurs, return false */
-	if (over == (int)machine.rA)
+	if (over == (int)machine.rA) {
+		machine.CR = getCondCode(machine.rA)
 		return true;
-	else
+	} else {
 		return false;
+	}
 }
 
 /* Subtracts the input from rA */
@@ -121,10 +123,12 @@ bool SUB() {
 	over -= (int)(addr == DIRECT ? main_memory[operand] : operand);
 
 	/* If overflow occurs, return false */
-	if (over == (int)machine.rA)
+	if (over == (int)machine.rA) {
+		machine.CR = getCondCode(machine.rA)
 		return true;
-	else
+	} else {
 		return false;
+	}
 }
 
 /* Adds the input to the specified register */
@@ -151,21 +155,12 @@ bool ADR() {
 /* TODO: Verify overflow checking */
 bool SUR() {
 	short int *reg = getRegister(getRegCode(machine.IR));
+	short int addr = getAddrMode(machine.IR);
+	short int operand = getOperand(machine.IR);
 	int over = (int)*reg;
 
-	switch (getAddrMode(machine.IR)) {
-		case DIRECT:
-			*reg -= main_memory[getOperand(machine.IR)];
-			over -= (int)main_memory[getOperand(machine.IR)];
-			break;
-		case IMMEDIATE:
-			*reg -= getOperand(machine.IR);
-			over -= (int)getOperand(machine.IR);
-			break;
-		case default:
-			return false;
-			break;
-	}
+	*reg -= (addr == DIRECT ? main_memory[operand] : operand);
+	over -= (int)(addr == DIRECT ? main_memory[operand] : operand);
 
 	/* Effect condition code; return false if overflow */
 	if (over == (int)*reg) {
