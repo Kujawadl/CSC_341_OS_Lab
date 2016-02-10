@@ -8,6 +8,7 @@ registers machine = {0, 0, 0, 0, 0, 0, 0};
 /* Uses value in IR to determine course of action */
 /* Returns false if errors */
 bool interpreter() {
+	machine.IR = main_memory[machine.PC];
 	machine.PC++; /* Increment Program Counter */
 	short int op = getOpcode(machine.IR);
 	switch (op) {
@@ -37,7 +38,7 @@ short int getOpcode(short int num) {
 	short int ret = (num & 61440)>>12;
 
 	#ifdef DEBUG_VERBOSE
-	fprintf(stderr, "In getOpCode(). IR: %d, Opcode: %d", machine.IR, ret);
+	fprintf(stderr, "In getOpCode(). IR: %d, Opcode: %d\n", machine.IR, ret);
 	#endif
 
 	return ret;
@@ -49,7 +50,7 @@ short int getAddrMode(short int num) {
 	short int ret = (num & 2048)>>11;
 
 	#ifdef DEBUG_VERBOSE
-	fprintf(stderr, "In getAddrMode(). IR: %d, Opcode: %d", machine.IR, ret);
+	fprintf(stderr, "In getAddrMode(). IR: %d, Opcode: %d\n", machine.IR, ret);
 	#endif
 
 	return ret;
@@ -61,7 +62,7 @@ short int getRegCode(short int num) {
 	short int ret = (num & 1792)>>8;
 
 	#ifdef DEBUG_VERBOSE
-	fprintf(stderr, "In getRegCode(). IR: %d, Opcode: %d", machine.IR, ret);
+	fprintf(stderr, "In getRegCode(). IR: %d, Opcode: %d\n", machine.IR, ret);
 	#endif
 
 	return ret;
@@ -73,7 +74,7 @@ short int getOperand(short int num) {
 	short int ret = (num & 255);
 
 	#ifdef DEBUG_VERBOSE
-	fprintf(stderr, "In getOpCode(). IR: %d, Opcode: %d", machine.IR, ret);
+	fprintf(stderr, "In getOpCode(). IR: %d, Opcode: %d\n", machine.IR, ret);
 	#endif
 
 	return ret;
@@ -123,7 +124,7 @@ bool ADD() {
 		return true;
 	} else {
 		#ifdef DEBUG
-		fprintf(stderr, "!! OVERFLOW IN ADD()");
+		fprintf(stderr, "!! OVERFLOW IN ADD()\n");
 		#endif
 		return false;
 	}
@@ -149,7 +150,7 @@ bool SUB() {
 		return true;
 	} else {
 		#ifdef DEBUG
-		fprintf(stderr, "!! OVERFLOW IN SUB()");
+		fprintf(stderr, "!! OVERFLOW IN SUB()\n");
 		#endif
 		return false;
 	}
@@ -176,7 +177,7 @@ bool ADR() {
 		return true;
 	} else {
 		#ifdef DEBUG
-		fprintf(stderr, "!! OVERFLOW IN ADR()");
+		fprintf(stderr, "!! OVERFLOW IN ADR()\n");
 		#endif
 		return false;
 	}
@@ -203,7 +204,7 @@ bool SUR() {
 		return true;
 	} else {
 		#ifdef DEBUG
-		fprintf(stderr, "!! OVERFLOW IN SUR()");
+		fprintf(stderr, "!! OVERFLOW IN SUR()\n");
 		#endif
 		return false;
 	}
@@ -391,7 +392,8 @@ short int* getRegister() {
 	short int regCode = getRegCode(machine.IR); /* Guaranteed to return 0-3 */
 
 	#ifdef DEBUG_VERBOSE
-	fprintf(stderr, "In getRegister(). IR: %d, Regcode: %d", machine.IR, regCode);
+	fprintf(stderr, "In getRegister(). IR: %d, Regcode: %d\n", \
+		machine.IR, regCode);
 	#endif
 
 	switch (regCode) {

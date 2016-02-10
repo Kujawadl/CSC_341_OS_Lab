@@ -1,8 +1,22 @@
 #include "os.h"
 
-registers U1 = {0, 0, 0, 0, 61440, 0, 0};
-registers U2 = {0, 0, 0, 0, 61440, 0, 0};
-registers SYS = {0, 0, 0, 0, 61440, 0, 0};
+registers U1 = {0, 0, 0, 0, 0, 0, 0};
+registers U2 = {0, 0, 0, 0, 0, 0, 0};
+registers SYS = {0, 0, 0, 0, 0, 0, 0};
+
+/*
+Note: U1 & U2 instruction registers contain 61440 (HLT)
+while user is not running any program. The run function
+will later assign the IR to the value of the starting
+memory address of the program.
+
+The scheduler can quickly determine if a user is running
+something by testing the opcode of the IR for HLT (1111).
+*/
+
+users currentUser;
+int clock;
+int switchTime;
 
 void dump(bool dumpRegs)
 {
@@ -17,103 +31,117 @@ void dump(bool dumpRegs)
 void scheduler()
 {
 	/* Scheduler code */
-    while (true) {
+	while (true) {
+		switch (currentUser) {
+			case u1: machine = U1; break;
+			case u2: machine = U2; break;
+			case sys: machine = SYS; break;
+		}
 
-        Node currentUser = schedulerQueue.pop(&schedulerQueue);
-        machine = currentUser.userRegister;
+		while (clock < switchTime) {
+			bool running = !(getOpcode(machine.IR) == 15);
+			clock++;
+			if (currentUser != sys && !running) {
+				printf("USER%d > ", (currentUser == u1 ? 1 : 2));
+			} else if (currentUser != sys && running) {
+				interpreter();
+			} else {
+				printf("SYS > ");
+			}
+			if (!running || currentUser == sys) {
+				char input[4];
+				fgets(input, sizeof(input), stdin);
+				/* Clear input buffer */
+				char garbage[100];
+				fgets(garbage, sizeof(garbage), stdin);
 
-        while (clock < switchTime) {
-            // do stuff
-            clock++;
-            if (currentUser.userNum > 0) {
-                printf("USER%d > ", currentUser.userNum);
-            } else {
-                printf("SYS > ");
-            }
+				if (strcasecmp(input, "run") == 0) {
+					if (currentUser != sys) {
+						machine.IR = main_memory[machine.PC];
+						interpreter();
+					} else {
+						printf("Invalid command for system\n");
+					}
+				} else if (strcasecmp(input, "dmp") == 0) {
+					if (currentUser == sys) {
+						dump(false);
+					} else {
+						printf("Invalid command for users\n");
+					}
+				} else if (strcasecmp(input, "nop") == 0) {
+					break;
+				} else if (strcasecmp(input, "stp") == 0) {
+					if (currentUser == sys) {
+						exit(EXIT_SUCCESS);
+					} else {
+						printf("Invalid command for users\n");
+					}
+				} else {
+					printf("Invalid command: %s\n", input);
+				}
+			}
+		}
 
-						char input[3];
-						fgets(input, sizeof(input), stdin);
+		switch (currentUser) {
+			case u1: U1 = machine; break;
+			case u2: U2 = machine; break;
+			case sys: SYS = machine; break;
+		}
 
-						if (strcasecmp(input, "run") == 0) {
-							if (currentUser.userNum > 0) {
-								interpreter();
-							} else {
-								printf("Invalid command for system\n");
-							}
-						} else if (strcasecmp(input, "dmp") == 0) {
-							if (currentUser.userNum == 0) {
-								dump(false);
-							} else {
-								printf("Invalid command for users\n");
-							}
-						} else if (strcasecmp(input, "nop") == 0) {
-							break;
-						} else if (strcasecmp(input, "stp") == 0) {
-							if (currentUser.userNum == 0) {
-								exit(EXIT_SUCCESS);
-							} else {
-								printf("Invalid command for users\n");
-							}
-						} else {
-							printf("Invalid command: %s\n", input);
-						}
-
-
-        }
-
-        currentUser.userRegister = machine;
-        schedulerQueue.push(&schedulerQueue, &currentUser);
-				switchTime = clock + 3;
-
-    }
+		switchTime = clock + 3;
+		currentUser = nextUser(currentUser);
+		printf("Switching to u%d\n", (int)currentUser);
+	}
 
 }
 
 int main(int argc, char** argv)
 {
-	/* Initialize main_memory with given data */
-	readFile(); // read instructions into main_memory
-    init(); // do things with the things
-    scheduler(); // call the scheduler
-	/* Call scheduler */
+	init();
+	scheduler();
 }
 
 void init(){
+	/* Initialize main_memory */
+	for (int i = 0; i < 256; i++) {
+		main_memory[i] = 0;
+	}
 
-    // queue schedulerQueue = createQueue();
+	/* Read in the program for u1 and u2 */
+	int u1_start = 0;
+	int u2_start = readFile(u1_start) + 1;
+	readFile(u2_start);
+	U1.IR = 61440;
+	U1.PC = u1_start;
+	U2.IR = 61440;
+	U2.PC = u2_start;
+	currentUser = u1;
 
-    Queue schedulerQueue = createQueue();
-    Node sys = { .userNum = 0, .next = NULL, .userRegister = {0, 0, 0, 0, 61440, 0, 0} };
-    Node usr1 = { .userNum = 1, .next = NULL, .userRegister = {0, 0, 0, 0, 61440, 0, 0} };
-    Node usr2 = { .userNum = 2, .next = NULL, .userRegister = {0, 0, 0, 0, 61440, 0, 0} };
-
-
-    schedulerQueue.push(&schedulerQueue, &usr1);
-    schedulerQueue.push(&schedulerQueue, &usr2);
-    schedulerQueue.push(&schedulerQueue, &sys);
-
-    // intialize the clock to zero
-    clock = 0;
-    // intialize switch time to clock+3, this will be the next point at which
-    //  users are changed.
-    switchTime=clock+3;
+	/* Initialize clock and switchTime */
+	clock = 0;
+	switchTime = clock + 3;
 }
 
-void readFile(){
-    /* read input file into int main_memory[] */
-    FILE *ifp;
-    ifp = fopen("part1.dat", "r"); /* input file */
+/* Read program into memory */
+/* Takes the address to start loading into */
+/* Returns the size of the program in words */
+int readFile(short int start){
+	FILE *ifp;
+	ifp = fopen("part1.dat", "r");
 
-    /* validates file exists */
-    if (ifp == NULL){perror("proj1a.dat");exit(0);}
+	/* Ensure file exists */
+	if (ifp == NULL) {
+		fprintf(stderr, "proj1a.dat does not exist!\n");
+		exit(0);
+	}
 
-    char str[32]; /* current line from file, had to increase it size... */
-    int i = 0; /* index of main_memory */
-    while(fgets(str, 18, ifp)){ /* plus 2 for new lines. */
-         printf("%s\t", str);  /* DEBUG */
-        main_memory[i] = (short)(strtoul(str, NULL, 2));
-         printf("%d\n", main_memory[i]);  /* DEBUG */
-        i++;
-    }
-    fclose(ifp);
+	char str[18];
+	int i = start;
+	while(fgets(str, 18, ifp)){
+		main_memory[i] = (short int)(strtol(str, NULL, 2));
+		i++;
+	}
+	fclose(ifp);
+
+	return (i - start);
 }

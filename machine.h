@@ -4,6 +4,7 @@
 /* Debugging flags */
 #define DEBUG
 #define DEBUG_VERBOSE
+#undef DEBUG_VERBOSE
 
 /* If DEBUG_VERBOSE, then DEBUG */
 #ifdef DEBUG_VERBOSE

@@ -12,14 +12,14 @@ typedef struct Queue {
 	Node* tail;
 
 	void (*push) (struct Queue*, Node*);
-	Node (*pop) (struct Queue*);
+	Node* (*pop) (struct Queue*);
 	Node (*peek) (struct Queue*);
 	void (*display) (struct Queue*);
 	int size;
 } Queue;
 
 void push (Queue* queue, Node* n);
-Node pop (Queue* queue);
+Node* pop (Queue* queue);
 Node peek (Queue* queue);
 void display (Queue* queue);
 
@@ -30,27 +30,24 @@ void push (Queue* queue, Node* n) {
 
 	n->next = NULL;
 
-	if (queue->head == NULL) { // no head
-		printf("\nballs");
+	/* If queue is empty, set head to n */
+	if (queue->head == NULL) {
 		queue->head = n;
-	} else{
-		printf("\nballs 2");
+	} else {
 		queue->tail->next = n;
 	}
-	printf("\nCurrent head: %d", queue->head->userNum);
 	queue->tail = n;
 	queue->size++;
 }
 
-Node pop (Queue* queue) {
+Node* pop (Queue* queue) {
 
 	Node* head = queue->head;
-	Node current = *head;
+	Node* current = head;
 
 	queue->head = head->next;
 	queue->size--;
-	// free the memory of original head
-	//free(head);
+
 	return current;
 }
 
