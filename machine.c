@@ -1,4 +1,17 @@
 #include "machine.h"
+#include <stdio.h>
+#include <string.h>
+
+/* Debugging flags */
+#define DEBUG
+#define DEBUG_VERBOSE
+
+/* If DEBUG_VERBOSE, then DEBUG */
+#ifdef DEBUG_VERBOSE
+	#ifndef DEBUG
+		#define DEBUG
+	#endif
+#endif
 
 /* Initialize machine registers */
 machine_registers machine = {0, 0, 0, 0, 0, 0, 0};
@@ -61,6 +74,9 @@ bool LOD() {
 
 	*reg = (addr == DIRECT ? main_memory[operand] : operand);
 
+	#ifdef DEBUG
+	printDebug("LOD");
+	#endif
 	return true;
 }
 
@@ -68,6 +84,10 @@ bool LOD() {
 bool STO() {
 	short int *reg = getRegister();
 	main_memory[getOperand(machine.IR)] = *reg;
+
+	#ifdef DEBUG
+	printDebug("STO");
+	#endif
 	return true;
 }
 
@@ -80,11 +100,18 @@ bool ADD() {
 	machine.rA += (addr == DIRECT ? main_memory[operand] : operand);
 	over += (int)(addr == DIRECT ? main_memory[operand] : operand);
 
+	#ifdef DEBUG
+	printDebug("ADD");
+	#endif
+
 	/* If overflow occurs, return false */
 	if (over == (int)machine.rA) {
 		machine.CR = getCondCode(machine.rA);
 		return true;
 	} else {
+		#ifdef DEBUG
+		fprintf(stderr, "!! OVERFLOW IN ADD()");
+		#endif
 		return false;
 	}
 }
@@ -99,11 +126,18 @@ bool SUB() {
 	machine.rA -= (addr == DIRECT ? main_memory[operand] : operand);
 	over -= (int)(addr == DIRECT ? main_memory[operand] : operand);
 
+	#ifdef DEBUG
+	printDebug("SUB");
+	#endif
+
 	/* If overflow occurs, return false */
 	if (over == (int)machine.rA) {
 		machine.CR = getCondCode(machine.rA);
 		return true;
 	} else {
+		#ifdef DEBUG
+		fprintf(stderr, "!! OVERFLOW IN SUB()");
+		#endif
 		return false;
 	}
 }
@@ -119,11 +153,18 @@ bool ADR() {
 	*reg += (addr == DIRECT ? main_memory[operand] : operand);
 	over += (int)(addr == DIRECT ? main_memory[operand] : operand);
 
+	#ifdef DEBUG
+	printDebug("ADR");
+	#endif
+
 	/* Effect condition code; return false if overflow */
 	if (over == (int)*reg) {
 		machine.CR = getCondCode(*reg);
 		return true;
 	} else {
+		#ifdef DEBUG
+		fprintf(stderr, "!! OVERFLOW IN ADR()");
+		#endif
 		return false;
 	}
 }
@@ -139,11 +180,18 @@ bool SUR() {
 	*reg -= (addr == DIRECT ? main_memory[operand] : operand);
 	over -= (int)(addr == DIRECT ? main_memory[operand] : operand);
 
+	#ifdef DEBUG
+	printDebug("SUR");
+	#endif
+
 	/* Effect condition code; return false if overflow */
 	if (over == (int)*reg) {
 		machine.CR = getCondCode(*reg);
 		return true;
 	} else {
+		#ifdef DEBUG
+		fprintf(stderr, "!! OVERFLOW IN SUR()");
+		#endif
 		return false;
 	}
 }
@@ -159,6 +207,9 @@ bool AND() {
 
 	machine.CR = getCondCode(*reg);
 
+	#ifdef DEBUG
+	printDebug("AND");
+	#endif
 	return true;
 }
 
@@ -173,6 +224,9 @@ bool IOR() {
 
 	machine.CR = getCondCode(*reg);
 
+	#ifdef DEBUG
+	printDebug("IOR");
+	#endif
 	return true;
 }
 
@@ -186,6 +240,9 @@ bool NOT() {
 
 	machine.CR = getCondCode(*reg);
 
+	#ifdef DEBUG
+	printDebug("NOT");
+	#endif
 	return true;
 }
 
@@ -210,6 +267,11 @@ bool JMP() {
 
 	/* Set program counter to new address */
 	machine.PC = jmpTo;
+
+	#ifdef DEBUG
+	if (getOpcode(machine.IR) == 9)
+		printDebug("JMP");
+	#endif
 	return true;
 }
 
@@ -217,6 +279,9 @@ bool JMP() {
 bool JEQ() {
 	if (machine.CR == EQL)
 		JMP();
+	#ifdef DEBUG
+	printDebug("JEQ");
+	#endif
 	return true;
 }
 
@@ -224,6 +289,9 @@ bool JEQ() {
 bool JGT() {
 	if (machine.CR == GRT)
 		JMP();
+	#ifdef DEBUG
+	printDebug("JGT");
+	#endif
 	return true;
 }
 
@@ -231,6 +299,9 @@ bool JGT() {
 bool JLT() {
 	if (machine.CR == LST)
 		JMP();
+	#ifdef DEBUG
+	printDebug("JLT");
+	#endif
 	return true;
 }
 
@@ -256,6 +327,9 @@ bool CMP() {
 		machine.CR = GRT;
 	}
 
+	#ifdef DEBUG
+	printDebug("CMP");
+	#endif
 	return true;
 }
 
@@ -264,6 +338,10 @@ bool CLR() {
 	short int *reg = getRegister();
 	*reg = 0;
 	machine.CR = 0;
+
+	#ifdef DEBUG
+	printDebug("CLR");
+	#endif
 	return true;
 }
 
@@ -276,6 +354,10 @@ bool HLT() {
 	machine.IR = 61440;
 	machine.PC = 0;
 	machine.CR = 0;
+
+	#ifdef DEBUG
+	printDebug("HLT");
+	#endif
 	return true;
 }
 
@@ -301,3 +383,33 @@ short int* getRegister() {
 		default: return &machine.rA; break;
 	}
 }
+
+#ifdef DEBUG
+void printDebug(char** op) {
+	short int oldPC = machine.PC - 1;
+	short int addr = getAddrMode(machine.IR);
+	short int code = getRegCode(machine.IR);
+	char reg = (code == 0 ? 'A' : code + '0');
+	short int operand = getOperand(machine.IR);
+	short int rA = machine.rA;
+	short int r1 = machine.r1;
+	short int r2 = machine.r2;
+	short int r3 = machine.r3;
+	short int IR = machine.IR; /* TODO: Convert this to hex or binary */
+	short int PC = machine.PC;
+	short int CR = machine.CR;
+	fprintf(stderr, "Instruction with opcode %s finished executing.\n", op);
+	fprintf(stderr, "\t0x%d: %s %d r%c %d\n", op, oldPC, addr, reg, operand);
+	fprintf(stderr, "\tDumping Registers:\n");
+	fprintf(stderr, "\trA: %d, r1: %d, r2: %d, r3: %d\n", rA, r1, r2, r3);
+	fprintf(stderr, "\tIR: %d, PC: %d, CR: %d\n", IR, PC, CR);
+}
+#endif
+
+/* Undefine debug flags if necessary */
+#ifdef DEBUG_VERBOSE
+	#undef DEBUG_VERBOSE
+#endif
+#ifdef DEBUG
+	#undef DEBUG
+#endif
