@@ -251,51 +251,26 @@ bool JMP()
 	return true;
 }
 
-/* Jump if rA is equal to the specified register */
+/* Check condition flag register; jump if appropriate */
 bool JEQ()
 {
-	short int operand;
-	switch (getRegCode(machine.IR)) {
-		case 1: operand = machine.r1; break;
-		case 2: operand = machine.r2; break;
-		case 3: operand = machine.r3; break;
-		default: return false; break;
-	}
-	if (machine.rA == operand)
+	if (machine.CR == EQL)
 		machine.PC = getOperand(machine.IR);
 	return true;
 }
 
-/* Jump if rA is greater than the specified register */
-/* TODO: Verify that the above statement is correct,
-	i.e. if the comparison should be rA < r? instead. */
+/* Check condition flag register; jump if appropriate */
 bool JGT()
 {
-	short int operand;
-	switch (getRegCode(machine.IR)) {
-		case 1: operand = machine.r1; break;
-		case 2: operand = machine.r2; break;
-		case 3: operand = machine.r3; break;
-		default: return false; break;
-	}
-	if (machine.rA > operand)
+	if (machine.CR == GRT)
 		machine.PC = getOperand(machine.IR);
 	return true;
 }
 
-/* Jump if rA is less than the specified register */
-/* TODO: Verify that the above statement is correct,
-	i.e. if the comparison should be rA > r? instead. */
+/* Check condition flag register; jump if appropriate */
 bool JLT()
 {
-	short int operand;
-	switch (getRegCode(machine.IR)) {
-		case 1: operand = machine.r1; break;
-		case 2: operand = machine.r2; break;
-		case 3: operand = machine.r3; break;
-		default: return false; break;
-	}
-	if (machine.rA < operand)
+	if (machine.CR == LST)
 		machine.PC = getOperand(machine.IR);
 	return true;
 }
