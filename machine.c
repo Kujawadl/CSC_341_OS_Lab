@@ -186,7 +186,19 @@ bool SUR() {
 		return false;
 }
 
-bool AND() {return false;}
+/* The And fuction will do the bitwise operation AND using the specified */
+/* register, and the address of a value provided in the arguments */
+bool AND() {
+	short int *reg = getRegister(getRegCode(machine.IR));
+	short int operand =  main_memory[getOperand(machine.IR)];
+	short int result = (*reg & operand);
+
+	*reg = result; // set the new result into the register specified
+
+	machine.CR = getCondCode(*reg);
+
+	return true;
+}
 bool IOR() {return false;}
 
 /* This is the bitwise NOT, or compliment function. This performs logical */
@@ -253,48 +265,38 @@ bool JLT() {
 /* I.E. It's always of the style of (reg < instruction) */
 bool CMP() {
 
-	short int reg = getRegCode(machine.IR);
+	short int *reg = getRegister(getRegCode(machine.IR));
 	short int operand = getOperand(machine.IR);
 	short int addr = getAddrMode(machine.IR);
-	short int registerValue;
-	switch (reg) {
-		case 0:
-			registerValue = machine.rA;
-			break;
-		case 1:
-			registerValue = machine.r1;
-			break;
-		case 2:
-			registerValue = machine.r2;
-			break;
-		case 3:
-			registerValue = machine.r3;
-			break;
-		default:
-			return false;
-			break;
-	}
+
 	if (addr == DIRECT) {
-		if (registerValue < main_memory[operand]) {
+		if (*reg < main_memory[operand]) {
 			machine.CR = LST;
-		} else if (registerValue == main_memory[operand]) {
+		} else if (*reg == main_memory[operand]) {
 			machine.CR = EQL;
-		} else if (registerValue > main_memory[operand]) {
+		} else if (*reg > main_memory[operand]) {
 			machine.CR = GRT;
 		}
 	} else if (addr == IMMEDIATE) {
-		if (registerValue < operand) {
+		if (*reg < operand) {
 			machine.CR = LST;
-		} else if (registerValue == operand) {
+		} else if (*reg == operand) {
 			machine.CR = EQL;
-		} else if (registerValue > operand) {
+		} else if (*reg > operand) {
 			machine.CR = GRT;
 		}
 	}
 
 	return true;
 }
-bool CLR() {return false;}
+
+/* Will clear the specified regiester with 0s */
+bool CLR() {
+	short int *reg = getRegister(getRegCode(machine.IR));
+	*reg = 0;
+	machine.CR = 0;
+	return true;
+}
 bool HLT() {return false;}
 
 /* Determine if a resultant value is positive, negative, or 0 */
