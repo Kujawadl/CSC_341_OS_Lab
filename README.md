@@ -72,6 +72,7 @@ Markdown supports HTML code and comments as well.
     $("#includedContent").load("machine.h");
   });
   document.write('</code></pre>');
+</script>
 
 <a name="listing_machine_c" />
 ### machine.c
