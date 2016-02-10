@@ -49,7 +49,6 @@ Markdown supports HTML code and comments as well.
     - [makefile](#listing_makefile)
   - [Concluding Remarks](#conclusions)
 
-<a name="overview" />  
 ## Project overview
 
 <a name="overview_machine" />
