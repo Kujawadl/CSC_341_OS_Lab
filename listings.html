@@ -16,13 +16,15 @@
     <h2><a id="project-listing" class="anchor" href="#project-listing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Project Listing</h2>
     <script src="jquery.js"></script>
     <script>
-      $("#machine_h_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/machine.h");
-      $("#machine_c_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/machine.c");
-      $("#os_h_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/os.h");
-      $("#os_c_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/os.c");
-      $("#part1_dat_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/part1.dat");
-      $("#part1x_dat_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/part1x.dat");
-      $("#makefile_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/makefile");
+      $(document).ready(function(){
+        $("#machine_h_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/machine.h");
+        $("#machine_c_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/machine.c");
+        $("#os_h_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/os.h");
+        $("#os_c_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/os.c");
+        $("#part1_dat_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/part1.dat");
+        $("#part1x_dat_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/part1x.dat");
+        $("#makefile_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/makefile");
+      });
     </script>
 
     <p><a name="listing_machine_h"></a></p>
