@@ -26,16 +26,37 @@ void scheduler()
             // do stuff
             clock++;
             if (currentUser.userNum > 0) {
-                printf("USER %d > ", currentUser.userNum);
+                printf("USER%d > ", currentUser.userNum);
             } else {
                 printf("SYS > ");
             }
+
+						char* input;
+						gets(input);
+						input = strlwr(inpu);
+
+						if (strcmp(input, "run") == 0) {
+							if (currentUser.userNum > 0) {
+
+							} else {
+
+							}
+						} else if (strcmp(input, "dmp") = 0) {
+
+						} else if (strcmp(input, "nop") = 0) {
+
+						} else if (strcmp(input, "stp") = 0) {
+
+						} else {
+
+						}
 
 
         }
 
         currentUser.userRegister = machine;
         schedulerQueue.push(&schedulerQueue, &currentUser);
+				switchTime = clock + 3;
 
     }
 

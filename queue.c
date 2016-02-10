@@ -50,7 +50,7 @@ Node pop (Queue* queue) {
 	queue->head = head->next;
 	queue->size--;
 	// free the memory of original head
-	free(head);
+	//free(head);
 	return current;
 }
 
