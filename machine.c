@@ -24,7 +24,7 @@ bool interpreter() {
 		case 12: return JLT(); break;
 		case 13: return CMP(); break;
 		case 14: return CLR(); break;
-		case 15: return HLT(); break;
+		case 15: return HLT(true); break;
 		default: return false; break;
 	}
 }
@@ -161,7 +161,20 @@ bool AND() {
 
 	return true;
 }
-bool IOR() {return false;}
+
+/* The IOR fuction will do the bitwise operation Or using the specified */
+/* register, and the address of a value provided in the arguments */
+bool IOR() {
+	short int *reg = getRegister(getRegCode(machine.IR));
+	short int operand =  main_memory[getOperand(machine.IR)];
+	short int result = (*reg | operand);
+
+	*reg = result; // set the new result into the register specified
+
+	machine.CR = getCondCode(*reg);
+
+	return true;
+}
 
 /* This is the bitwise NOT, or compliment function. This performs logical */
 /* negation on each bit, forming the ones' complement of the given binary */
@@ -203,21 +216,21 @@ bool JMP() {
 /* Check condition flag register; jump if appropriate */
 bool JEQ() {
 	if (machine.CR == EQL)
-		machine.PC = getOperand(machine.IR);
+		JMP();
 	return true;
 }
 
 /* Check condition flag register; jump if appropriate */
 bool JGT() {
 	if (machine.CR == GRT)
-		machine.PC = getOperand(machine.IR);
+		JMP();
 	return true;
 }
 
 /* Check condition flag register; jump if appropriate */
 bool JLT() {
 	if (machine.CR == LST)
-		machine.PC = getOperand(machine.IR);
+		JMP();
 	return true;
 }
 
@@ -230,23 +243,17 @@ bool CMP() {
 	short int *reg = getRegister(getRegCode(machine.IR));
 	short int operand = getOperand(machine.IR);
 	short int addr = getAddrMode(machine.IR);
+	short int left_operand, right_operand;
 
-	if (addr == DIRECT) {
-		if (*reg < main_memory[operand]) {
-			machine.CR = LST;
-		} else if (*reg == main_memory[operand]) {
-			machine.CR = EQL;
-		} else if (*reg > main_memory[operand]) {
-			machine.CR = GRT;
-		}
-	} else if (addr == IMMEDIATE) {
-		if (*reg < operand) {
-			machine.CR = LST;
-		} else if (*reg == operand) {
-			machine.CR = EQL;
-		} else if (*reg > operand) {
-			machine.CR = GRT;
-		}
+	left_operand = *reg;
+	right_operand = (addr == DIRECT ? main_memory[operand] : operand);
+
+	if (left_operand < right_operand) {
+		machine.CR = LST;
+	} else if (left_operand == right_operand) {
+		machine.CR = EQL;
+	} else if (left_operand > right_operand) {
+		machine.CR = GRT;
 	}
 
 	return true;
@@ -260,7 +267,9 @@ bool CLR() {
 	return true;
 }
 
-bool HLT(bool exit_clean) {return exit_clean;}
+bool HLT(bool exit_clean) {
+	return exit_clean;
+}
 
 
 /* Determine if a resultant value is positive, negative, or 0 */
