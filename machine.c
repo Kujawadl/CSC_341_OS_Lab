@@ -5,8 +5,7 @@ machine_registers machine = {0, 0, 0, 0, 0, 0, 0};
 
 /* Uses value in IR to determine course of action */
 /* Returns false if errors */
-bool interpreter()
-{
+bool interpreter() {
 	machine.PC++; /* Increment Program Counter */
 	short int op = getOpcode(machine.IR);
 	switch (op) {
@@ -32,35 +31,30 @@ bool interpreter()
 
 /* Retrieves the opcode */
 /* Returns an int 0-15 */
-short int getOpcode(short int num)
-{
+short int getOpcode(short int num) {
 	return (num & 61440)>>12;
 }
 
 /* Retrieves the address mode */
 /* Returns 0 or 1 */
-short int getAddrMode(short int num)
-{
+short int getAddrMode(short int num) {
 	return (num & 2048)>>11;
 }
 
 /* Retrieves the register code */
 /* Returns an int 0-3 */
-short int getRegCode(short int num)
-{
+short int getRegCode(short int num) {
 	return (num & 1792)>>8;
 }
 
 /* Retrieves the operand */
 /* Returns an int 0-255 */
-short int getOperand(short int num)
-{
+short int getOperand(short int num) {
 	return (num & 255);
 }
 
 /* Loads a value into a register */
-bool LOD()
-{
+bool LOD() {
 	short int addr = getAddrMode(machine.IR);
 	short int operand = getOperand(machine.IR);
 	short int reg = getRegCode(machine.IR);
@@ -88,8 +82,7 @@ bool LOD()
 }
 
 /* Stores a value from a register to a memory location */
-bool STO()
-{
+bool STO() {
 	short int reg = getRegCode(machine.IR);
 	switch (reg) {
 		case 0: main_memory[getOperand(machine.IR)] = machine.rA; break;
@@ -103,8 +96,7 @@ bool STO()
 
 /* Adds the input to rA */
 /* TODO: Verify overflow checking */
-bool ADD()
-{
+bool ADD() {
 	short int operand = getOperand(machine.IR);
 	short int addr = getAddrMode(machine.IR);
 	int over = (int)machine.rA;
@@ -120,8 +112,7 @@ bool ADD()
 
 /* Subtracts the input from rA */
 /* TODO: Verify overflow checking */
-bool SUB()
-{
+bool SUB() {
 	short int operand = getOperand(machine.IR);
 	short int addr = getAddrMode(machine.IR);
 	int over = (int)machine.rA;
@@ -135,10 +126,9 @@ bool SUB()
 		return false;
 }
 
-/* Adds the contents of the specified register to rA */
+/* Adds the input to the specified register */
 /* TODO: Verify overflow checking */
-bool ADR()
-{
+bool ADR() {
 	short int reg = getOperand(machine.IR);
 	int over = (int)machine.rA;
 	switch (reg) {
@@ -166,15 +156,14 @@ bool ADR()
 		return false;
 }
 
-/* Subtracts the contents of the specified register from rA */
+/* Subtracts the input from the specified register */
 /* TODO: Verify overflow checking */
-bool SUR()
-{
-	short int reg = getOperand(machine.IR);
+bool SUR() {
+	short int *reg;
 	int over = (int)machine.rA;
-	switch (reg) {
+	switch (getOperand(machine.IR)) {
 		case 1:
-			machine.rA -= machine.r1;
+			reg = &
 			over -= (int)machine.r1;
 			break;
 		case 2:
@@ -205,24 +194,11 @@ bool IOR() {return false;}
 /* value. Bits that are 0 become 1, and those that are 1 become 0. */
 bool NOT() {
 
-	short int reg = getRegCode(machine.IR);
-	switch (reg) {
-		case 0:
-			machine.rA = ~machine.rA;
-			break;
-		case 1:
-			machine.r1 = ~machine.r1;
-			break;
-		case 2:
-			machine.r2 = ~machine.r2;
-			break;
-		case 3:
-			machine.r3 = ~machine.r3;
-			break;
-		default:
-			return false;
-			break;
-	}
+	short int *reg = getRegister(getRegCode(machine.IR));
+	*reg = ~*reg;
+
+	machine.CR = getCondCode(*reg);
+
 	return true;
 }
 
@@ -231,8 +207,7 @@ bool NOT() {
 	is actually only using 8 bits. If the 8 highest-order bits contain anything,
 	that would be a reference to a memory location that does not exist (PC: 8bits)
 	and thus the JMP would return an error (essentially OutOfBounds) */
-bool JMP()
-{
+bool JMP() {
 	short int addr = getAddrMode(machine.IR)
 	short int jmpTo;
 	if (addr == DIRECT) {
@@ -252,24 +227,21 @@ bool JMP()
 }
 
 /* Check condition flag register; jump if appropriate */
-bool JEQ()
-{
+bool JEQ() {
 	if (machine.CR == EQL)
 		machine.PC = getOperand(machine.IR);
 	return true;
 }
 
 /* Check condition flag register; jump if appropriate */
-bool JGT()
-{
+bool JGT() {
 	if (machine.CR == GRT)
 		machine.PC = getOperand(machine.IR);
 	return true;
 }
 
 /* Check condition flag register; jump if appropriate */
-bool JLT()
-{
+bool JLT() {
 	if (machine.CR == LST)
 		machine.PC = getOperand(machine.IR);
 	return true;
@@ -324,3 +296,24 @@ bool CMP() {
 }
 bool CLR() {return false;}
 bool HLT() {return false;}
+
+/* Determine if a resultant value is positive, negative, or 0 */
+/* Takes a short integer, returns a condition code (short integer) */
+short int getCondCode(short int x) {
+	if (x == 0)
+		return EQL;
+	else if (x > 0)
+		return GRT;
+	else if (x < 0)
+		return LST;
+}
+
+/* Take a register code and return a pointer to that register */
+short int* getRegister(short int regCode) {
+	switch (regCode) {
+		case 0: return &machine.rA; break;
+		case 1: return &machine.r1; break;
+		case 2: return &machine.r2; break;
+		case 3: return &machine.r3; break;
+	}
+}
