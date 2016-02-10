@@ -41,15 +41,15 @@ void scheduler()
 							} else {
 								printf("Invalid command for system\n");
 							}
-						} else if (strcmp(input, "dmp") = 0) {
+						} else if (strcmp(input, "dmp") == 0) {
 							if (currentUser.userNum == 0) {
 								dumpRegs(false);
 							} else {
 								printf("Invalid command for users\n");
 							}
-						} else if (strcmp(input, "nop") = 0) {
+						} else if (strcmp(input, "nop") == 0) {
 							break;
-						} else if (strcmp(input, "stp") = 0) {
+						} else if (strcmp(input, "stp") == 0) {
 							if (currentUser.userNum == 0) {
 								system.exit(0);
 							} else {
