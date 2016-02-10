@@ -37,7 +37,7 @@ short int getOpcode(short int num) {
 	short int ret = (num & 61440)>>12;
 
 	#ifdef DEBUG_VERBOSE
-	fprintf("In getOpCode(). IR: %d, Opcode: %d", machine.IR, ret);
+	fprintf(stderr, "In getOpCode(). IR: %d, Opcode: %d", machine.IR, ret);
 	#endif
 
 	return ret;
@@ -49,7 +49,7 @@ short int getAddrMode(short int num) {
 	short int ret = (num & 2048)>>11;
 
 	#ifdef DEBUG_VERBOSE
-	fprintf("In getAddrMode(). IR: %d, Opcode: %d", machine.IR, ret);
+	fprintf(stderr, "In getAddrMode(). IR: %d, Opcode: %d", machine.IR, ret);
 	#endif
 
 	return ret;
@@ -61,7 +61,7 @@ short int getRegCode(short int num) {
 	short int ret = (num & 1792)>>8;
 
 	#ifdef DEBUG_VERBOSE
-	fprintf("In getRegCode(). IR: %d, Opcode: %d", machine.IR, ret);
+	fprintf(stderr, "In getRegCode(). IR: %d, Opcode: %d", machine.IR, ret);
 	#endif
 
 	return ret;
@@ -73,7 +73,7 @@ short int getOperand(short int num) {
 	short int ret = (num & 255);
 
 	#ifdef DEBUG_VERBOSE
-	fprintf("In getOpCode(). IR: %d, Opcode: %d", machine.IR, ret);
+	fprintf(stderr, "In getOpCode(). IR: %d, Opcode: %d", machine.IR, ret);
 	#endif
 
 	return ret;
@@ -391,7 +391,7 @@ short int* getRegister() {
 	short int regCode = getRegCode(machine.IR); /* Guaranteed to return 0-3 */
 
 	#ifdef DEBUG_VERBOSE
-	fprintf("In getRegister(). IR: %d, Regcode: %d", machine.IR, regCode);
+	fprintf(stderr, "In getRegister(). IR: %d, Regcode: %d", machine.IR, regCode);
 	#endif
 
 	switch (regCode) {
