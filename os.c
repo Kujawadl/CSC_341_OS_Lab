@@ -19,7 +19,7 @@ void scheduler()
 	/* Scheduler code */
     while (true) {
 
-        Node currentUser = schedulerQueue.pop();
+        Node currentUser = schedulerQueue.pop(&schedulerQueue);
         machine = currentUser.userRegister;
 
         while (clock < switchTime) {
@@ -31,11 +31,11 @@ void scheduler()
                 printf("SYS > ");
             }
 
-            
+
         }
 
         currentUser.userRegister = machine;
-        schedulerQueue.push(currentUser);
+        schedulerQueue.push(&schedulerQueue, &currentUser);
 
     }
 
