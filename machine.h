@@ -34,20 +34,15 @@
 /* Define boolean type */
 typedef enum { false, true } bool;
 
-/* Define user registers type */
-/* user_registers is used to save/restore registers on user switch */
-typedef struct {
-	short int r1, r2, r3, rA, IR, PC:8;
-} user_registers;
 /* Define machine registers type */
 /* Machine register type also has a condition code register */
 typedef struct {
 	short int r1, r2, r3, rA, IR, PC:8;
 	unsigned short int CR:3;
-} machine_registers;
+} registers;
 
 /* Declare and initialize machine registers */
-extern machine_registers machine;
+extern registers machine;
 
 /* Declare main memory */
 short int main_memory[256];

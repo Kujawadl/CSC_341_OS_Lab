@@ -6,9 +6,9 @@
 #ifndef OS
 #define OS
 
-user_registers U1 = {0, 0, 0, 0, 61440, 0};
-user_registers U2 = {0, 0, 0, 0, 61440, 0};
-user_registers SYS;
+extern registers U1;
+extern registers U2;
+extern registers SYS;
 /*
 Note: U1 & U2 instruction registers contain 61440 (HLT)
 while user is not running any program. The run function

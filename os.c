@@ -1,5 +1,9 @@
 #include "os.h"
 
+registers U1 = {0, 0, 0, 0, 61440, 0, 0};
+registers U2 = {0, 0, 0, 0, 61440, 0, 0};
+registers SYS = {0, 0, 0, 0, 61440, 0, 0};
+
 void dump(bool dumpRegs)
 {
 	if (dumpRegs == true)
@@ -34,9 +38,9 @@ void readFile(){
     char str[32]; /* current line from file, had to increase it size... */
     int i = 0; /* index of main_memory */
     while(fgets(str, 18, ifp)){ /* plus 2 for new lines. */
-        /* printf("%s\t", str); */ /* DEBUG */
+         printf("%s\t", str);  /* DEBUG */
         main_memory[i] = (short)(strtoul(str, NULL, 2));
-        /* printf("%d\n", main_memory[i]); */ /* DEBUG */
+         printf("%d\n", main_memory[i]);  /* DEBUG */
         i++;
     }
     fclose(ifp);
