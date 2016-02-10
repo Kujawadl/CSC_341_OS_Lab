@@ -24,7 +24,7 @@ bool interpreter() {
 		case 12: return JLT(); break;
 		case 13: return CMP(); break;
 		case 14: return CLR(); break;
-		case 15: return HLT(true); break;
+		case 15: return HLT(); break;
 		default: return false; break;
 	}
 }
@@ -267,8 +267,16 @@ bool CLR() {
 	return true;
 }
 
-bool HLT(bool exit_clean) {
-	return exit_clean;
+/* Clears all registers; reset IR to HLT (61440) */
+bool HLT() {
+	machine.rA = 0;
+	machine.r1 = 0;
+	machine.r2 = 0;
+	machine.r3 = 0;
+	machine.IR = 61440;
+	machine.PC = 0;
+	machine.CR = 0;
+	return true;
 }
 
 
