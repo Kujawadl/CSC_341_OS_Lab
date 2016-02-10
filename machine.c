@@ -34,25 +34,49 @@ bool interpreter() {
 /* Retrieves the opcode */
 /* Returns an int 0-15 */
 short int getOpcode(short int num) {
-	return (num & 61440)>>12;
+	short int ret = (num & 61440)>>12;
+
+	#ifdef DEBUG_VERBOSE
+	fprintf("In getOpCode(). IR: %d, Opcode: %d", machine.IR, ret);
+	#endif
+
+	return ret;
 }
 
 /* Retrieves the address mode */
 /* Returns 0 or 1 */
 short int getAddrMode(short int num) {
-	return (num & 2048)>>11;
+	short int ret = (num & 2048)>>11;
+
+	#ifdef DEBUG_VERBOSE
+	fprintf("In getAddrMode(). IR: %d, Opcode: %d", machine.IR, ret);
+	#endif
+
+	return ret;
 }
 
 /* Retrieves the register code */
 /* Returns an int 0-3 */
 short int getRegCode(short int num) {
-	return (num & 1792)>>8;
+	short int ret = (num & 1792)>>8;
+
+	#ifdef DEBUG_VERBOSE
+	fprintf("In getRegCode(). IR: %d, Opcode: %d", machine.IR, ret);
+	#endif
+
+	return ret;
 }
 
 /* Retrieves the operand */
 /* Returns an int 0-255 */
 short int getOperand(short int num) {
-	return (num & 255);
+	short int ret = (num & 255);
+
+	#ifdef DEBUG_VERBOSE
+	fprintf("In getOpCode(). IR: %d, Opcode: %d", machine.IR, ret);
+	#endif
+
+	return ret;
 }
 
 /* Loads a value into a register */
@@ -365,6 +389,11 @@ unsigned short int getCondCode(short int x) {
 /* Take a register code and return a pointer to that register */
 short int* getRegister() {
 	short int regCode = getRegCode(machine.IR); /* Guaranteed to return 0-3 */
+
+	#ifdef DEBUG_VERBOSE
+	fprintf("In getRegister(). IR: %d, Regcode: %d", machine.IR, regCode);
+	#endif
+
 	switch (regCode) {
 		case 1: return &machine.r1; break;
 		case 2: return &machine.r2; break;
