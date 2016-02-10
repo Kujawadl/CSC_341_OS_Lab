@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>CSC 341 OS Lab by Kujawadl</title>
+
+    <link rel="stylesheet" href="{{ site.path }}/stylesheets/styles.css" type="text/css" />
+    <link rel="stylesheet" href="{{ site.path }}/stylesheets/github-light.css" type="text/css" />
+    <link rel="stylesheet" href="{{ site.path }}/stylesheets/shCore.css" type="text/css" />
+    <link rel="stylesheet" href="{{ site.path }}/stylesheets/shThemeDefault.css" type="text/css" />
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="{{ site.path }}/javascripts/shCore.js"></script>
+    <script src="{{ site.path }}/javascripts/shBrushCpp.js"></script>
+  </head>
+  <body>
+    {{ content }}
+
+    <h2><a id="project-listing" class="anchor" href="#project-listing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Project Listing</h2>
+    <script>
+      $(document).ready(function(){
+        $("#machine_h_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/machine.h");
+        $("#machine_c_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/machine.c");
+        $("#os_h_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/os.h");
+        $("#os_c_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/os.c");
+        $("#part1_dat_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/part1.dat");
+        $("#part1x_dat_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/part1x.dat");
+        $("#makefile_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/makefile");
+        SyntaxHighlighter.all();
+      });
+    </script>
+
+    <p><a name="listing_machine_h"></a></p>
+    <h3><a id="machineh" class="anchor" href="#machineh" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>machine.h</h3>
+    <pre id="machine_h_code" class="brush: c; toolbar: false; tab-size: 2; ruler: false"></pre>
+    <p><a name="listing_machine_c"></a></p>
+    <h3><a id="machinec" class="anchor" href="#machinec" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>machine.c</h3>
+    <pre id="machine_c_code" class="brush: c; toolbar: false; tab-size: 2; ruler: false"></pre>
+    <p><a name="listing_os_h"></a></p>
+    <h3><a id="osh" class="anchor" href="#osh" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>os.h</h3>
+    <pre id="os_h_code" class="brush: c; toolbar: false; tab-size: 2; ruler: false"></pre>
+    <p><a name="listing_os_c"></a></p>
+    <h3><a id="osc" class="anchor" href="#osc" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>os.c</h3>
+    <pre id="os_c_code" class="brush: c; toolbar: false; tab-size: 2; ruler: false"></pre>
+    <p><a name="listing_part1_dat"></a></p>
+    <h3><a id="part1dat" class="anchor" href="#part1dat" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>part1.dat</h3>
+    <pre id="part1_dat_code" class="brush: c; toolbar: false; tab-size: 2; ruler: false"></pre>
+    <p><a name="listing_part1x_dat"></a></p>
+    <h3><a id="part1xdat" class="anchor" href="#part1xdat" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>part1x.dat</h3>
+    <pre id="part1x_dat_code" class="brush: c; toolbar: false; tab-size: 2; ruler: false"></pre>
+    <p><a name="listing_makefile"></a></p>
+    <h3><a id="makefile" class="anchor" href="#makefile" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>makefile</h3>
+    <pre id="makefile_code" class="brush: c; toolbar: false; tab-size: 2; ruler: false"></pre>
+  </body>
+</html>

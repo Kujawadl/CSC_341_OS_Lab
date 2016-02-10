@@ -1,3 +1,7 @@
+---
+layout: index
+---
+
 <!--
 Quick overview of .md (markdown) syntax:
 *text* = italics
@@ -94,3 +98,9 @@ Markdown supports HTML code and comments as well.
 
 <a name="conclusions" />
 ## Concluding Remarks
+
+
+```c
+#include <stdio.h>
+
+```
