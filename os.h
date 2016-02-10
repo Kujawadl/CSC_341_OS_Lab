@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "machine.h"
 
@@ -26,5 +27,7 @@ void scheduler();
 
 /* Main function (O/S Initialization) */
 int main(int argc, char** argv);
+
+void readFile();
 
 #endif
