@@ -57,40 +57,17 @@ short int getOperand(short int num) {
 bool LOD() {
 	short int addr = getAddrMode(machine.IR);
 	short int operand = getOperand(machine.IR);
-	short int reg = getRegCode(machine.IR);
+	short int *reg = getRegister(getRegCode(machine.IR));
 
-	if (addr == DIRECT) {
-		switch (reg) {
-			case 0: machine.rA = main_memory[getOperand(machine.IR)]; break;
-			case 1: machine.r1 = main_memory[getOperand(machine.IR)]; break;
-			case 2: machine.r2 = main_memory[getOperand(machine.IR)]; break;
-			case 3: machine.r3 = main_memory[getOperand(machine.IR)]; break;
-			default: return false; break;
-		};
-	} else if (addr == IMMEDIATE) {
-		switch (reg) {
-			case 0: machine.rA = getOperand(machine.IR); break;
-			case 1: machine.r1 = getOperand(machine.IR); break;
-			case 2: machine.r2 = getOperand(machine.IR); break;
-			case 3: machine.r3 = getOperand(machine.IR); break;
-			default: return false; break;
-		};
-	} else {
-		return false;
-	}
+	*reg = (addr == DIRECT ? main_memory[operand] : operand);
+
 	return true;
 }
 
 /* Stores a value from a register to a memory location */
 bool STO() {
-	short int reg = getRegCode(machine.IR);
-	switch (reg) {
-		case 0: main_memory[getOperand(machine.IR)] = machine.rA; break;
-		case 1: main_memory[getOperand(machine.IR)] = machine.r1; break;
-		case 2: main_memory[getOperand(machine.IR)] = machine.r2; break;
-		case 3: main_memory[getOperand(machine.IR)] = machine.r3; break;
-		default: return false; break;
-	};
+	short int *reg = getRegister(getRegCode(machine.IR));
+	main_memory[getOperand(machine.IR)] = *reg;
 	return true;
 }
 
