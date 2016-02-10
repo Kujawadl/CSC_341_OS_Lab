@@ -281,6 +281,53 @@ bool JLT()
 		machine.PC = getOperand(machine.IR);
 	return true;
 }
-bool CMP() {return false;}
+
+/* This is the compare function, it compares a */
+/* direct or indirect value to the specified   */
+/* register, it will always be register oriented */
+/* I.E. It's always of the style of (reg < instruction) */
+bool CMP() {
+
+	short int reg = getRegCode(machine.IR);
+	short int operand = getOperand(machine.IR);
+	short int addr = getAddrMode(machine.IR);
+	short int registerValue;
+	switch (reg) {
+		case 0:
+			registerValue = machine.rA;
+			break;
+		case 1:
+			registerValue = machine.r1;
+			break;
+		case 2:
+			registerValue = machine.r2;
+			break;
+		case 3:
+			registerValue = machine.r3;
+			break;
+		default:
+			return false;
+			break;
+	}
+	if (addr == DIRECT) {
+		if (registerValue < main_memory[operand]) {
+			machine.CR = LST;
+		} else if (registerValue == main_memory[operand]) {
+			machine.CR = EQL;
+		} else if (registerValue > main_memory[operand]) {
+			machine.CR = GRT;
+		}
+	} else if (addr == IMMEDIATE) {
+		if (registerValue < operand) {
+			machine.CR = LST;
+		} else if (registerValue == operand) {
+			machine.CR = EQL;
+		} else if (registerValue > operand) {
+			machine.CR = GRT;
+		}
+	}
+
+	return true;
+}
 bool CLR() {return false;}
 bool HLT() {return false;}
