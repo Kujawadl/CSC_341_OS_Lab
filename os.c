@@ -31,8 +31,8 @@ void scheduler()
                 printf("SYS > ");
             }
 
-						char* input;
-						gets(input);
+						char input[3];
+						fgets(input, sizeof(input), stdin);
 
 						if (strcasecmp(input, "run") == 0) {
 							if (currentUser.userNum > 0) {
