@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "machine.h"
+#include "queue.c"
 
 #ifndef OS
 #define OS
@@ -9,6 +10,10 @@
 extern registers U1;
 extern registers U2;
 extern registers SYS;
+
+Queue schedulerQueue;
+int clock;
+int switchTime;
 /*
 Note: U1 & U2 instruction registers contain 61440 (HLT)
 while user is not running any program. The run function
@@ -29,5 +34,7 @@ void scheduler();
 int main(int argc, char** argv);
 
 void readFile();
+
+void init();
 
 #endif

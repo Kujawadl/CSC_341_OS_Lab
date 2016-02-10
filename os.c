@@ -17,14 +17,58 @@ void dump(bool dumpRegs)
 void scheduler()
 {
 	/* Scheduler code */
+    while (true) {
+
+        Node currentUser = schedulerQueue.pop();
+        machine = currentUser.userRegister;
+
+        while (clock < switchTime) {
+            // do stuff
+            clock++;
+            if (currentUser.userNum > 0) {
+                printf("USER %d > ", currentUser.userNum);
+            } else {
+                printf("SYS > ");
+            }
+
+            
+        }
+
+        currentUser.userRegister = machine;
+        schedulerQueue.push(currentUser);
+
+    }
+
 }
 
 int main(int argc, char** argv)
 {
 	/* Initialize main_memory with given data */
-	readFile();
-
+	readFile(); // read instructions into main_memory
+    init(); // do things with the things
+    scheduler(); // call the scheduler
 	/* Call scheduler */
+}
+
+void init(){
+
+    // queue schedulerQueue = createQueue();
+
+    Queue schedulerQueue = createQueue();
+    Node sys = { .userNum = 0, .next = NULL, .userRegister = {0, 0, 0, 0, 61440, 0, 0} };
+    Node usr1 = { .userNum = 1, .next = NULL, .userRegister = {0, 0, 0, 0, 61440, 0, 0} };
+    Node usr2 = { .userNum = 2, .next = NULL, .userRegister = {0, 0, 0, 0, 61440, 0, 0} };
+
+
+    schedulerQueue.push(&schedulerQueue, &usr1);
+    schedulerQueue.push(&schedulerQueue, &usr2);
+    schedulerQueue.push(&schedulerQueue, &sys);
+
+    // intialize the clock to zero
+    clock = 0;
+    // intialize switch time to clock+3, this will be the next point at which
+    //  users are changed.
+    switchTime=clock+3;
 }
 
 void readFile(){
