@@ -31,11 +31,12 @@ typedef struct {
 /* Define machine registers type */
 /* Machine register type also has a condition code register */
 typedef struct {
-	short int r1, r2, r3, rA, IR, PC:8, CR:3;
+	short int r1, r2, r3, rA, IR, PC:8;
+	unsigned short int CR:3;
 } machine_registers;
 
 /* Declare and initialize machine registers */
-extern registers machine;
+extern machine_registers machine;
 
 /* Declare main memory */
 short int main_memory[256];
@@ -77,11 +78,7 @@ bool CMP();
 bool CLR();
 bool HLT();
 
-/* Condition codes unneeded outside hardware */
-#undef GRT
-#undef LST
-#undef EQL
-#undef GEQ
-#undef LEQ
+unsigned short int getCondCode(short int);
+short int* getRegister();
 
 #endif
