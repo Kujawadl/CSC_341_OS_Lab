@@ -39,7 +39,7 @@ Markdown supports HTML code and comments as well.
     - [OS](#os)
     - [Difficulties Encountered](#difficulties-encountered)
   - [Verification](#verification)
-  - [Project Listing](#listing)
+  - [Project Listing](#project-listing)
     - [machine.h](#listing_machine_h)
     - [machine.c](#listing_machine_c)
     - [os.h](#listing_os_h)
