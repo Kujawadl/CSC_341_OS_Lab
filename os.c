@@ -33,25 +33,24 @@ void scheduler()
 
 						char* input;
 						gets(input);
-						input = strlwr(input);
 
-						if (strcmp(input, "run") == 0) {
+						if (strcasecmp(input, "run") == 0) {
 							if (currentUser.userNum > 0) {
 								interpreter();
 							} else {
 								printf("Invalid command for system\n");
 							}
-						} else if (strcmp(input, "dmp") == 0) {
+						} else if (strcasecmp(input, "dmp") == 0) {
 							if (currentUser.userNum == 0) {
-								dumpRegs(false);
+								dump(false);
 							} else {
 								printf("Invalid command for users\n");
 							}
-						} else if (strcmp(input, "nop") == 0) {
+						} else if (strcasecmp(input, "nop") == 0) {
 							break;
-						} else if (strcmp(input, "stp") == 0) {
+						} else if (strcasecmp(input, "stp") == 0) {
 							if (currentUser.userNum == 0) {
-								system.exit(0);
+								exit(EXIT_SUCCESS);
 							} else {
 								printf("Invalid command for users\n");
 							}
