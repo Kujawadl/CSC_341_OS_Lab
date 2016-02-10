@@ -103,7 +103,8 @@ int main(int argc, char** argv)
 
 void init(){
 	/* Initialize main_memory */
-	for (int i = 0; i < 256; i++) {
+	int i;
+	for (i = 0; i < 256; i++) {
 		main_memory[i] = 0;
 	}
 
