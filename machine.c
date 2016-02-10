@@ -2,17 +2,6 @@
 #include <stdio.h>
 #include <string.h>
 
-/* Debugging flags */
-#define DEBUG
-#define DEBUG_VERBOSE
-
-/* If DEBUG_VERBOSE, then DEBUG */
-#ifdef DEBUG_VERBOSE
-	#ifndef DEBUG
-		#define DEBUG
-	#endif
-#endif
-
 /* Initialize machine registers */
 machine_registers machine = {0, 0, 0, 0, 0, 0, 0};
 
@@ -385,7 +374,7 @@ short int* getRegister() {
 }
 
 #ifdef DEBUG
-void printDebug(char** op) {
+void printDebug(char* op) {
 	short int oldPC = machine.PC - 1;
 	short int addr = getAddrMode(machine.IR);
 	short int code = getRegCode(machine.IR);
@@ -399,7 +388,7 @@ void printDebug(char** op) {
 	short int PC = machine.PC;
 	short int CR = machine.CR;
 	fprintf(stderr, "Instruction with opcode %s finished executing.\n", op);
-	fprintf(stderr, "\t0x%d: %s %d r%c %d\n", op, oldPC, addr, reg, operand);
+	fprintf(stderr, "\t0x%d: %s %d r%c %d\n", oldPC, op, addr, reg, operand);
 	fprintf(stderr, "\tDumping Registers:\n");
 	fprintf(stderr, "\trA: %d, r1: %d, r2: %d, r3: %d\n", rA, r1, r2, r3);
 	fprintf(stderr, "\tIR: %d, PC: %d, CR: %d\n", IR, PC, CR);

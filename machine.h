@@ -1,6 +1,17 @@
 #ifndef MACHINE
 #define MACHINE
 
+/* Debugging flags */
+#define DEBUG
+#define DEBUG_VERBOSE
+
+/* If DEBUG_VERBOSE, then DEBUG */
+#ifdef DEBUG_VERBOSE
+	#ifndef DEBUG
+		#define DEBUG
+	#endif
+#endif
+
 /* Define condition codes for hardware functions
 	 > : 001
 	 < : 100
@@ -80,5 +91,9 @@ bool HLT();
 
 unsigned short int getCondCode(short int);
 short int* getRegister();
+
+#ifdef DEBUG
+void printDebug(char*);
+#endif
 
 #endif
