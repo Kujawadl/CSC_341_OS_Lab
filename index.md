@@ -8,7 +8,7 @@ layout: index
 
 #### Submitted under cs341109
 
-<h2 class="nobreak">Table of contents</h2>
+<h2 style="line-break-before:never">Table of contents</h2>
   - [Project overview](#project-overview)
     - [Machine](#machine)
     - [OS](#os)

@@ -99,10 +99,6 @@ h2 {
   page-break-before: always;
 }
 
-h2.nobreak {
-  page-break-before: never;
-}
-
 h3, h4, h5, h6 {
   color:#494949;
 }
