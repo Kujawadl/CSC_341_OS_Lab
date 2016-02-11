@@ -99,7 +99,7 @@ h2 {
   page-break-before: always;
 }
 
-div.nobreak h2 {
+h2.nobreak {
   page-break-before: never;
 }
 
