@@ -45,11 +45,20 @@ Markdown supports HTML code and comments as well.
     - [makefile](#listing_makefile)
   - [Concluding Remarks](#conclusions)
 
-<a name="overview" />  
+<a name="overview"></a>
 ## Project overview
-
-<a name="overview_machine" />
+During this course of this class we are going to be exploring and creating operating system concenpts and components. In this very first lab we are going to implement a maching language interpreter (or Hardware Simulator) for the architecture defined in our handout. This will be our basis for the <i>Hardware System</i>.
+<a name="overview_machine" /></a>
 ### Machine
+First we will go over the Architectural  design of the machine as indicated on the handout:
+* 16-bit words
+* 256-word memory (16 bits) word addressable
+* 3 general purpose registers (1-3), 1 special: A (0)
+* 8-bit program counter (PC)
+* condition code flags : equals or zero-(010), positive-(001), negative-(100)
+* Machine instruction cycle - fetch, decode, opfetch, execute, writeback
+
+This was the basis of the design of our machine. The 16 bit words are held in the <b>short int</b> data type, which in c can only hold 16 bits. The 256 word memory is simply an array of size 256, the indexes obviously refer to the address location of instructions.<br></br>To hold the Registers we designed a structure that represented all possible machine registers states (including condition codes). Since we knew in advance that users were going to have different register states that would need to be saved and loaded, this just made sense.</br></br>The machine instructions and operation codes are as follows: </br>![alt text](https://i.imgur.com/eAVF44a.png "Some bullshit")</br></br>The above outlines the basic operations the machine had to be able to perform.
 
 <a name="overview_os" />
 ### OS

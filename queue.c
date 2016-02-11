@@ -4,32 +4,29 @@
 typedef struct Node {
 	int userNum;
 	struct Node* next;
-	registers userRegister;
+	registers userRegisters;
 } Node;
 
 typedef struct Queue {
 	Node* head;
 	Node* tail;
 
-	void (*push) (struct Queue*, Node*);
-	Node* (*pop) (struct Queue*);
-	Node (*peek) (struct Queue*);
+	void (*enqueue) (struct Queue*, Node*);
+	Node (*dequeue) (struct Queue*);
+	Node* (*peek) (struct Queue*);
 	void (*display) (struct Queue*);
 	int size;
 } Queue;
 
-void push (Queue* queue, Node* n);
-Node* pop (Queue* queue);
-Node peek (Queue* queue);
+void enqueue (Queue* queue, Node* n);
+Node dequeue (Queue* queue);
+Node* peek (Queue* queue);
 void display (Queue* queue);
 
 Queue createQueue ();
 
-
-void push (Queue* queue, Node* n) {
-
+void enqueue (Queue* queue, Node* n) {
 	n->next = NULL;
-
 	/* If queue is empty, set head to n */
 	if (queue->head == NULL) {
 		queue->head = n;
@@ -40,23 +37,19 @@ void push (Queue* queue, Node* n) {
 	queue->size++;
 }
 
-Node* pop (Queue* queue) {
-
+Node dequeue (Queue* queue) {
 	Node* head = queue->head;
 	Node* current = head;
-
 	queue->head = head->next;
 	queue->size--;
-
-	return current;
-}
-
-
-Node peek (Queue* queue) {
-	Node* current = queue->head;
 	return *current;
 }
 
+
+Node* peek (Queue* queue) {
+	Node* current = queue->head;
+	return current;
+}
 
 void display (Queue* queue) {
 	printf("\nDisplay: ");
@@ -72,21 +65,21 @@ void display (Queue* queue) {
 		for (i = 0; i < size; i++) {
 			if (i > 0)
 				printf("\n");
-
 			printf("UserNum: %d, Next: %p", current->userNum, current->next);
+			printf("\n\trA: %d, r1: %d, r2: %d, r3: %d", current->userRegisters.rA, current->userRegisters.r1, current->userRegisters.r2, current->userRegisters.r3);
+			printf("\n\tIR: %d, PC: %d, CR: %d\n", current->userRegisters.IR, current->userRegisters.PC, current->userRegisters.CR);
 			current = current->next;
 		}
 	}
 	printf("\n\n");
 }
-
 Queue createQueue () {
 	Queue queue;
 	queue.size = 0;
 	queue.head = NULL;
 	queue.tail = NULL;
-	queue.push = &push;
-	queue.pop = &pop;
+	queue.enqueue = &enqueue;
+	queue.dequeue = &dequeue;
 	queue.peek = &peek;
 	queue.display = &display;
 	return queue;
