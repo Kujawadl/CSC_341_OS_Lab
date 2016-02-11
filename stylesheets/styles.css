@@ -363,6 +363,6 @@ body .syntaxhighlighter .line {
         white-space: pre-wrap !important; /* make code wrap */
 }
 
-#table-of-contents #project-overview #how-to-run #time-spent {
-  page-break-after: always;
+#overview #project-overview #how-to-run #time-spent {
+  page-break-before: always;
 }
