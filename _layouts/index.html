@@ -25,22 +25,29 @@
         document.write("<br />");
       }
       </script>
-      <p>Lab 1</p>
+      <p id="coverTitle"></p>
       </br>
       <p>Aaron Baker, Andrew Ballard, and Dylan Jager-Kujawa</p>
       <p>Dr. Robert Strader</p>
       <p>CSC 341.001</p>
-      <p id="date"></p>
+      <p id="coverDate"></p>
       <p>
         <script>
-          var m_names = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
-          var d = new Date();
-          var dd = d.getDate();
-          var mm = d.getMonth();
-          var yyyy = d.getFullYear();
-          var today = m_names[mm] + " " + dd + ", " + yyyy;
+          /* Determine which lab we're working with by determining the due dates we're within */
+          var labNum = 0;
+          var today = new Date();
+          var dueDates = new Array(new Date("February 11, 2016 3:30 PM"), new Date("February 25, 2016 3:30 PM"), new Date("March 29, 2016 3:30 PM"), new Date("April 12, 2016 3:30 PM"), new Date("April 28, 2016 3:30 PM"));
+          for (int i = 0; i < 5; i++) {
+            if (today < dueDates[i]) {
+              labNum++;
+            }
+          }
+          /* The due dates to print */
+          var dateToPrint = new Array("February 11, 2016", "February 25, 2016", "March 29, 2016", "April 12, 2016", "April 28, 2016");
 
-          document.write(today);
+          /* Print out the title and date */
+          $("p.coverTitle").html("Lab " + labNum);
+          $("p.coverDate").html(dateToPrint[labNum - 1]); /* labNum is 1-indexed, dateToPrint is 0-indexed */
         </script>
       </p>
     </div>
