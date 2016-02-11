@@ -66,6 +66,13 @@ body {
   text-align: center;
   margin-top: 100;
   color: black;
+  visibility: hidden;
+}
+
+@media print {
+  .coverpage {
+    visibility: visible;
+  }
 }
 
 .coverpage p {
