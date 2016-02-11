@@ -67,6 +67,7 @@ body {
   margin-top: 100;
   color: black;
   display: none;
+  page-break-after: always;
 }
 
 @media print {
