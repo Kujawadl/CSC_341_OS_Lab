@@ -9,7 +9,7 @@ layout: index
 #### Submitted under cs341109
 
 <div class="nobreak">
-# Table of contents
+<h2>Table of contents</h2>
 </div>
   - [Project overview](#project-overview)
     - [Machine](#machine)
