@@ -71,6 +71,9 @@ This will be a quick overview of how to run the program:
 ## Time Spent & Charts
 We actually have some of the most accurate timings of coding we have ever recorded. This is due to the fact that someone else (Specifically github) did it for us. The following graphs dipict how much code was added to the project and on what days.
 
+First this is the total contribution to the project by day, from the day we started to today (the 11th).
+![alt text](https://i.imgur.com/ylnJUZh.png)
+
 The following is a breakdown of lines of code, and how many additional lines of code were added compared to how many were deleted by day.
 ![alt text](http://i.imgur.com/y9TogtV.png)
 
