@@ -346,7 +346,7 @@ footer {
 
 @page :first {
   @top-right {
-    
+
   }
 }
 
@@ -361,4 +361,8 @@ footer {
 
 body .syntaxhighlighter .line {
         white-space: pre-wrap !important; /* make code wrap */
+}
+
+#table-of-contents{
+  page-break-after: always;
 }
