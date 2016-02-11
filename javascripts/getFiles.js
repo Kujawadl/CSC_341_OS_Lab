@@ -38,7 +38,7 @@ var files = [
 
 document.ready(function() {
   document.write('<h2><a id="project-listing" class="anchor" href="#project-listing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Project Listing</h2>');
-  for (var current in files) {
+  for (current in files) {
     document.write('<h3><a id=\"' + current.anchor + '\" class="anchor" href=\"#' + current.anchor + '\" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>machine.h</h3><pre id=\"' + current.anchor + '\"_code class="syntaxhighlighter brush: c; toolbar: false; tab-size: 2; ruler: false"></pre>');
     document.write('<p class=\"pagebreak\" />');
 
