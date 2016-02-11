@@ -8,7 +8,7 @@ layout: index
 
 #### Submitted under cs341109
 
-#Table of Contents
+# Table of Contents
   - [Project overview](#project-overview)
     - [Machine](#machine)
     - [OS](#os)
