@@ -86,7 +86,7 @@ bool CMP();
 bool CLR();
 bool HLT();
 
-unsigned unsigned short int getCondCode(unsigned short int);
+unsigned short int getCondCode(unsigned short int);
 unsigned short int* getRegister();
 
 #ifdef DEBUG

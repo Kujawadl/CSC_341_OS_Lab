@@ -379,7 +379,7 @@ bool HLT() {
 
 /* Determine if a resultant value is positive, negative, or 0 */
 /* Takes a short integer, returns a condition code (short integer) */
-unsigned unsigned short int getCondCode(unsigned short int x) {
+unsigned short int getCondCode(unsigned short int x) {
 	if (x == 0)
 	return EQL;
 	else if (x > 0)
