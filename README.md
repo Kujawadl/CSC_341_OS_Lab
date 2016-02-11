@@ -1,3 +1,7 @@
+---
+layout: index
+---
+
 <!--
 Quick overview of .md (markdown) syntax:
 *text* = italics
@@ -30,13 +34,12 @@ Markdown supports HTML code and comments as well.
 ##### Submitted under cs341109
 
 ## Table of contents
-  - [Project overview](#overview)
-    - [How to Run](#how_to_run)
-    - [Machine](#overview_machine)
-    - [OS](#overview_os)
-    - [Difficulties Encountered](#overview_difficulties)
+  - [Project overview](#project-overview)
+    - [Machine](#machine)
+    - [OS](#os)
+    - [Difficulties Encountered](#difficulties-encountered)
   - [Verification](#verification)
-  - [Project Listing](#listing)
+  - [Project Listing](#project-listing)
     - [machine.h](#listing_machine_h)
     - [machine.c](#listing_machine_c)
     - [os.h](#listing_os_h)
@@ -44,14 +47,10 @@ Markdown supports HTML code and comments as well.
     - [part1.dat](#listing_part1_dat)
     - [part1x.dat](#listing_part1x_dat)
     - [makefile](#listing_makefile)
-  - [Concluding Remarks](#conclusions)
 
-<a name="overview"></a>
 ## Project overview
 During this course of this class we are going to be exploring and creating operating system concepts and components. In this very first lab we are going to implement a machine language interpreter (or Hardware Simulator) for the architecture defined in our handout. This will be our basis for the *Hardware System*.
 
-
-<a name="overview_machine" /></a>
 ### Machine
 First we will go over the Architectural  design of the machine as indicated on the handout:
 * 16-bit words
@@ -67,11 +66,8 @@ This was the basis of the design of our machine. The 16 bit words are held in th
 
 The above outlines the basic operations the machine had to be able to perform.
 
-<a name="overview_os" />
 ### OS
 
-<a name="overview_difficulties" />
 ### Difficulties Encountered
 
-<a name="verification" />
 ## Verification
