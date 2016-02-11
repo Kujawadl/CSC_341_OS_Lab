@@ -51,7 +51,6 @@ Markdown supports HTML code and comments as well.
 ## Project overview
 During this course of this class we are going to be exploring and creating operating system concepts and components. In this very first lab we are going to implement a machine language interpreter (or Hardware Simulator) for the architecture defined in our handout. This will be our basis for the *Hardware System*.
 
-
 ### Machine
 First we will go over the Architectural  design of the machine as indicated on the handout:
 * 16-bit words
