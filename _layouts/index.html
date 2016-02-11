@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>CSC 341 OS Lab</title>
 
+    <link rel='stylesheet' href='../stylesheets/styles.css'>
     <link rel='stylesheet' href='{{ site.path }}/CSC_341_OS_Lab/stylesheets/styles.css'>
     <link rel='stylesheet' href='{{ site.path }}/CSC_341_OS_Lab/stylesheets/github-light.css'>
     <link rel='stylesheet' href='{{ site.path }}/CSC_341_OS_Lab/stylesheets/shCore.css'>
@@ -13,14 +14,42 @@
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src='{{ site.path }}/CSC_341_OS_Lab/javascripts/shCore.js'></script>
     <script src='{{ site.path }}/CSC_341_OS_Lab/javascripts/shBrushCpp.js'></script>
+
+
+    <div class="coverpage">
+      <script>
+      for (i = 0; i < 15; i++) {
+        document.write("<br />");
+      }
+      </script>
+      <p>Lab 1</p>
+      </br>
+      <p>Aaron Baker, Andrew Ballard, and Dylan Jager-Kujawa</p>
+      <p>Dr. Robert Strader</p>
+      <p>CSC 341.001</p>
+      <p id="date"></p>
+      <p>
+        <script>
+          var m_names = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+          var d = new Date();
+          var dd = d.getDate();
+          var mm = d.getMonth();
+          var yyyy = d.getFullYear();
+          var today = m_names[mm] + " " + dd + ", " + yyyy;
+
+          document.write(today);
+        </script>
+      </p>
+    </div>
   </head>
   <body>
     {{ content }}
 
+
+<p class="pagebreak" />
     <h2><a id="project-listing" class="anchor" href="#project-listing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Project Listing</h2>
     <script>
       $(document).ready(function(){
@@ -38,21 +67,33 @@
     <p><a name="listing_machine_h"></a></p>
     <h3><a id="machineh" class="anchor" href="#machineh" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>machine.h</h3>
     <pre id="machine_h_code" class="brush: c; toolbar: false; tab-size: 2; ruler: false"></pre>
+
+<p class="pagebreak" />
     <p><a name="listing_machine_c"></a></p>
     <h3><a id="machinec" class="anchor" href="#machinec" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>machine.c</h3>
     <pre id="machine_c_code" class="brush: c; toolbar: false; tab-size: 2; ruler: false"></pre>
+
+<p class="pagebreak" />
     <p><a name="listing_os_h"></a></p>
     <h3><a id="osh" class="anchor" href="#osh" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>os.h</h3>
     <pre id="os_h_code" class="brush: c; toolbar: false; tab-size: 2; ruler: false"></pre>
+
+<p class="pagebreak" />
     <p><a name="listing_os_c"></a></p>
     <h3><a id="osc" class="anchor" href="#osc" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>os.c</h3>
     <pre id="os_c_code" class="brush: c; toolbar: false; tab-size: 2; ruler: false"></pre>
+
+<p class="pagebreak" />
     <p><a name="listing_part1_dat"></a></p>
     <h3><a id="part1dat" class="anchor" href="#part1dat" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>part1.dat</h3>
     <pre id="part1_dat_code" class="brush: c; toolbar: false; tab-size: 2; ruler: false"></pre>
+
+<p class="pagebreak" />
     <p><a name="listing_part1x_dat"></a></p>
     <h3><a id="part1xdat" class="anchor" href="#part1xdat" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>part1x.dat</h3>
     <pre id="part1x_dat_code" class="brush: c; toolbar: false; tab-size: 2; ruler: false"></pre>
+
+<p class="pagebreak" />
     <p><a name="listing_makefile"></a></p>
     <h3><a id="makefile" class="anchor" href="#makefile" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>makefile</h3>
     <pre id="makefile_code" class="brush: c; toolbar: false; tab-size: 2; ruler: false"></pre>
