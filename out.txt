@@ -120,7 +120,7 @@ Instruction with opcode HLT finished executing.
 	Dumping Registers:
 	rA: 0, r1: 0, r2: 0, r3: 0
 	IR: -4096, PC: 0, CR: 0
-USER2 > nopp 
+USER2 > nop
 
 ####################################################
 ############### Switching to user 0 ################
