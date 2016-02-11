@@ -253,7 +253,7 @@ bool NOT() {
 	*reg = ~*reg;
 
 	if (machine.CR != 0)
-		machine.CR = getCondCode(*reg);
+	machine.CR = getCondCode(*reg);
 
 	#ifdef DEBUG
 	printDebug("NOT");
@@ -263,9 +263,9 @@ bool NOT() {
 
 /* Unconditional Jump */
 /* Direct addressing is allowed, provided the value in the memory location
-	is actually only using 8 bits. If the 8 highest-order bits contain anything,
-	that would be a reference to a memory location that does not exist (PC: 8bits)
-	and thus the JMP would return an error (essentially OutOfBounds) */
+is actually only using 8 bits. If the 8 highest-order bits contain anything,
+that would be a reference to a memory location that does not exist (PC: 8bits)
+and thus the JMP would return an error (essentially OutOfBounds) */
 bool JMP() {
 	short int addr = getAddrMode(machine.IR);
 	short int jmpTo;
@@ -273,7 +273,7 @@ bool JMP() {
 		jmpTo = main_memory[getOperand(machine.IR)];
 		/* Check high-order bits */
 		if ((jmpTo & 65280) != 0)
-			return false;
+		return false;
 	} else if (addr == IMMEDIATE) {
 		jmpTo = getOperand(machine.IR);
 	} else {
@@ -285,7 +285,7 @@ bool JMP() {
 
 	#ifdef DEBUG
 	if (getOpcode(machine.IR) == 9)
-		printDebug("JMP");
+	printDebug("JMP");
 	#endif
 	return true;
 }
@@ -293,7 +293,7 @@ bool JMP() {
 /* Check condition flag register; jump if appropriate */
 bool JEQ() {
 	if (machine.CR == EQL)
-		JMP();
+	JMP();
 	#ifdef DEBUG
 	printDebug("JEQ");
 	#endif
@@ -303,7 +303,7 @@ bool JEQ() {
 /* Check condition flag register; jump if appropriate */
 bool JGT() {
 	if (machine.CR == GRT)
-		JMP();
+	JMP();
 	#ifdef DEBUG
 	printDebug("JGT");
 	#endif
@@ -313,7 +313,7 @@ bool JGT() {
 /* Check condition flag register; jump if appropriate */
 bool JLT() {
 	if (machine.CR == LST)
-		JMP();
+	JMP();
 	#ifdef DEBUG
 	printDebug("JLT");
 	#endif
@@ -381,11 +381,11 @@ bool HLT() {
 /* Takes a short integer, returns a condition code (short integer) */
 unsigned short int getCondCode(short int x) {
 	if (x == 0)
-		return EQL;
+	return EQL;
 	else if (x > 0)
-		return GRT;
+	return GRT;
 	else
-		return LST;
+	return LST;
 }
 
 /* Take a register code and return a pointer to that register */
@@ -394,7 +394,7 @@ short int* getRegister() {
 
 	#ifdef DEBUG_VERBOSE
 	fprintf(stderr, "In getRegister(). IR: %d, Regcode: %d\n", \
-		machine.IR, regCode);
+	machine.IR, regCode);
 	#endif
 
 	switch (regCode) {
@@ -429,8 +429,8 @@ void printDebug(char* op) {
 
 /* Undefine debug flags if necessary */
 #ifdef DEBUG_VERBOSE
-	#undef DEBUG_VERBOSE
+#undef DEBUG_VERBOSE
 #endif
 #ifdef DEBUG
-	#undef DEBUG
+#undef DEBUG
 #endif

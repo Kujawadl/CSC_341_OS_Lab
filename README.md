@@ -10,7 +10,10 @@
   - [Project overview](#project-overview)
     - [Machine](#machine)
     - [OS](#os)
+      - [Scheduling Users](#scheduling-users)
     - [Difficulties Encountered](#difficulties-encountered)
+  - [How to Run](#how-to-run)
+  - [Time Spent](#time-spent)
   - [Verification](#verification)
   - [Project Listing](#project-listing)
     - [machine.h](#listing_machine_h)
@@ -22,7 +25,7 @@
     - [makefile](#listing_makefile)
 
 ## Project overview
-During this course of this class we are going to be exploring and creating operating system concepts and components. In this very first lab we are going to implement a machine language interpreter (or Hardware Simulator) for the architecture defined in our handout. This will be our basis for the *Hardware System*.
+During this course of this class we are going to be exploring and creating operating system concepts and components. In this first lab we are going to implement a machine language interpreter for the given architecture. This will serve as the foundation for later projects, which will highlight more specific concepts in OS design.
 
 ### Machine
 First we will go over the Architectural  design of the machine as indicated on the handout:
@@ -33,56 +36,77 @@ First we will go over the Architectural  design of the machine as indicated on t
 * condition code flags : equals or zero-(010), positive-(001), negative-(100)
 * Machine instruction cycle - fetch, decode, opfetch, execute, writeback
 
-This was the basis of the design of our machine. The 16 bit words are held in the <b>short int</b> data type, which in c can only hold 16 bits. The 256 word memory is simply an array of size 256, the indexes obviously refer to the address location of instructions.<br></br>To hold the Registers we designed a structure that represented all possible machine registers states (including condition codes). Since we knew in advance that users were going to have different register states that would need to be saved and loaded, this just made sense.</br></br>The machine instructions and operation codes are as follows:
+This was the basis of our machine's design. The 16-bit words are held as short ints, which in c hold 16 bits. The 256 words of memory are simply an array of 256 short ints, with the indexes obviously referring to addresses.
 
-![alt text](https://i.imgur.com/eAVF44a.png)
+The registers are held in a structure which contains several short int values, one for each of the four main registers, one for the instruction register, one for the program counter, and one for the condition flag register. The last two are set to use only 8 and 3 bits, respectively, in an attempt to more accurately represent the physical hardware we are simulating.
 
-The above outlines the basic operations the machine had to be able to perform. Using this outline and feedback from our instructor we were able to get all the functionalilty of the above working.
+The following is a list of the instructions that can be executed on our hardware, along with their opcodes and mnemonics. These instructions will serve as the foundation for any programs running on the machine.
+
+| <u>Instruction</u> | <u>Opcode</u> | <u>Mnemonic</u> |
+|--------------------|---------------|-----------------|
+|Load                |0000           |LOD              |        
+|Store               |0001           |STO              |
+|Add                 |0010           |ADD              |
+|Subtract            |0011           |SUB              |
+|Add Register        |0100           |ADR              |
+|Subtract Register   |0101           |SUR              |
+|And                 |0110           |AND              |
+|Or                  |0111           |IOR              |
+|Not                 |1000           |NOT              |
+|Jump                |1001           |JMP              |
+|Jump ==             |1010           |JEQ              |
+|Jump >              |1011           |JGT              |
+|Jump <              |1100           |JLT              |
+|Compare             |1101           |CMP              |
+|Clear               |1110           |CLR              |
+|Halt                |1111           |HLT              |
 
 ### OS
-The Operating System design currently is very basic. The main functions of the OS are currently to monitor the usage of the machine by each user and switch the users when they use their alloted usage. It also currently has a simple interactive command-line interface. The users type in the commands that they want executed (the typing of a command counts as a single tick against the user). The following commands currently in place are:
-* **run** - run the program in main memory (user)
-* **dmp** - dump (output) of main memory (o/s only)
-* **nop** - none (no command to execute) (user or o/s)
-* **stp** - stop the program (o/s only)
+The Operating System design currently is very basic; it is essentially a ver simplistic round-robin scheduler. It also currently has a simple interactive command-line interface. The users type in the commands that they want executed (the typing of a command counts as a single tick against the user). The following commands currently in place are:
+ - `run` - run the program in main memory *(user)*
+ - `dmp` - dump (output) of main memory *(o/s only)*
+ - `nop` - none (no command to execute) *(user or o/s)*
+ - `stp` - stop the program *(o/s only)*
 
-When you run the program, the registers are dumped on every tick, for this reason the **dmp** function does not currently dump registers. This will likely change when given the scope of our next project.
+When the `DEBUG` flag is defined in machine.h, the registers will be dumped on every tick. For this reason the `dmp` function does not currently dump registers. This will likely change in later iterations of the OS.
+
+>**Note:** The program submitted to the cs.sfasu.edu server was done so with the `DEBUG` flag **undefined**. The output shown in the out.txt listing **will not** match the output given from the server, as debug output has been **disabled** for the final version we've handed in. To enable debug output, simply remove the `#undef DEBUG` statement from the top of machine.h and remake.
+
+>The out.txt file was generated with debugging enabled simply to give an idea of what said debug output looks like, without making anyone go to the trouble of modifying the source code.
 
 #### Scheduling Users
-One of the problems we ran into when we started designing the OS is how we were going to schedule the users. Given the scope of this part of the program we decided that a enumerator would work just fine since the users were to be hardcoded in. Each user has an associated register state that is read and written to and by the machine when the user begins and ends his use of the machine.<br></br>We wanted to note that we have already came up with a way of scheduling many more users in a round robin fashion with the user of a queue. But due to the scope of the project and only a rudimentary knowledge of how to schedule users properly, we decided that it would be best to keep free of pointer logic for now.
+We specified a `struct` which would hold one of each kind of register, then declared one in machine.c which would hold the machine registers (representative of the actual hardware). The OS declares a `registers` value for itself, as well as one for each user. These register sets can be thought of as caches, to save/load user state with each user switch.
+
+We then defined an enum in os.h with `u1`, `u2`, and `sys`, to be representative of all the users on the system. The OS declares a variable of this type to keep track of the current user, and uses the `nextUser()` method to increment the value on switch.
+
+Finally, the OS keeps an integer value for the clock, which is incremented each time an instruction executes (either prompting for input on the CLI or by running another line of the program in memory). On switch, the variable switchTime is set to three values higher than the current clock. The scheduler then allows the next user time on the processor while `clock < switchTime`. If the user specifies `NOP`, the program breaks from the loop and the switch is called early.
 
 ### Difficulties Encountered
-The biggest difficulty that we ran into during this project was having getting a precise idea of what each op code was supposed to do, and how it would affect registers. Even after discussing it with our instructor and eachother we would still find topics that we were confused on (I.E. Should the jump command be able to use immediate addressing?).<br><br>
-Additionally we actually used the version control software Github to help with development on this portion of the project. The intial setup of getting everyone set up with their own fork to work on took some time. But that was essentially just the only other difficulty we ran into.
+The biggest difficulty that we ran into during this project was having getting a precise idea of what each op code was supposed to do, and how it would affect registers. Even after discussing it with our instructor and each other we still found topics that were not immediately clear (e.g., should the jump command be able to use immediate addressing?).
+
+Also, we found toward the beginning of writing the machine language interpreter that we were repeating a good bit of code (mostly switch statements) trying to get/set register values. The `getRegCode()` function gave us the specified register, at which point various switch statements were used to work with the specified register.
+
+Then we realized that if we created a pointer, and assigned it the address of the specified register, we could write each opcode function such that it would operate on the pointer; all the code determining which register to use, and at which address it is located, was outsourced to the `getRegister()` function, which takes an integer representing the register number, and returns the address to that register.
+
+Finally, we used the version control website Github to help simplify collaboration on this project. The initial setup took some time, and learning the command-line interface did prove something of a challenge. But that was essentially just the only other difficulty we ran into.
 
 ## How to Run
 This will be a quick overview of how to run the program:
-* Navigate to the submission folder and type the command: **make**, this will compile al the files.
+ - Build the project:
+ ```
+ make
+ ```
+ - Run the program:
+ ```
+ ./os
+ ```
+ - Interact with the OS as detailed in the OS section above. The OS loads a program named part1.dat into memory at startup.
 
-![alt text](https://i.imgur.com/abWpkLq.png)
-* Next type: **./os** to run the compiled code.
+>**Note:** Currently we are reading the program directly into memory form the "part1.dat" file that is in the directory. Both user 1 and user 2 are defaulted to this program, although each user has their own instance of it in memory. The simple loader we use does take into consideration the size of the program, in words, allowing for programs of variable length, but it does very little error handling beyond that. Programs must be under 128 words, as beyond this the second user's instance will overflow out of memory. This possibility is **not** checked.
 
-![alt text](https://i.imgur.com/MFvETMD.png)
-* Next use the commands as specified in the OS section of this report.
-
-**NOTE:** Currently we are reading the program directly into memory form the "part1.dat" file that is in the directory. Both user 1 and user 2 are defaulted to this program. If you want to load a different program into memory, you can open the "part1.dat" file and paste your binary into that file, if you already have a file with a new program in it, you can open the os.c file and change the file name retrieved.
-![alt text](https://i.imgur.com/FUwVD61.png)
-
-## Time Spent & Charts
-We actually have some of the most accurate timings of coding we have ever recorded. This is due to the fact that someone else (Specifically github) did it for us. The following graphs dipict how much code was added to the project and on what days.
-
-First this is the total contribution to the project by day, from the day we started to today (the 11th).
+## Time Spent
+GitHub tracks contributions over time.
+##### Project Commits by Day:
 ![alt text](https://i.imgur.com/ylnJUZh.png)
-
-The following is a breakdown of lines of code, and how many additional lines of code were added compared to how many were deleted by day.
-![alt text](http://i.imgur.com/y9TogtV.png)
-
-Next is the amount of changes and additions that happened to the project by day (as you can see, we finished most of the coding on tuesday).
-![alt text](http://i.imgur.com/e1l4lIq.png)
-
-Finally the time of day at which most of our changes were submitted.
-![alt text](http://i.imgur.com/ZgwCZxE.png)
-
-We unfortnately did not keep track of time spent by individuals, but we estimate a total of around 26 hours of work on this portion of the project.
 
 ## Verification

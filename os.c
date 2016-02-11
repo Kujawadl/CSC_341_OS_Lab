@@ -30,7 +30,9 @@ void dump(bool dumpRegs)
 	for (i = 0; i < 256; i++) {
 		if (i % 4 == 0)
 			printf("\n");
-		printf("\tMemory Location #%3d: %8d", i, main_memory[i]);
+		else
+			printf(" | ");
+		printf("#%3d: %8d", i, main_memory[i]);
 	}
 	printf("\n\n>\tEnd of dump\n\n");
 
@@ -103,7 +105,7 @@ void scheduler()
 		currentUser = nextUser(currentUser);
 
 		printf("\n%s\n", titleFiller);
-		printf("############ Switching to user: %d ##############\n", currentUser);
+		printf("############### Switching to user %d ################\n", currentUser);
 		printf("%s\n\n", titleFiller);
 	}
 
