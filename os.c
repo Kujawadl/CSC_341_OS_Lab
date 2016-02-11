@@ -142,7 +142,7 @@ void init(){
 /* Read program into memory */
 /* Takes the address to start loading into */
 /* Returns the size of the program in words */
-int readFile(unsigned short int start){
+unsigned short int readFile(unsigned short int start){
 	FILE *ifp;
 	ifp = fopen("part1.dat", "r");
 

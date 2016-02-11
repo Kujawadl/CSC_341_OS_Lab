@@ -37,7 +37,7 @@ void scheduler();
 int main(int argc, char** argv);
 
 /* Read program into memory */
-int readFile(short int);
+unsigned short int readFile(short int);
 
 void init();
 
