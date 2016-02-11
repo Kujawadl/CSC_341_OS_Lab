@@ -21,36 +21,30 @@
 
     <div class="coverpage">
       <script>
-      for (i = 0; i < 15; i++) {
-        document.write("<br />");
-      }
-      </script>
-      <p id="coverTitle"></p>
-      </br>
-      <p>Aaron Baker, Andrew Ballard, and Dylan Jager-Kujawa</p>
-      <p>Dr. Robert Strader</p>
-      <p>CSC 341.001</p>
-      <p id="coverDate"></p>
-      <p>
-        <script>
-          window.onLoad = function() {/* Determine which lab we're working with by determining the due dates we're within */
-            var labNum = 0;
-            var today = new Date();
-            var dueDates = new Array(new Date("February 11, 2016 3:30 PM"), new Date("February 25, 2016 3:30 PM"), new Date("March 29, 2016 3:30 PM"), new Date("April 12, 2016 3:30 PM"), new Date("April 28, 2016 3:30 PM"));
-            for (int i = 0; i < 5; i++) {
-              if (today < dueDates[i]) {
-                labNum++;
-              }
-            }
-            /* The due dates to print */
-            var dateToPrint = new Array("February 11, 2016", "February 25, 2016", "March 29, 2016", "April 12, 2016", "April 28, 2016");
+        /* Print line breaks to "center" the cover page */
+        for (i = 0; i < 15; i++) {
+          document.write("<br />");
+        }
 
-            /* Print out the title and date */
-            document.getElementById("coverTitle").innerHTML = "Lab " + labNum;
-            document.getElementById("coverDate").innerHTML = dateToPrint[labNum - 1]; /* labNum is 1-indexed, dateToPrint is 0-indexed */
-        };
-        </script>
-      </p>
+        /* Determine which lab we're working with by determining the due dates we're within */
+        var labNum = 0;
+        var today = new Date();
+        var dueDates = new Array(new Date("February 11, 2016 3:30 PM"), new Date("February 25, 2016 3:30 PM"), new Date("March 29, 2016 3:30 PM"), new Date("April 12, 2016 3:30 PM"), new Date("April 28, 2016 3:30 PM"));
+        for (int i = 0; i < 5; i++) {
+          if (today < dueDates[i]) {
+            labNum++;
+          }
+        }
+        /* The due dates to print */
+        var dateToPrint = new Array("February 11, 2016", "February 25, 2016", "March 29, 2016", "April 12, 2016", "April 28, 2016");
+
+        /* Print out the cover page */
+        document.write("<p>Lab " + labNum + "</p>");
+        document.write("<p>Aaron Baker, Andrew Ballard, and Dylan Jager-Kujawa</p>");
+        document.write("<p>Dr. Robert Strader</p>");
+        document.write("<p>CSC 341.001</p>");
+        document.write("<p>" + dateToPrint[labNum - 1] + "</p>"); /* labNum is 1-indexed, dateToPrint is 0-indexed */
+      </script>
     </div>
   </head>
   <body>
