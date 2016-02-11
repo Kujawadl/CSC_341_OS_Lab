@@ -1,7 +1,3 @@
----
-layout: index
----
-
 <!--
 Quick overview of .md (markdown) syntax:
 *text* = italics
