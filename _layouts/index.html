@@ -33,21 +33,22 @@
       <p id="coverDate"></p>
       <p>
         <script>
-          /* Determine which lab we're working with by determining the due dates we're within */
-          var labNum = 0;
-          var today = new Date();
-          var dueDates = new Array(new Date("February 11, 2016 3:30 PM"), new Date("February 25, 2016 3:30 PM"), new Date("March 29, 2016 3:30 PM"), new Date("April 12, 2016 3:30 PM"), new Date("April 28, 2016 3:30 PM"));
-          for (int i = 0; i < 5; i++) {
-            if (today < dueDates[i]) {
-              labNum++;
+          window.onLoad = function() {/* Determine which lab we're working with by determining the due dates we're within */
+            var labNum = 0;
+            var today = new Date();
+            var dueDates = new Array(new Date("February 11, 2016 3:30 PM"), new Date("February 25, 2016 3:30 PM"), new Date("March 29, 2016 3:30 PM"), new Date("April 12, 2016 3:30 PM"), new Date("April 28, 2016 3:30 PM"));
+            for (int i = 0; i < 5; i++) {
+              if (today < dueDates[i]) {
+                labNum++;
+              }
             }
-          }
-          /* The due dates to print */
-          var dateToPrint = new Array("February 11, 2016", "February 25, 2016", "March 29, 2016", "April 12, 2016", "April 28, 2016");
+            /* The due dates to print */
+            var dateToPrint = new Array("February 11, 2016", "February 25, 2016", "March 29, 2016", "April 12, 2016", "April 28, 2016");
 
-          /* Print out the title and date */
-          document.getElementById("coverTitle").innerHTML = "Lab " + labNum;
-          document.getElementById("coverDate").innerHTML = dateToPrint[labNum - 1]; /* labNum is 1-indexed, dateToPrint is 0-indexed */
+            /* Print out the title and date */
+            document.getElementById("coverTitle").innerHTML = "Lab " + labNum;
+            document.getElementById("coverDate").innerHTML = dateToPrint[labNum - 1]; /* labNum is 1-indexed, dateToPrint is 0-indexed */
+        };
         </script>
       </p>
     </div>
