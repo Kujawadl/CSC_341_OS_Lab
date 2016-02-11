@@ -8,7 +8,7 @@ layout: index
 
 #### Submitted under cs341109
 
-<h2 style="page-break-before:never!important">Table of contents</h2>
+#Table of Contents
   - [Project overview](#project-overview)
     - [Machine](#machine)
     - [OS](#os)
@@ -27,7 +27,7 @@ layout: index
     - [part1x.dat](#listing_part1x_dat)
     - [makefile](#listing_makefile)
 
-## Project overview
+## Project Overview
 During this course of this class we are going to be exploring and creating operating system concepts and components. In this first lab we are going to implement a machine language interpreter for the given architecture. This will serve as the foundation for later projects, which will highlight more specific concepts in OS design.
 
 ### Machine
