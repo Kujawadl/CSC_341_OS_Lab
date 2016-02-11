@@ -96,6 +96,7 @@ h1 {
 
 h2 {
   color:#393939;
+  page-break-before: always;
 }
 
 h3, h4, h5, h6 {
@@ -361,8 +362,4 @@ footer {
 
 body .syntaxhighlighter .line {
         white-space: pre-wrap !important; /* make code wrap */
-}
-
-#overview #project-overview #how-to-run #time-spent {
-  page-break-before: always;
 }
