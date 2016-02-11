@@ -18,7 +18,7 @@ layout: index
   - [Time Spent](#time-spent)
   - [Verification](#verification)
   - [Project Listing](#project-listing)
-    - [Execution listing](#out_txt)
+    - [Execution Listing](#out_txt)
     - [machine.h](#listing_machine_h)
     - [machine.c](#listing_machine_c)
     - [os.h](#listing_os_h)
