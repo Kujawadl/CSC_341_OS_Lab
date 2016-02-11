@@ -110,3 +110,68 @@ GitHub tracks contributions over time.
 ![alt text](https://i.imgur.com/ylnJUZh.png)
 
 ## Verification
+
+###### Verifying program load:
+To start, we'll verify that the program loads into memory correctly. The program in question is listed in part1.dat. The assembly equivalent of this program is:
+
+Operation | Addressing Mode | Register | Operand
+-|-|-|-
+`LOD`|`1`|`0`|`10`
+`STO`|`0`|`0`|`6`
+`LOD`|`1`|`1`|`5`
+`ADR`|`0`|`1`|`0`
+`STO`|`0`|`0`|`7`
+`HLT`|`0`|`0`|``
+
+Which can also be represented in decimal form as:
+```
+2058
+4102
+2309
+16640
+4103
+61440
+```
+
+The loader should load this into memory starting at location 0, then again starting at the location after the first program ends. There should be one empty memory space between, as the loader reads the newline at the end and returns 0 for that space. Thus, our memory should look like this:
+
+Address | Value (Decimal)
+-|-
+0x0|2058
+0x1|4102
+0x2|2309
+0x3|16640
+0x4|4103
+0x5|61440
+0x6|0
+0x7|2058
+0x8|4102
+0x9|2309
+0xA|16640
+0xB|4103
+0xC|61440
+0xD|0
+0xE|0
+0xF|0
+
+We can see from the first `dmp` in out.txt that this is indeed how are memory has been loaded.
+
+###### Running u1
+The program that is loaded essentially does the following:
+ - Load the immediate value 10 into the default register (rA)
+ - Store the default register into memory address 6
+ - Load the immediate value 5 into r1
+ - Add the immediate value 0 to r1
+ - Store the default register into memory address 7
+ - Halt
+Basically, the end result of this program is that locations 6 and 7 are overwritten with the value 10, and this is what we should expect to see in our output. The second `dmp` verifies that the program has run as expected.
+
+###### Running u2
+Once u1 has finished running, the value in address 7 has changed to 10. This address is still u2's starting location. Thus, u2's program now starts with decimal 10, which would be binary 0000000000001010, which loads the value in memory address 10 into the default register (rA). The program then proceeds as expected, its only side effect being that the value in rA is written to addresses 6 and 7.
+
+The value in address 10 is decimal 16640. Our third `dmp` shows that addresses 6 and 7 were correctly overwritten with this value.
+
+###### Scheduler
+We can see throughout the output listing that the scheduler runs as expected. Each user gets three ticks, including entering input as one tick, or if a `nop` is received the user's turn is skipped.
+
+Additionally, if a user is currently executing a program, their turn is skipped. For example, when u1 is running its program, the scheduler executes its statements, then switches to u2. From the CLI (ignoring debug output) it would appear that the scheduler has skipped u1 entirely, though we can see from debug output that this is not the case, and u1 did still get its 3 turns.
