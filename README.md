@@ -53,8 +53,19 @@ One of the problems we ran into when we started designing the OS is how we were 
 
 ### Difficulties Encountered
 The biggest difficulty that we ran into during this project was having getting a precise idea of what each op code was supposed to do, and how it would affect registers. Even after discussing it with our instructor and eachother we would still find topics that we were confused on (I.E. Should the jump command be able to use immediate addressing?).<br><br>
-Additionally we actually used the version control software Github to help with development on this portion of the project.
+Additionally we actually used the version control software Github to help with development on this portion of the project. The intial setup of getting everyone set up with their own fork to work on took some time. But that was essentially just the only other difficulty we ran into.
 
 ## How to Run
+This will be a quick overview of how to run the program:
+* Navigate to the submission folder and type the command: **make**, this will compile al the files.
+
+![alt text](https://i.imgur.com/abWpkLq.png)
+* Next type: **./os** to run the compiled code.
+
+![alt text](https://i.imgur.com/MFvETMD.png)
+* Next use the commands as specified in the OS section of this report.
+
+**NOTE:** Currently we are reading the program directly into memory form the "part1.dat" file that is in the directory. Both user 1 and user 2 are defaulted to this program. If you want to load a different program into memory, you can open the "part1.dat" file and paste your binary into that file, if you already have a file with a new program in it, you can open the os.c file and change the file name retrieved.
+![alt text](https://i.imgur.com/FUwVD61.png)
 
 ## Verification
