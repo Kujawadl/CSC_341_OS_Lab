@@ -38,8 +38,8 @@ void dump(bool dumpRegs)
 
 void scheduler()
 {
-	char titleFiller[] = "##################################################################";
-	char titleText[] = "####################### CSC 341 OS Lab ###########################";
+	char titleFiller[] = "####################################################";
+	char titleText[] = "################ CSC 341 OS Lab ####################";
 	printf("\n%s\n%s\n%s\n\n", titleFiller, titleText, titleFiller);
 	/* Scheduler code */
 	while (true) {
@@ -103,7 +103,7 @@ void scheduler()
 		currentUser = nextUser(currentUser);
 
 		printf("\n%s\n", titleFiller);
-		printf("#################### Switching to user: %d ########################\n", currentUser);
+		printf("############ Switching to user: %d ##############\n", currentUser);
 		printf("%s\n\n", titleFiller);
 	}
 
