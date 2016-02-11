@@ -344,3 +344,7 @@ footer {
     color:#444;
   }
 }
+
+body .syntaxhighlighter .line {
+        white-space: pre-wrap !important; /* make code wrap */
+}
