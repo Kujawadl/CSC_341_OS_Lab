@@ -68,4 +68,18 @@ This will be a quick overview of how to run the program:
 **NOTE:** Currently we are reading the program directly into memory form the "part1.dat" file that is in the directory. Both user 1 and user 2 are defaulted to this program. If you want to load a different program into memory, you can open the "part1.dat" file and paste your binary into that file, if you already have a file with a new program in it, you can open the os.c file and change the file name retrieved.
 ![alt text](https://i.imgur.com/FUwVD61.png)
 
+## Time Spent & Charts
+We actually have some of the most accurate timings of coding we have ever recorded. This is due to the fact that someone else (Specifically github) did it for us. The following graphs dipict how much code was added to the project and on what days.
+
+The following is a breakdown of lines of code, and how many additional lines of code were added compared to how many were deleted by day.
+![alt text](http://i.imgur.com/y9TogtV.png)
+
+Next is the amount of changes and additions that happened to the project by day (as you can see, we finished most of the coding on tuesday).
+![alt text](http://i.imgur.com/e1l4lIq.png)
+
+Finally the time of day at which most of our changes were submitted.
+![alt text](http://i.imgur.com/ZgwCZxE.png)
+
+We unfortnately did not keep track of time spent by individuals, but we estimate a total of around 26 hours of work on this portion of the project.
+
 ## Verification
