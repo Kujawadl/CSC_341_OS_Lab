@@ -389,7 +389,7 @@ unsigned short int getCondCode(unsigned short int x) {
 }
 
 /* Take a register code and return a pointer to that register */
-short int* getRegister() {
+unsigned short int* getRegister() {
 	unsigned short int regCode = getRegCode(machine.IR); /* Guaranteed to return 0-3 */
 
 	#ifdef DEBUG_VERBOSE
