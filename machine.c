@@ -50,7 +50,7 @@ unsigned short int getAddrMode(unsigned short int num) {
 	unsigned short int ret = (num & 2048)>>11;
 
 	#ifdef DEBUG_VERBOSE
-	fprintf(stderr, "In getAddrMode(). IR: %d, Opcode: %d\n", machine.IR, ret);
+	fprintf(stderr, "In getAddrMode(). IR: %d, Addr: %d\n", machine.IR, ret);
 	#endif
 
 	return ret;
@@ -62,7 +62,7 @@ unsigned short int getRegCode(unsigned short int num) {
 	unsigned short int ret = (num & 1792)>>8;
 
 	#ifdef DEBUG_VERBOSE
-	fprintf(stderr, "In getRegCode(). IR: %d, Opcode: %d\n", machine.IR, ret);
+	fprintf(stderr, "In getRegCode(). IR: %d, Regcode: %d\n", machine.IR, ret);
 	#endif
 
 	return ret;
@@ -74,7 +74,7 @@ unsigned short int getOperand(unsigned short int num) {
 	unsigned short int ret = (num & 255);
 
 	#ifdef DEBUG_VERBOSE
-	fprintf(stderr, "In getOpCode(). IR: %d, Opcode: %d\n", machine.IR, ret);
+	fprintf(stderr, "In getOperand(). IR: %d, Operand: %d\n", machine.IR, ret);
 	#endif
 
 	return ret;
