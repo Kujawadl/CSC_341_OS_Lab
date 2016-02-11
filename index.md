@@ -8,7 +8,9 @@ layout: index
 
 #### Submitted under cs341109
 
-## Table of contents
+<div class="nobreak">
+# Table of contents
+</div>
   - [Project overview](#project-overview)
     - [Machine](#machine)
     - [OS](#os)
