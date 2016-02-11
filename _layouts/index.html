@@ -51,7 +51,12 @@
   <body>
     {{ content }}
 
-<script src='{{ site.path }}/CSC_341_OS_Lab/javascripts/getFiles.js'></script>
+  <div id="sources"></div>
+  <script>
+    var s = document.createElement('script');
+    s.setAttribute('src', '{{ site.path }}/CSC_341_OS_Lab/javascripts/getFiles.js');
+    $("#sources").appendChild(s);
+  </script>
 
 <!-- <p class="pagebreak" />
     <h2><a id="project-listing" class="anchor" href="#project-listing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Project Listing</h2>
