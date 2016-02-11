@@ -20,11 +20,6 @@
 
 
     <div class="coverpage">
-      <p id="coverTitle"></p>
-      <p id="coverNames"></p>
-      <p id="coverProf"></p>
-      <p id="coverCourse"></p>
-      <p id="coverDate"></p>
       <script>
         /* Print line breaks to "center" the cover page */
         for (i = 0; i < 15; i++) {
@@ -32,11 +27,11 @@
         }
 
         /* Determine which lab we're working with by determining the due dates we're within */
-        var labNum = 0;
+        var labNum = 1;
         var today = new Date();
         var dueDates = new Array(new Date("February 11, 2016 3:30 PM"), new Date("February 25, 2016 3:30 PM"), new Date("March 29, 2016 3:30 PM"), new Date("April 12, 2016 3:30 PM"), new Date("April 28, 2016 3:30 PM"));
         for (i = 0; i < 5; i++) {
-          if (today < dueDates[i]) {
+          if (today > dueDates[i]) {
             labNum++;
           }
         }
