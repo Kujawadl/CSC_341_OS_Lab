@@ -58,7 +58,7 @@ First we will go over the Architectural  design of the machine as indicated on t
 * condition code flags : equals or zero-(010), positive-(001), negative-(100)
 * Machine instruction cycle - fetch, decode, opfetch, execute, writeback
 
-This was the basis of the design of our machine. The 16 bit words are held in the <b>short int</b> data type, which in c can only hold 16 bits. The 256 word memory is simply an array of size 256, the indexes obviously refer to the address location of instructions.
+This was the basis of the design of our machine. The 16 bit words are held in the <b>short int</b> data type, which in c can only hold 16 bits. The 256 word memory is simply an array of size 256, the indexes obviously refer to the address location of instructions.<br></br>To hold the Registers we designed a structure that represented all possible machine registers states (including condition codes). Since we knew in advance that users were going to have different register states that would need to be saved and loaded, this just made sense.</br></br>The machine instructions and operation codes are as follows: </br>![alt text](https://i.imgur.com/eAVF44a.png "Some bullshit")</br></br>The above outlines the basic operations the machine had to be able to perform.
 
 <a name="overview_os" />
 ### OS
