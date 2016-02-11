@@ -44,11 +44,11 @@
         var dateToPrint = new Array("February 11, 2016", "February 25, 2016", "March 29, 2016", "April 12, 2016", "April 28, 2016");
 
         /* Print out the cover page */
-        document.getElementById("coverTitle").innerHTML("<p>Lab " + labNum + "</p>");
-        document.getElementById("coverTitle").innerHTML("<p>Aaron Baker, Andrew Ballard, and Dylan Jager-Kujawa</p>");
-        document.getElementById("coverNames").innerHTML("<p>Dr. Robert Strader</p>");
-        document.getElementById("coverProf").innerHTML("<p>CSC 341.001</p>");
-        document.getElementById("coverDate").innerHTML("<p>" + dateToPrint[labNum - 1] + "</p>"); /* labNum is 1-indexed, dateToPrint is 0-indexed */
+        document.write("<p>Lab " + labNum + "</p>");
+        document.write("<p>Aaron Baker, Andrew Ballard, and Dylan Jager-Kujawa</p>");
+        document.write("<p>Dr. Robert Strader</p>");
+        document.write("<p>CSC 341.001</p>");
+        document.write("<p>" + dateToPrint[labNum - 1] + "</p>"); /* labNum is 1-indexed, dateToPrint is 0-indexed */
       </script>
     </div>
   </head>
