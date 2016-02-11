@@ -46,8 +46,8 @@
           var dateToPrint = new Array("February 11, 2016", "February 25, 2016", "March 29, 2016", "April 12, 2016", "April 28, 2016");
 
           /* Print out the title and date */
-          $("p.coverTitle").html("Lab " + labNum);
-          $("p.coverDate").html(dateToPrint[labNum - 1]); /* labNum is 1-indexed, dateToPrint is 0-indexed */
+          document.getElementById("coverTitle").innerHTML = "Lab " + labNum;
+          document.getElementById("coverTitle").innerHTML = dateToPrint[labNum - 1]; /* labNum is 1-indexed, dateToPrint is 0-indexed */
         </script>
       </p>
     </div>
