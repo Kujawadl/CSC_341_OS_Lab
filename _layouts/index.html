@@ -51,18 +51,11 @@
   <body>
     {{ content }}
 
-  <div id="sources"></div>
-  <script>
-    var s = document.createElement('script');
-    s.setAttribute('src', '{{ site.path }}/CSC_341_OS_Lab/javascripts/getFiles.js');
-    $("#sources").appendChild(s);
-  </script>
-
-<!-- <p class="pagebreak" />
+<p class="pagebreak" />
     <h2><a id="project-listing" class="anchor" href="#project-listing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Project Listing</h2>
     <script>
       $(document).ready(function(){
-        $("#out_txt").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/out.txt")
+        $("#out_txt_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/out.txt")
         $("#machine_h_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/machine.h");
         $("#machine_c_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/machine.c");
         $("#os_h_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/os.h");
@@ -74,9 +67,9 @@
       });
     </script>
 
-    <p><a name="listing_machine_h"></a></p>
-    <h3><a id="machineh" class="anchor" href="#machineh" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>machine.h</h3>
-    <pre id="machine_h_code" class="syntaxhighlighter brush: c; toolbar: false; tab-size: 2; ruler: false"></pre>
+    <p><a name="out_txt"></a></p>
+    <h3><a id="outtxt" class="anchor" href="#out_txt" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Execution Listing</h3>
+    <pre id="out_txt_code" class="syntaxhighlighter brush: c; toolbar: false; tab-size: 2; ruler: false"></pre>
 
 <p class="pagebreak" />
     <p><a name="listing_machine_h"></a></p>
@@ -111,6 +104,6 @@
 <p class="pagebreak" />
     <p><a name="listing_makefile"></a></p>
     <h3><a id="makefile" class="anchor" href="#makefile" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>makefile</h3>
-    <pre id="makefile_code" class="syntaxhighlighter brush: c; toolbar: false; tab-size: 2; ruler: false"></pre> -->
+    <pre id="makefile_code" class="syntaxhighlighter brush: c; toolbar: false; tab-size: 2; ruler: false"></pre>
   </body>
 </html>
