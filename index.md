@@ -6,9 +6,7 @@ layout: index
 
 ### by Aaron Baker, Andrew Ballard, and Dylan Jager-Kujawa
 
-#### CSC 341, Spring 2016
-
-##### Submitted under cs341109
+#### Submitted under cs341109
 
 ## Table of contents
   - [Project overview](#project-overview)
