@@ -44,11 +44,11 @@
         var dateToPrint = new Array("February 11, 2016", "February 25, 2016", "March 29, 2016", "April 12, 2016", "April 28, 2016");
 
         /* Print out the cover page */
-        $("#coverTitle").write("<p>Lab " + labNum + "</p>");
-        $("#coverNames").write("<p>Aaron Baker, Andrew Ballard, and Dylan Jager-Kujawa</p>");
-        $("#coverProf").write("<p>Dr. Robert Strader</p>");
-        $("#coverCourse").write("<p>CSC 341.001</p>");
-        $("#coverDate").write("<p>" + dateToPrint[labNum - 1] + "</p>"); /* labNum is 1-indexed, dateToPrint is 0-indexed */
+        $("#coverTitle").HTML("<p>Lab " + labNum + "</p>");
+        $("#coverNames").HTML("<p>Aaron Baker, Andrew Ballard, and Dylan Jager-Kujawa</p>");
+        $("#coverProf").HTML("<p>Dr. Robert Strader</p>");
+        $("#coverCourse").HTML("<p>CSC 341.001</p>");
+        $("#coverDate").HTML("<p>" + dateToPrint[labNum - 1] + "</p>"); /* labNum is 1-indexed, dateToPrint is 0-indexed */
       </script>
     </div>
   </head>
