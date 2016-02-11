@@ -20,6 +20,11 @@
 
 
     <div class="coverpage">
+      <p id="coverTitle"></p>
+      <p id="coverNames"></p>
+      <p id="coverProf"></p>
+      <p id="coverCourse"></p>
+      <p id="coverDate"></p>
       <script>
         /* Print line breaks to "center" the cover page */
         for (i = 0; i < 15; i++) {
@@ -39,11 +44,11 @@
         var dateToPrint = new Array("February 11, 2016", "February 25, 2016", "March 29, 2016", "April 12, 2016", "April 28, 2016");
 
         /* Print out the cover page */
-        document.write("<p>Lab " + labNum + "</p>");
-        document.write("<p>Aaron Baker, Andrew Ballard, and Dylan Jager-Kujawa</p>");
-        document.write("<p>Dr. Robert Strader</p>");
-        document.write("<p>CSC 341.001</p>");
-        document.write("<p>" + dateToPrint[labNum - 1] + "</p>"); /* labNum is 1-indexed, dateToPrint is 0-indexed */
+        $("#coverTitle").write("<p>Lab " + labNum + "</p>");
+        $("#coverNames").write("<p>Aaron Baker, Andrew Ballard, and Dylan Jager-Kujawa</p>");
+        $("#coverProf").write("<p>Dr. Robert Strader</p>");
+        $("#coverCourse").write("<p>CSC 341.001</p>");
+        $("#coverDate").write("<p>" + dateToPrint[labNum - 1] + "</p>"); /* labNum is 1-indexed, dateToPrint is 0-indexed */
       </script>
     </div>
   </head>
