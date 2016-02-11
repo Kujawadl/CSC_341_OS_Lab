@@ -252,7 +252,8 @@ bool NOT() {
 	short int *reg = getRegister();
 	*reg = ~*reg;
 
-	machine.CR = getCondCode(*reg);
+	if (machine.CR != 0)
+		machine.CR = getCondCode(*reg);
 
 	#ifdef DEBUG
 	printDebug("NOT");

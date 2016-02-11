@@ -24,12 +24,23 @@ void dump(bool dumpRegs)
 	{
 		/* Dump registers */
 	}
-
 	/* Dump memory */
+	printf("\n\t>>>>>>DUMPING MEMORY<<<<<<\n");
+	int i;
+	for (i = 0; i < 256; i++) {
+		if (i % 4 == 0)
+			printf("\n");
+		printf("\tMemory Location #%3d: %8d", i, main_memory[i]);
+	}
+	printf("\n\n>\tEnd of dump\n\n");
+
 }
 
 void scheduler()
 {
+	char titleFiller[] = "##################################################################";
+	char titleText[] = "####################### CSC 341 OS Lab ###########################";
+	printf("\n%s\n%s\n%s\n\n", titleFiller, titleText, titleFiller);
 	/* Scheduler code */
 	while (true) {
 		switch (currentUser) {
@@ -58,7 +69,7 @@ void scheduler()
 				if (strcasecmp(input, "run") == 0) {
 					if (currentUser != sys) {
 						machine.IR = main_memory[machine.PC];
-						interpreter();
+						// interpreter();
 					} else {
 						printf("Invalid command for system\n");
 					}
@@ -90,7 +101,10 @@ void scheduler()
 
 		switchTime = clock + 3;
 		currentUser = nextUser(currentUser);
-		printf("Switching to u%d\n", (int)currentUser);
+
+		printf("\n%s\n", titleFiller);
+		printf("#################### Switching to user: %d ########################\n", currentUser);
+		printf("%s\n\n", titleFiller);
 	}
 
 }
