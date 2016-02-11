@@ -344,6 +344,21 @@ footer {
   }
 }
 
+@page :first {
+  @top-right {
+    
+  }
+}
+
+@page {
+  @top-right {
+    content: "Baker, Ballard, Jager-Kujawa " + counter(page);
+    margin: 20, 0, 10, 0
+    font-size: 10pt;
+    color: black;
+  }
+}
+
 body .syntaxhighlighter .line {
         white-space: pre-wrap !important; /* make code wrap */
 }
