@@ -3,6 +3,9 @@
 #include <string.h>
 #include "machine.h"
 
+//Needed for formatting when printing
+//</stdio.h></stdlib.h></string.h>
+
 #ifndef OS
 #define OS
 
