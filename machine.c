@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <string.h>
 
+//Needed for formatting when printing
+//</stdio.h></stdio.h></string.h></string.h>
+
 /* Initialize machine registers */
 registers machine = {0, 0, 0, 0, 0, 0, 0};
 
