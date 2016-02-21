@@ -8,6 +8,7 @@
 
 <body>
   {% for contributor in site.github.contributors %}
+  * Contributor
   * {{contributor.login}}
   {% endfor %}
   
