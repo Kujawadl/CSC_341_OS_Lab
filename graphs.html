@@ -58,7 +58,7 @@ var tooltip = d3.select("body").append("div")
     .style("opacity", "0.0")
     .style("pointer-events", "none");
 
-d3.xhr("https://api.github.com/repos/mbostock/d3", "application/vnd.github.beta+json", function(xhr) {
+d3.xhr("https://api.github.com/repos/Kujawadl/CSC_341_OS_Lab?access_token=810a958996a52c76bcf8e9b5fef4654fb869ef6d", "application/vnd.github.beta+json", function(xhr) {
   root = JSON.parse(xhr.response);
   root.fixed = true;
   root.x = w / 2;
