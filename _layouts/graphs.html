@@ -6,6 +6,13 @@
     src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"
   ></script>
   <script type="text/javascript">
+    jQuery.ajaxPrefilter(function(options) {
+      if (options.crossDomain && jQuery.support.cors) {
+          options.url = 'https://cors-anywhere.herokuapp.com/' + options.url;
+      }
+    });
+  </script>
+  <script type="text/javascript">
     $(document).ready(function(){
       $('#graphs').load('https://github.com/Kujawadl/CSC_341_OS_Lab/graphs/contributors .repository-content', '', function(response, status, xhr) {
         if (status == 'error') {
