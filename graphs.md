@@ -7,7 +7,9 @@
 </head>
 
 <body>
-  {{ site.github.contributors }}
+  {% for contributor in site.github.contributors %}
+  * {{login}}
+  {% endfor %}
   
 
 
