@@ -24,7 +24,7 @@
     })();
   
     $(document).ready(function(){
-      $('#graphs').load('https://github.com/Kujawadl/CSC_341_OS_Lab/graphs/contributors .repository-content', '', function(response, status, xhr) {
+      $('#graphs').load('https://github.com/Kujawadl/CSC_341_OS_Lab/graphs/contributors .graphs', '', function(response, status, xhr) {
         if (status == 'error') {
           var msg = "Problem fetching latest commit information";
           $(".content").html(msg + xhr.status + " " + xhr.statusText);
