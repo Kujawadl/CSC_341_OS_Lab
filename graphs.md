@@ -8,7 +8,7 @@
 
 <body>
   {% for contributor in site.github.contributors %}
-  * {{login}}
+  * {{contributor.login}}
   {% endfor %}
   
 
