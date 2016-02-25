@@ -19,10 +19,12 @@ int switchTime;
 
 void dump(bool dumpRegs)
 {
-	if (dumpRegs == true)
-	{
-		// Dump registers
-	}
+	// Dump Registers
+	User temp;
+	cout << "\n\t>>>>>>DUMPING REGISTERS<<<<<<\n";
+	printQueue(readyQueue, readyQueue.size());
+	printQueue(blockedQueue, blockedQueue.size());
+
 	// Dump memory
 	cout << "\n\t>>>>>>DUMPING MEMORY<<<<<<\n";
 	int i;
@@ -35,6 +37,23 @@ void dump(bool dumpRegs)
 	}
 	cout << "\n\n>\tEnd of dump\n\n";
 
+}
+
+void printQueue(queue<User> &s,int num)
+{
+    if(!num)
+    {
+        cout << endl;
+        return;
+    }
+    User x= s.front();
+    s.pop();
+    cout << "\nUSER " << x.id << " REGISTERS";
+		cout << "\n\trA: " << x.regs.rA << ", r1: " << x.regs.r1 << ", r2: " \
+			<< x.regs.r2 << ", r3: " << x.regs.r3 << endl;
+		cout << "\tIR: " << x.regs.IR << ", PC: " << x.regs.PC << ", CR: " << x.regs.CR << endl;
+    s.push(x);
+    printQueue(s,--num);
 }
 
 void dispatcher() {
@@ -61,7 +80,7 @@ void scheduler()
 	// Scheduler code
 	while (true) {
 		// Load next user and assign its max time (3 ticks)
-		dispatcher();
+		// dispatcher();
 		switchTime = sysclock + 3;
 
 		while (sysclock < switchTime) {
