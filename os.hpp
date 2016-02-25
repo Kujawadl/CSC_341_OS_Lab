@@ -23,6 +23,7 @@
 enum userID {sys, u1, u2};
 struct User {
   userID id;
+  bool running;
   registers regs;
 };
 

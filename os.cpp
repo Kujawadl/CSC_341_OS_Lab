@@ -107,6 +107,8 @@ void dispatcher(int action) {
 
 void scheduler()
 {
+	string titleFiller = "######################################" \
+	 "##############";
 	// Scheduler code
 	while (true) {
 		// Load next user and assign its max time (3 ticks)
@@ -117,39 +119,76 @@ void scheduler()
 		switchTime = sysclock + 3;
 
 		while (sysclock < switchTime) {
-			bool running = !(getOpcode(machine.IR) == 15);
+			bool running = currentUser.running;
+			bool instrLoaded = !(getOpcode(machine.IR) == 15);
 			sysclock++;
 			// If current user is not running, prompt for a command
-			if (currentUser.id != sys && !running) {
+			if (currentUser.id != sys && !running && !instrLoaded) {
 				cout << "USER" << (currentUser.id == u1 ? 1 : 2) << " > ";
-			// If current user is running, continue execution
-			} else if (currentUser.id != sys && running) {
-				interpreter();
-				// If last instruction executed was HLT, call semsignal and break
-				if (getOpcode(machine.IR) == 15) {
-				  semsignal();
+			// If current user is not running, but has an instruction loaded, begin
+			// executing instructions (user just restored from blocked state)
+			} else if (currentUser.id != sys && !running && instrLoaded) {
+				// If memory is free, run as usual.
+				if (semwait() == false) {
+					cout << endl << titleFiller;
+					cout << endl << "USER " << currentUser.id << " REQUESTED MEM " \
+						<< "ACCESS AND ACCESS WAS GRANTED." << endl << "USER MAY " \
+						<< "EXECUTE INSTRUCTIONS.";
+					cout << endl << titleFiller << endl << endl;
+					currentUser.running = true;
+					interpreter();
+					// If last instruction executed was HLT
+					if (machine.IR == 61440) {
+						// Signal semaphore is unlocked
+						semsignal();
+						currentUser.running = false;
+						// Exit loop (current user is done)
+						switchTime = sysclock;
+					}
+				// If memory is locked, dispatch to blockedQueue, load next user
+				// Reset switchtime (i.e. reset the loop) so next user gets
+				// 3 ticks.
+				} else {
+					switchTime = sysclock + 3;
 					break;
 				}
-				// If current user is system, prompt as system
+			// If current user is system, prompt as system
+			} else if (currentUser.id != sys && running) {
+				interpreter();
+				// If last instruction executed was HLT
+				if (machine.IR == 61440) {
+					// Signal semaphore is unlocked
+					semsignal();
+					currentUser.running = false;
+					// Exit loop (current user is done)
+					switchTime = sysclock;
+				}
 			} else {
 				cout << "SYS > ";
 			}
 
-			// If necessary, take input from command line
-			if (!running || currentUser.id == sys) {
-				string input;
-				getline(cin, input);
-				switch (cmdToInt(input)) {
-					case 0: // "run"
+		// If necessary, take input from command line
+		if ((!running  && !instrLoaded) || currentUser.id == sys) {
+			string input;
+			getline(cin, input);
+			switch (cmdToInt(input)) {
+				case 0: // "run"
 					if (currentUser.id != sys) {
 						machine.IR = main_memory[machine.PC];
 						// If memory is free, run as usual.
 						if (semwait() == false) {
+							cout << endl << titleFiller;
+							cout << endl << "USER " << currentUser.id << " REQUESTED MEM " \
+								<< "ACCESS AND ACCESS WAS GRANTED." << endl << "USER MAY " \
+								<< "EXECUTE INSTRUCTIONS.";
+							cout << endl << titleFiller << endl << endl;
+							currentUser.running = true;
 							interpreter();
 							// If last instruction executed was HLT
 							if (machine.IR == 61440) {
 								// Signal semaphore is unlocked
 								semsignal();
+								currentUser.running = false;
 								// Exit loop (current user is done)
 								switchTime = sysclock;
 							}
@@ -163,25 +202,25 @@ void scheduler()
 						cout << "Invalid command for system" << endl;
 					}
 					break;
-					case 1: // "dmp"
+				case 1: // "dmp"
 					if (currentUser.id == sys) {
 						dump();
 					} else {
 						cout << "Invalid command for users" << endl;
 					}
 					break;
-					case 2: // "nop"
+				case 2: // "nop"
 					// Exit loop (current user is done)
 					switchTime = sysclock;
 					break;
-					case 3: // "stp"
+				case 3: // "stp"
 					if (currentUser.id == sys) {
 						exit(EXIT_SUCCESS);
 					} else {
 						cout << "Invalid command for users" << endl;
 					}
 					break;
-					default:
+				default:
 					cout << "Invalid command: " << input << endl;
 					break;
 				}
@@ -222,9 +261,9 @@ void init(){
 		0,			// PC
 		0				// CR
 	};
-	User U1 = {u1, defaultRegisterValues};
-	User U2 = {u2, defaultRegisterValues};
-	User SYS = {sys, defaultRegisterValues};
+	User U1 = {u1, false, defaultRegisterValues};
+	User U2 = {u2, false, defaultRegisterValues};
+	User SYS = {sys, false, defaultRegisterValues};
 
 	// Read in the program for u1 and u2
 	int u1_start = 0;
