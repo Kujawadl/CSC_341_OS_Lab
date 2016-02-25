@@ -13,6 +13,7 @@ something by testing the opcode of the IR for HLT (1111).
 queue<User> readyQueue = queue<User>();
 queue<User> blockedQueue = queue<User>();
 User currentUser;
+bool semaphore = false; // Default value is unlocked
 
 int sysclock;
 int switchTime;
@@ -41,38 +42,48 @@ void dump(bool dumpRegs)
 
 void printQueue(queue<User> &s,int num)
 {
-    if(!num)
-    {
-        cout << endl;
-        return;
-    }
-    User x= s.front();
-    s.pop();
-    cout << "\nUSER " << x.id << " REGISTERS";
-		cout << "\n\trA: " << x.regs.rA << ", r1: " << x.regs.r1 << ", r2: " \
-			<< x.regs.r2 << ", r3: " << x.regs.r3 << endl;
-		cout << "\tIR: " << x.regs.IR << ", PC: " << x.regs.PC << ", CR: " << x.regs.CR << endl;
-    s.push(x);
-    printQueue(s,--num);
+	if(!num)
+	{
+		cout << endl;
+		return;
+	}
+	User x= s.front();
+	s.pop();
+	cout << "\nUSER " << x.id << " REGISTERS";
+	cout << "\n\trA: " << x.regs.rA << ", r1: " << x.regs.r1 << ", r2: " \
+	<< x.regs.r2 << ", r3: " << x.regs.r3 << endl;
+	cout << "\tIR: " << x.regs.IR << ", PC: " << x.regs.PC << ", CR: " << x.regs.CR << endl;
+	s.push(x);
+	printQueue(s,--num);
 }
 
-void dispatcher() {
+void dispatcher(int action) {
+	string titleFiller = "####################################################";
 	// Save user state
 	currentUser.regs = machine;
-	// Return user to readyQueue
-	readyQueue.push(currentUser);
-	// Load next user
-	currentUser = readyQueue.front();
-	readyQueue.pop();
-	// Load user state
-	machine = currentUser.regs;
+	if (action == 1) {
+		// Return user to readyQueue
+		readyQueue.push(currentUser);
+	} else {
+		blockedQueue.push(currentUser);
+		cout << "\n" << titleFiller;
+		cout <<"\nUSER: "  << currentUser.id << " WAS DENIED ACCESS TO "\
+		"MEMORY AND PUT INTO \nTHE BLOCK QUEUE UNTIL ANOTHER PROCESS FINISHES";
+		cout << "\n" << titleFiller << "\n\n";
+	}
+		// Load next user
+		currentUser = readyQueue.front();
+		readyQueue.pop();
+		// Load user state
+		machine = currentUser.regs;
 
-	// Output information about user switch
-	string titleFiller = "####################################################";
-	cout << endl << titleFiller << endl;
-	cout << "############### Switching to user " << currentUser.id \
-	<< " ################" << endl;
-	cout << titleFiller << endl << endl;
+		// Output information about user switch
+
+		cout << endl << titleFiller << endl;
+		cout << "############### Switching to user " << currentUser.id \
+		<< " ################" << endl;
+		cout << titleFiller << endl << endl;
+
 }
 
 void scheduler()
@@ -82,6 +93,7 @@ void scheduler()
 		// Load next user and assign its max time (3 ticks)
 		// dispatcher();
 		switchTime = sysclock + 3;
+		int flag = 1;
 
 		while (sysclock < switchTime) {
 			bool running = !(getOpcode(machine.IR) == 15);
@@ -108,39 +120,44 @@ void scheduler()
 				getline(cin, input);
 				switch (cmdToInt(input)) {
 					case 0: // "run"
-						if (currentUser.id != sys) {
-							machine.IR = main_memory[machine.PC];
-							// semwait();
+					if (currentUser.id != sys) {
+						machine.IR = main_memory[machine.PC];
+						// if memory is free, run as usual.
+						if (semwait() == true) {
 							interpreter();
-							// semsignal if necessary
 						} else {
-							cout << "Invalid command for system" << endl;
+							flag = 0;
+							switchTime = sysclock;
 						}
-						break;
+						// semsignal if necessary
+					} else {
+						cout << "Invalid command for system" << endl;
+					}
+					break;
 					case 1: // "dmp"
-						if (currentUser.id == sys) {
-							dump(false);
-						} else {
-							cout << "Invalid command for users" << endl;
-						}
-						break;
+					if (currentUser.id == sys) {
+						dump(false);
+					} else {
+						cout << "Invalid command for users" << endl;
+					}
+					break;
 					case 2: // "nop"
-						switchTime = sysclock;
-						break;
+					switchTime = sysclock;
+					break;
 					case 3: // "stp"
-						if (currentUser.id == sys) {
-							exit(EXIT_SUCCESS);
-						} else {
-							cout << "Invalid command for users" << endl;
-						}
-						break;
+					if (currentUser.id == sys) {
+						exit(EXIT_SUCCESS);
+					} else {
+						cout << "Invalid command for users" << endl;
+					}
+					break;
 					default:
-						cout << "Invalid command: " << input << endl;
-						break;
+					cout << "Invalid command: " << input << endl;
+					break;
 				}
 			}
 		}
-		dispatcher();
+		dispatcher(flag);
 	}
 
 }
@@ -151,7 +168,7 @@ int main(int argc, char** argv)
 	char const *titleText = "################ CSC 341 OS Lab ####################";
 	cout << endl << titleFiller << endl << titleText << endl << titleFiller << endl << endl;
 	init();
-	dispatcher();
+	dispatcher(1);
 	scheduler();
 	return 0;
 }
@@ -212,6 +229,16 @@ bool semsignal() {
 
 }
 
+bool semwait() {
+	// If the memory is unlocked then return true, else false.
+	if (semaphore == false) {
+		semaphore = true;
+		return true;
+	} else {
+		return false;
+	}
+}
+
 // Read program into memory
 // Takes the address to start loading into
 // Returns the size of the program in words
@@ -228,7 +255,7 @@ unsigned short int readFile(unsigned short int start){
 			continue;
 		}
 		char * ptr;
-    current = strtol(line.c_str(), & ptr, 2);
+		current = strtol(line.c_str(), & ptr, 2);
 		main_memory[i] = current;
 		i++;
 	}
