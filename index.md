@@ -121,5 +121,4 @@ GitHub tracks contributions over time.
 ![timesheet.png]('{{ site.path }}/images/timesheet.png')
 
 ## Verification
-
 ![verification.png]('{{ site.path }}/images/verification.png')
