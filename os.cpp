@@ -89,7 +89,7 @@ void scheduler()
 	// Scheduler code
 	while (true) {
 		// Load next user and assign its max time (3 ticks)
-		// dispatcher();
+		dispatcher();
 		switchTime = sysclock + 3;
 
 		while (sysclock < switchTime) {
@@ -149,20 +149,20 @@ void scheduler()
 				}
 			}
 		}
-		dispatcher();
 	}
-
 }
 
 int main(int argc, char** argv)
 {
+	// Print OS startup header
 	string titleFiller = "####################################################";
 	string titleText = "################ CSC 341 OS Lab ####################";
 	cout << endl << titleFiller << endl \
 		<< titleText << endl \
 		<< titleFiller << endl << endl;
+	// Initialization
 	init();
-	dispatcher();
+	// Start scheduler
 	scheduler();
 	return 0;
 }
@@ -249,9 +249,16 @@ unsigned short int readFile(unsigned short int start){
 // Convert a command as a string into an integer value to simplify
 // switch statements using commands.
 int cmdToInt(string cmd) {
-	if (cmd == "run") return 0;
-	else if (cmd == "dmp") return 1;
-	else if (cmd == "nop") return 2;
-	else if (cmd == "stp") return 3;
+	if my_strcasecmp(cmd, "run") return 0;
+	else if my_strcasecmp(cmd, "dmp") return 1;
+	else if my_strcasecmp(cmd, "nop") return 2;
+	else if my_strcasecmp(cmd, "stp") return 3;
 	else return -1;
+}
+
+bool my_strcasecmp(string str1, string str2)
+{
+	transform(str1.begin(), str1.end(), str1.begin(), tolower);
+	transform(str2.begin(), str2.end(), str2.begin(), tolower);
+	return ((str1 == str2) ? true : false);
 }

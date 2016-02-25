@@ -7,6 +7,7 @@
 #include <sstream>
 #include <fstream>
 #include <string>
+#include <algorithm>
 #include "machine.hpp"
   using namespace std;
 
@@ -53,5 +54,7 @@ unsigned short int readFile(unsigned short int);
 void init();
 
 int cmdToInt(string);
+
+bool my_strcasecmp(string str1, string str2);
 
 #endif
