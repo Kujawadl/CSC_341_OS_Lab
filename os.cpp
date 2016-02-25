@@ -256,6 +256,7 @@ bool semsignal() {
 		}
 		cout << titleFiller << endl;
 	}
+	return true;
 }
 
 bool semwait() {
@@ -288,6 +289,7 @@ unsigned short int readFile(unsigned short int start){
 		main_memory[i] = current;
 		i++;
 	}
+	return current;
 }
 
 // Convert a command as a string into an integer value to simplify
