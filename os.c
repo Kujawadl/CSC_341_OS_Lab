@@ -126,7 +126,7 @@ void init(){
 
 	/* Read in the program for u1 and u2 */
 	int u1_start = 0;
-	int u2_start = readFile(u1_start) + 1;
+	int u2_start = 100;
 	readFile(u2_start);
 	U1.IR = 61440;
 	U1.PC = u1_start;
@@ -144,7 +144,7 @@ void init(){
 /* Returns the size of the program in words */
 unsigned short int readFile(unsigned short int start){
 	FILE *ifp;
-	ifp = fopen("part1.dat", "r");
+	ifp = fopen("part2.dat", "r");
 
 	/* Ensure file exists */
 	if (ifp == NULL) {
@@ -155,6 +155,12 @@ unsigned short int readFile(unsigned short int start){
 	char str[18];
 	int i = start;
 	while(fgets(str, 18, ifp)){
+		if (str[0] == '*') {
+			// This is hardcoded for project 2. Sorry dawg
+			i = 100;
+			continue;
+		}
+
 		main_memory[i] = (short int)(strtol(str, NULL, 2));
 		i++;
 	}
