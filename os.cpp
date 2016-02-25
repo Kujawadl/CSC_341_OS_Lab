@@ -76,9 +76,10 @@ void dispatcher(int action) {
 		readyQueue.push(currentUser);
 	} else {
 		blockedQueue.push(currentUser);
-		cout << "\n" << titleFiller;
-		cout <<"\nUSER: "  << currentUser.id << " WAS DENIED ACCESS TO "\
-		"MEMORY AND PUT INTO \nTHE BLOCK QUEUE UNTIL ANOTHER PROCESS FINISHES";
+		cout << endl << titleFiller;
+		cout << endl << "USER "  << currentUser.id << " WAS DENIED ACCESS TO "\
+			<< "MEMORY AND PUT INTO" << endl << "THE BLOCKED QUEUE UNTIL ANOTHER " \
+			<< "PROCESS FINISHES";
 		cout << "\n" << titleFiller << "\n\n";
 	}
 		// Load next user
