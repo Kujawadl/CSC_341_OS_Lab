@@ -14,12 +14,12 @@
   - [Verification](#verification)
   - [Project Listing](#project-listing)
     - [Execution Listing](#out_txt)
-    - [machine.h](#listing_machine_h)
-    - [machine.c](#listing_machine_c)
-    - [os.h](#listing_os_h)
-    - [os.c](#listing_os_c)
-    - [part1.dat](#listing_part1_dat)
-    - [part1x.dat](#listing_part1x_dat)
+    - [machine.hpp](#listing_machine_hpp)
+    - [machine.cpp](#listing_machine_cpp)
+    - [os.hpp](#listing_os_hpp)
+    - [os.cpp](#listing_os_cpp)
+    - [part2.dat](#listing_part1_dat)
+    - [part2x.dat](#listing_part1x_dat)
     - [makefile](#listing_makefile)
 
 ## Project Overview

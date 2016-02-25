@@ -249,10 +249,11 @@ void semsignal() {
 
 			User x = blockedQueue.front();
 			blockedQueue.pop();
+			cout << titleFiller << endl;
 			cout << "USER " << x.id << " WAS PUT BACK INTO READY QUEUE" << endl;
+			cout << titleFiller << endl << endl;
 			readyQueue.push(x);
 		}
-		cout << titleFiller << endl;
 	}
 }
 
