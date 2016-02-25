@@ -4,6 +4,9 @@
 #include <iomanip>
 #include <cstdlib>
 #include <cstring>
+#include <sstream>
+#include <fstream>
+#include <string>
 #include "machine.hpp"
   using namespace std;
 
