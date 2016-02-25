@@ -3,16 +3,16 @@
 //Needed for formatting when printing
 //</stdio.h></stdio.h></string.h></string.h>
 
-/* Initialize machine registers */
+// Initialize machine registers
 registers machine = {0, 0, 0, 0, 0, 0, 0};
 
 unsigned short int main_memory[256];
 
-/* Uses value in IR to determine course of action */
-/* Returns false if errors */
+// Uses value in IR to determine course of action
+// Returns false if errors
 bool interpreter() {
 	machine.IR = main_memory[machine.PC];
-	machine.PC++; /* Increment Program Counter */
+	machine.PC++; // Increment Program Counter
 	unsigned short int op = getOpcode(machine.IR);
 	switch (op) {
 		case 0:  return LOD(); break;
@@ -35,55 +35,55 @@ bool interpreter() {
 	}
 }
 
-/* Retrieves the opcode */
-/* Returns an int 0-15 */
+// Retrieves the opcode
+// Returns an int 0-15
 unsigned short int getOpcode(unsigned short int num) {
 	unsigned short int ret = (num & 61440)>>12;
 
 	#ifdef DEBUG_VERBOSE
-	fprintf(stderr, "In getOpCode(). IR: %d, Opcode: %d\n", machine.IR, ret);
+	cerr<< "In getOpCode(). IR: " << machine.IR << ", Opcode: " << ret << endl;
 	#endif
 
 	return ret;
 }
 
-/* Retrieves the address mode */
-/* Returns 0 or 1 */
+// Retrieves the address mode
+// Returns 0 or 1
 unsigned short int getAddrMode(unsigned short int num) {
 	unsigned short int ret = (num & 2048)>>11;
 
 	#ifdef DEBUG_VERBOSE
-	fprintf(stderr, "In getAddrMode(). IR: %d, Addr: %d\n", machine.IR, ret);
+	cerr << "In getAddrMode(). IR: " << machine.IR << ", Addr: " << ret << endl;
 	#endif
 
 	return ret;
 }
 
-/* Retrieves the register code */
-/* Returns an int 0-3 */
+// Retrieves the register code
+// Returns an int 0-3
 unsigned short int getRegCode(unsigned short int num) {
 	unsigned short int ret = (num & 1792)>>8;
 
 	#ifdef DEBUG_VERBOSE
-	fprintf(stderr, "In getRegCode(). IR: %d, Regcode: %d\n", machine.IR, ret);
+	cerr << "In getRegCode(). IR: " << machine.IR << ", Regcode: " << ret << endl;
 	#endif
 
 	return ret;
 }
 
-/* Retrieves the operand */
-/* Returns an int 0-255 */
+// Retrieves the operand
+// Returns an int 0-255
 unsigned short int getOperand(unsigned short int num) {
 	unsigned short int ret = (num & 255);
 
 	#ifdef DEBUG_VERBOSE
-	fprintf(stderr, "In getOperand(). IR: %d, Operand: %d\n", machine.IR, ret);
+	cerr << "In getOperand(). IR: " << machine.IR << ", Operand: " << ret << endl;
 	#endif
 
 	return ret;
 }
 
-/* Loads a value into a register */
+// Loads a value into a register
 bool LOD() {
 	unsigned short int addr = getAddrMode(machine.IR);
 	unsigned short int operand = getOperand(machine.IR);
@@ -97,7 +97,7 @@ bool LOD() {
 	return true;
 }
 
-/* Stores a value from a register to a memory location */
+// Stores a value from a register to a memory location
 bool STO() {
 	unsigned short int *reg = getRegister();
 	main_memory[getOperand(machine.IR)] = *reg;
@@ -108,8 +108,8 @@ bool STO() {
 	return true;
 }
 
-/* Adds the input to rA */
-/* TODO: Verify overflow checking */
+// Adds the input to rA
+// TODO: Verify overflow checking
 bool ADD() {
 	unsigned short int operand = getOperand(machine.IR);
 	unsigned short int addr = getAddrMode(machine.IR);
@@ -121,20 +121,20 @@ bool ADD() {
 	printDebug("ADD");
 	#endif
 
-	/* If overflow occurs, return false */
+	// If overflow occurs, return false
 	if (over == (int)machine.rA) {
 		machine.CR = getCondCode(machine.rA);
 		return true;
 	} else {
 		#ifdef DEBUG
-		fprintf(stderr, "!! OVERFLOW IN ADD()\n");
+		cout << "!! OVERFLOW IN ADD()" << endl;
 		#endif
 		return false;
 	}
 }
 
-/* Subtracts the input from rA */
-/* TODO: Verify overflow checking */
+// Subtracts the input from rA
+// TODO: Verify overflow checking
 bool SUB() {
 	unsigned short int addr = getAddrMode(machine.IR);
 	unsigned short int operand = getOperand(machine.IR);
@@ -147,20 +147,20 @@ bool SUB() {
 	printDebug("SUB");
 	#endif
 
-	/* If overflow occurs, return false */
+	// If overflow occurs, return false
 	if (over == (int)machine.rA) {
 		machine.CR = getCondCode(machine.rA);
 		return true;
 	} else {
 		#ifdef DEBUG
-		fprintf(stderr, "!! OVERFLOW IN SUB()\n");
+		cout << "!! OVERFLOW IN SUB()" << endl;
 		#endif
 		return false;
 	}
 }
 
-/* Adds the input to the specified register */
-/* TODO: Verify overflow checking */
+// Adds the input to the specified register
+// TODO: Verify overflow checking
 bool ADR() {
 	unsigned short int *reg = getRegister();
 	unsigned short int addr = getAddrMode(machine.IR);
@@ -174,20 +174,20 @@ bool ADR() {
 	printDebug("ADR");
 	#endif
 
-	/* Effect condition code; return false if overflow */
+	// Effect condition code; return false if overflow
 	if (over == (int)*reg) {
 		machine.CR = getCondCode(*reg);
 		return true;
 	} else {
 		#ifdef DEBUG
-		fprintf(stderr, "!! OVERFLOW IN ADR()\n");
+		cerr << "!! OVERFLOW IN ADR()" << endl;
 		#endif
 		return false;
 	}
 }
 
-/* Subtracts the input from the specified register */
-/* TODO: Verify overflow checking */
+// Subtracts the input from the specified register
+// TODO: Verify overflow checking
 bool SUR() {
 	unsigned short int *reg = getRegister();
 	unsigned short int addr = getAddrMode(machine.IR);
@@ -201,20 +201,20 @@ bool SUR() {
 	printDebug("SUR");
 	#endif
 
-	/* Effect condition code; return false if overflow */
+	// Effect condition code; return false if overflow
 	if (over == (int)*reg) {
 		machine.CR = getCondCode(*reg);
 		return true;
 	} else {
 		#ifdef DEBUG
-		fprintf(stderr, "!! OVERFLOW IN SUR()\n");
+		cout << "!! OVERFLOW IN SUR()" << endl;
 		#endif
 		return false;
 	}
 }
 
-/* The And fuction will do the bitwise operation AND using the specified */
-/* register, and the address of a value provided in the arguments */
+// The And fuction will do the bitwise operation AND using the specified
+// register, and the address of a value provided in the arguments
 bool AND() {
 	unsigned short int *reg = getRegister();
 	unsigned short int operand =  main_memory[getOperand(machine.IR)];
@@ -230,8 +230,8 @@ bool AND() {
 	return true;
 }
 
-/* The IOR fuction will do the bitwise operation Or using the specified */
-/* register, and the address of a value provided in the arguments */
+// The IOR fuction will do the bitwise operation Or using the specified
+// register, and the address of a value provided in the arguments
 bool IOR() {
 	unsigned short int *reg = getRegister();
 	unsigned short int operand =  main_memory[getOperand(machine.IR)];
@@ -247,9 +247,9 @@ bool IOR() {
 	return true;
 }
 
-/* This is the bitwise NOT, or compliment function. This performs logical */
-/* negation on each bit, forming the ones' complement of the given binary */
-/* value. Bits that are 0 become 1, and those that are 1 become 0. */
+// This is the bitwise NOT, or compliment function. This performs logical
+// negation on each bit, forming the ones' complement of the given binary
+// value. Bits that are 0 become 1, and those that are 1 become 0.
 bool NOT() {
 
 	unsigned short int *reg = getRegister();
@@ -264,7 +264,7 @@ bool NOT() {
 	return true;
 }
 
-/* Unconditional Jump */
+// Unconditional Jump
 /* Direct addressing is allowed, provided the value in the memory location
 is actually only using 8 bits. If the 8 highest-order bits contain anything,
 that would be a reference to a memory location that does not exist (PC: 8bits)
@@ -274,7 +274,7 @@ bool JMP() {
 	unsigned short int jmpTo;
 	if (addr == DIRECT) {
 		jmpTo = main_memory[getOperand(machine.IR)];
-		/* Check high-order bits */
+		// Check high-order bits
 		if ((jmpTo & 65280) != 0)
 		return false;
 	} else if (addr == IMMEDIATE) {
@@ -283,7 +283,7 @@ bool JMP() {
 		return false;
 	}
 
-	/* Set program counter to new address */
+	// Set program counter to new address
 	machine.PC = jmpTo;
 
 	#ifdef DEBUG
@@ -293,7 +293,7 @@ bool JMP() {
 	return true;
 }
 
-/* Check condition flag register; jump if appropriate */
+// Check condition flag register; jump if appropriate
 bool JEQ() {
 	if (machine.CR == EQL)
 	JMP();
@@ -303,7 +303,7 @@ bool JEQ() {
 	return true;
 }
 
-/* Check condition flag register; jump if appropriate */
+// Check condition flag register; jump if appropriate
 bool JGT() {
 	if (machine.CR == GRT)
 	JMP();
@@ -313,7 +313,7 @@ bool JGT() {
 	return true;
 }
 
-/* Check condition flag register; jump if appropriate */
+// Check condition flag register; jump if appropriate
 bool JLT() {
 	if (machine.CR == LST)
 	JMP();
@@ -323,10 +323,10 @@ bool JLT() {
 	return true;
 }
 
-/* This is the compare function, it compares a */
-/* direct or indirect value to the specified   */
-/* register, it will always be register oriented */
-/* I.E. It's always of the style of (reg < instruction) */
+// This is the compare function, it compares a
+// direct or indirect value to the specified
+// register, it will always be register oriented
+// I.E. It's always of the style of (reg < instruction)
 bool CMP() {
 
 	unsigned short int *reg = getRegister();
@@ -351,7 +351,7 @@ bool CMP() {
 	return true;
 }
 
-/* Will clear the specified regiester with 0s */
+// Will clear the specified regiester with 0s
 bool CLR() {
 	unsigned short int *reg = getRegister();
 	*reg = 0;
@@ -363,7 +363,7 @@ bool CLR() {
 	return true;
 }
 
-/* Clears all registers; reset IR to HLT (61440) */
+// Clears all registers; reset IR to HLT (61440)
 bool HLT() {
 	machine.rA = 0;
 	machine.r1 = 0;
@@ -380,8 +380,8 @@ bool HLT() {
 }
 
 
-/* Determine if a resultant value is positive, negative, or 0 */
-/* Takes a short integer, returns a condition code (short integer) */
+// Determine if a resultant value is positive, negative, or 0
+// Takes a short integer, returns a condition code (short integer)
 unsigned short int getCondCode(unsigned short int x) {
 	if (x == 0)
 	return EQL;
@@ -391,13 +391,13 @@ unsigned short int getCondCode(unsigned short int x) {
 	return LST;
 }
 
-/* Take a register code and return a pointer to that register */
+// Take a register code and return a pointer to that register
 unsigned short int* getRegister() {
-	unsigned short int regCode = getRegCode(machine.IR); /* Guaranteed to return 0-3 */
+	unsigned short int regCode = getRegCode(machine.IR); // Returns 0-3
 
 	#ifdef DEBUG_VERBOSE
-	fprintf(stderr, "In getRegister(). IR: %d, Regcode: %d\n", \
-	machine.IR, regCode);
+	cerr << "In getRegister(). IR: " << machine.IR << \
+		", Regcode: %d" << regCode << endl;
 	#endif
 
 	switch (regCode) {
@@ -409,8 +409,7 @@ unsigned short int* getRegister() {
 }
 
 #ifdef DEBUG
-void printDebug(string strOP) {
-	char const *op = strOP.c_str();
+void printDebug(string op) {
 	unsigned short int oldPC = machine.PC - 1;
 	unsigned short int addr = getAddrMode(machine.IR);
 	unsigned short int code = getRegCode(machine.IR);
@@ -420,18 +419,20 @@ void printDebug(string strOP) {
 	unsigned short int r1 = machine.r1;
 	unsigned short int r2 = machine.r2;
 	unsigned short int r3 = machine.r3;
-	unsigned short int IR = machine.IR; /* TODO: Convert this to hex or binary */
+	unsigned short int IR = machine.IR; // TODO: Convert this to hex or binary
 	unsigned short int PC = machine.PC;
 	unsigned short int CR = machine.CR;
-	fprintf(stderr, "Instruction with opcode %s finished executing.\n", op);
-	fprintf(stderr, "\t0x%d: %s %d r%c %d\n", oldPC, op, addr, reg, operand);
-	fprintf(stderr, "\tDumping Registers:\n");
-	fprintf(stderr, "\trA: %d, r1: %d, r2: %d, r3: %d\n", rA, r1, r2, r3);
-	fprintf(stderr, "\tIR: %d, PC: %d, CR: %d\n", IR, PC, CR);
+	cerr << "Instruction with opcode " << op << " finished executing." << endl;
+	cerr << "\t0x" << oldPC << ": " << op << " " << addr \
+		<< " r" << reg << " " << operand << endl;
+	cerr << "\tDumping Registers:" << endl;
+	cerr << "\trA: " << rA << ", r1: " << r1 << ", r2: " \
+		<< r2 << ", r3: " << r3 << endl;
+	cerr << "\tIR: " << IR << ", PC: " << PC << ", CR: " << CR << endl;
 }
 #endif
 
-/* Undefine debug flags if necessary */
+// Undefine debug flags if necessary
 #ifdef DEBUG_VERBOSE
 #undef DEBUG_VERBOSE
 #endif

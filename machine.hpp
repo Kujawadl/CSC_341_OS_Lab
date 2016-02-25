@@ -1,18 +1,19 @@
 #ifndef MACHINE
 #define MACHINE
 
-#include <cstdio>
-#include <cstring>
 #include <string>
+#include <iostream>
+#include <iomanip>
+#include <cstring>
 	using namespace std;
 
-/* Debugging flags */
+// Debugging flags
 #define DEBUG
 #define DEBUG_VERBOSE
 #undef DEBUG_VERBOSE
 
 
-/* If DEBUG_VERBOSE, then DEBUG */
+// If DEBUG_VERBOSE, then DEBUG
 #ifdef DEBUG_VERBOSE
 	#ifndef DEBUG
 		#define DEBUG
@@ -34,41 +35,41 @@
 #define GEQ 3
 #define LEQ 6
 
-/* Define addressing modes */
+// Define addressing modes
 #define DIRECT 0
 #define IMMEDIATE 1
 
-/* Define machine registers type */
-/* Machine register type also has a condition code register */
+// Define machine registers type
+// Machine register type also has a condition code register
 typedef struct {
 	unsigned short int r1, r2, r3, rA, IR, PC:8;
 	unsigned short int CR:3;
 } registers;
 
-/* Declare and initialize machine registers */
+// Declare and initialize machine registers
 extern registers machine;
 
-/* Declare main memory */
+// Declare main memory
 extern unsigned short int main_memory[256];
 
-/* Uses value in IR to determine course of action */
-/* Returns false if errors */
+// Uses value in IR to determine course of action
+// Returns false if errors
 bool interpreter();
 
-/* Retrieves the opcode */
-/* Returns an int 0-15 */
+// Retrieves the opcode
+// Returns an int 0-15
 unsigned short int getOpcode(unsigned short int num);
 
-/* Retrieves the address mode */
-/* Returns 0 or 1 */
+// Retrieves the address mode
+// Returns 0 or 1
 unsigned short int getAddrMode(unsigned short int num);
 
-/* Retrieves the register code */
-/* Returns an int 0-3 */
+// Retrieves the register code
+// Returns an int 0-3
 unsigned short int getRegCode(unsigned short int num);
 
-/* Retrieves the operand */
-/* Returns an int 0-255 */
+// Retrieves the operand
+// Returns an int 0-255
 unsigned short int getOperand(unsigned short int num);
 
 bool LOD();

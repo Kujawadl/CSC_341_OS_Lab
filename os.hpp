@@ -1,5 +1,7 @@
 #include <string>
-#include <cstdio>
+#include <queue>
+#include <iostream>
+#include <iomanip>
 #include <cstdlib>
 #include <cstring>
 #include "machine.hpp"
@@ -11,39 +13,40 @@
 #ifndef OS
 #define OS
 
-extern registers U1;
-extern registers U2;
-extern registers SYS;
+// Define the user struct
+enum userID {sys, u1, u2};
+struct User {
+  userID id;
+  registers regs;
+};
 
-/* Define the users type and the nextUser method */
-typedef enum users {sys, u1, u2} users;
-users nextUser(users user) {
-  switch(user) {
-    case sys: return u1; break;
-    case u1: return u2; break;
-    case u2: return sys; break;
-  }
-  return user;
-}
+extern queue<User> readyQueue;
+extern queue<User> blockedQueue;
+extern User currentUser;
 
-/* Variables used by the scheduler */
-extern users currentUser;
+
+
+// Variables used by the scheduler
 extern int sysclock;
 extern int switchTime;
 
 
-/* Dump contents of main memory */
+// Dump contents of main memory
 void dump(bool dumpRegs);
 
-/* Round-robin scheduler */
+void dispatcher();
+
+// Round-robin scheduler
 void scheduler();
 
-/* Main function (O/S Initialization) */
+// Main function (O/S Initialization)
 int main(int argc, char** argv);
 
-/* Read program into memory */
+// Read program into memory
 unsigned short int readFile(unsigned short int);
 
 void init();
+
+int cmdToInt(string);
 
 #endif
