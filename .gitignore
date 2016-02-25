@@ -1,3 +1,4 @@
 # Ignore object and executable files
 *.[oa]
+*.gch
 os
