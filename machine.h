@@ -4,7 +4,7 @@
 /* Debugging flags */
 #define DEBUG
 #define DEBUG_VERBOSE
-// #undef DEBUG_VERBOSE
+#undef DEBUG_VERBOSE
 // #undef DEBUG
 
 
