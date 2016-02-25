@@ -36,6 +36,7 @@ extern int switchTime;
 
 // Dump contents of main memory
 void dump(bool dumpRegs);
+void printQueue(queue<User> &s,int num);
 
 void dispatcher();
 
