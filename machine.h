@@ -5,7 +5,6 @@
 #define DEBUG
 #define DEBUG_VERBOSE
 #undef DEBUG_VERBOSE
-// #undef DEBUG
 
 
 /* If DEBUG_VERBOSE, then DEBUG */
@@ -47,7 +46,7 @@ typedef struct {
 /* Declare and initialize machine registers */
 extern registers machine;
 
-// /* Declare main memory */
+/* Declare main memory */
 unsigned short int main_memory[256];
 
 /* Uses value in IR to determine course of action */
