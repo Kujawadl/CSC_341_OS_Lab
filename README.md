@@ -114,7 +114,7 @@ This will be a quick overview of how to run the program:
 ## Time Spent
 GitHub tracks contributions over time.
 ##### Project Commits by Day:
-![timesheet.png]({{ site.path }}/images/timesheet.png)
+![timesheet.png]({{ site.path }}/CSC_341_OS_Lab/images/timesheet.png)
 
 ## Verification
-![verification.png]({{ site.path }}/images/verification.png)
+![verification.png]({{ site.path }}/CSC_341_OS_Lab/images/verification.png)
