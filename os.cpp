@@ -70,6 +70,7 @@ void printQueue(queue<User> &q, int num)
 void dispatcher(int action) {
 	string titleFiller = "####################################################";
 	// Save user state
+	if (sysclock > 1) {
 	currentUser.regs = machine;
 	if (action == 1) {
 		// Return user to readyQueue
@@ -82,6 +83,7 @@ void dispatcher(int action) {
 			<< "PROCESS FINISHES";
 		cout << "\n" << titleFiller << "\n\n";
 	}
+}
 		// Load next user
 		currentUser = readyQueue.front();
 		readyQueue.pop();
