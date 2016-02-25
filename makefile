@@ -1,7 +1,7 @@
 all: os.o machine.o semaphore.o
 	gcc -g .machine.o .os.o .semaphore.o -o os
 
-os.o: queue.h os.h os.c machine.o
+os.o: os.h os.c machine.o
 	gcc -g -c os.c -o .os.o
 
 machine.o: machine.h machine.c
