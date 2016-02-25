@@ -1,4 +1,4 @@
-# Operating System Lab, Part II
+# Operating System Lab
 
 ### by Aaron Baker, Andrew Ballard, and Dylan Jager-Kujawa
 
