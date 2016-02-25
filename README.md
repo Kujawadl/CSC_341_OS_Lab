@@ -31,7 +31,6 @@ During this course of this class we are going to be exploring and creating opera
 
 ### Machine
 The following is a brief review of the virtual system we have built:
-
  - 16-bit words
  - 256-word memory (16 bits) word addressable
  - 3 general purpose registers (1-3), 1 special: A (0)
@@ -79,15 +78,12 @@ The `dmp` function will now dump all the registers, the queues for the semaphore
 We will now briefly talk about how components of the OS have changed during this portion of the project:
 
 #### UI
-
 User interface has not changed significantly between these versions of the operating system. The primary difference is that the dispatcher writes to the console to inform users when their processes have been blocked, and when they resume execution. Beyond this, the UI should be effectively the same as that of Lab 1.
 
 #### Memory
-
 In terms of the implementation, memory is exactly the same in Lab 2 as in Lab 1. The primary difference is that there is a global variable, semaphore, which, when locked, redirects all new requests to access memory to the blocked queue, to be recalled to the ready queue once the semaphore is unlocked.
 
 #### Organization
-
 Significant restructuring was necessary for this project. We initially attempted to implement a queue class in C, and while we found many examples online, none of them ended up working for our purposes. Thus, the decision was made to migrate to C++.
 
 Our former approach to implementing the users, having an enum for the users which could be incremented with each switch, would clearly no longer work in this program, as the users can be in one of two states: ready, and blocked. One queue was implemented for each of these states. At startup, all users are loaded into the ready queue. Users are only moved to the blocked queue if they request access to memory while the semaphore is already locked, and are only moved back once the `semsignal()` function is called, when the program using memory is done, and unlocks the semaphore.
@@ -95,7 +91,6 @@ Our former approach to implementing the users, having an enum for the users whic
 Finally, while the initial version was simple enough that the scheduler could essentially perform the job of the dispatcher as well, this program grew such that the resulting scheduler was enormous and unwieldy. The decision was made to split this up into two separate functions, the scheduler and the dispatcher.
 
 #### Data
-
 One of the advantages C++ brought with it was the ability to quickly and easily convert to hex in our output. Thus, the `dmp` function now reports in hexadecimal as opposed to binary, allowing us to fit 50% more content along the width of the screen. We expect this will greatly improve readability, and reduce paper use in our printouts.
 
 In addition, our inputs changed slightly as well. This time around, our input was one file with two programs, separated by a single * on its own line. The first program was to be loaded into user 1's memory (starting at location 0), while the second program was to be loaded into user 2's memory (starting at location 100). The readfile method did have to be rewritten from the ground up to accomodate C++'s use of streams, however this did not take long.
@@ -122,5 +117,4 @@ GitHub tracks contributions over time.
 ![timesheet.png]('{{ site.path }}/images/timesheet.png')
 
 ## Verification
-
 ![verification.png]('{{ site.path }}/images/verification.png')
