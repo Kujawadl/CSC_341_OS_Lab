@@ -12,7 +12,9 @@
   using namespace std;
 
 //Needed for formatting when printing
-//</stdio.h></stdlib.h></string.h>
+//</string></queue></iostream></iomanip>
+//</cstdlib></cstring></sstream></fstream>
+//</string></cctype>
 
 #ifndef OS
 #define OS

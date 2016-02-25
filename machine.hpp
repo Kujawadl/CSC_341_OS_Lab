@@ -6,11 +6,8 @@
 #include <iomanip>
 	using namespace std;
 
-/*
-</string>
-</iostream>
-</iomanip>
-*/
+// Needed for formatting when printing
+//</string></iostream></iomanip>
 
 // Debugging flags
 #define DEBUG
