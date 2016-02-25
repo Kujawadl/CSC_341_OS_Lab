@@ -28,9 +28,9 @@ void dump(bool dumpRegs)
 	int i;
 	for (i = 0; i < 256; i++) {
 		if (i % 4 == 0)
-			cout << endl;
+		cout << endl;
 		else
-			cout << " | ";
+		cout << " | ";
 		cout << "#" << setw(3) << i << ": " << setw(8) << main_memory[i];
 	}
 	cout << "\n\n>\tEnd of dump\n\n";
@@ -52,7 +52,7 @@ void dispatcher() {
 	string titleFiller = "####################################################";
 	cout << endl << titleFiller << endl;
 	cout << "############### Switching to user " << currentUser.id \
-		<< " ################" << endl;
+	<< " ################" << endl;
 	cout << titleFiller << endl << endl;
 }
 
@@ -70,7 +70,7 @@ void scheduler()
 			// If current user is not running, prompt for a command
 			if (currentUser.id != sys && !running) {
 				cout << "USER" << (currentUser.id == u1 ? 1 : 2) << " > ";
-			// If current user is running, continue execution
+				// If current user is running, continue execution
 			} else if (currentUser.id != sys && running) {
 				interpreter();
 				// If last executed command was halt, call semsignal and break
@@ -78,7 +78,7 @@ void scheduler()
 				//   semsignal();
 				//	 break;
 				// }
-			// If current user is system, prompt as system
+				// If current user is system, prompt as system
 			} else {
 				cout << "SYS > ";
 			}
@@ -90,35 +90,35 @@ void scheduler()
 
 				switch (cmdToInt(input)) {
 					case 0: // "run"
-						if (currentUser.id != sys) {
-							machine.IR = main_memory[machine.PC];
-							// semwait();
-							interpreter();
-							// semsignal if necessary
-						} else {
-							cout << "Invalid command for system" << endl;
-						}
-						break;
+					if (currentUser.id != sys) {
+						machine.IR = main_memory[machine.PC];
+						// semwait();
+						interpreter();
+						// semsignal if necessary
+					} else {
+						cout << "Invalid command for system" << endl;
+					}
+					break;
 					case 1: // "dmp"
-						if (currentUser.id == sys) {
-							dump(false);
-						} else {
-							cout << "Invalid command for users" << endl;
-						}
-						break;
+					if (currentUser.id == sys) {
+						dump(false);
+					} else {
+						cout << "Invalid command for users" << endl;
+					}
+					break;
 					case 2: // "nop"
-						switchTime = sysclock;
-						break;
+					switchTime = sysclock;
+					break;
 					case 3: // "stp"
-						if (currentUser.id == sys) {
-							exit(EXIT_SUCCESS);
-						} else {
-							cout << "Invalid command for users" << endl;
-						}
-						break;
+					if (currentUser.id == sys) {
+						exit(EXIT_SUCCESS);
+					} else {
+						cout << "Invalid command for users" << endl;
+					}
+					break;
 					default:
-						cout << "Invalid command: " << input << endl;
-						break;
+					cout << "Invalid command: " << input << endl;
+					break;
 				}
 			}
 		}
@@ -130,19 +130,20 @@ int main(int argc, char** argv)
 {
 	char const *titleFiller = "####################################################";
 	char const *titleText = "################ CSC 341 OS Lab ####################";
-	cout << endl << titleFiller \
-		<< endl << titleText \
-		<< endl << titleFiller << endl << endl;
+	cout << endl << titleFiller << endl << titleText << endl << titleFiller << endl << endl;
 	init();
 	scheduler();
+	return 0;
 }
 
 void init(){
 	// Initialize main_memory
 	int i;
-	for (i = 0; i < 256; i++) {
+
+	for (i = 0; i < 255; i++) {
 		main_memory[i] = 0;
 	}
+
 
 	registers defaultRegisterValues =
 	{				// Registers:
@@ -187,11 +188,30 @@ void init(){
 	switchTime = sysclock + 3;
 }
 
+bool semsignal() {
+
+}
+
 // Read program into memory
 // Takes the address to start loading into
 // Returns the size of the program in words
 unsigned short int readFile(unsigned short int start){
 	// This method will need to be rewritten entirely using c++ streams
+	ifstream infile("part2.dat");
+	int i = 0;
+	short unsigned int current;
+	string line;
+	while (std::getline(infile, line))
+	{
+		if (line == "*") {
+			i = 100;
+			continue;
+		}
+		char * ptr;
+    current = strtol(line.c_str(), & ptr, 2);
+		main_memory[i] = current;
+	}
+
 }
 
 // Convert a command as a string into an integer value to simplify
