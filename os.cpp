@@ -97,12 +97,13 @@ void dispatcher(int action) {
 
 void scheduler()
 {
+	int flag = 1;
 	// Scheduler code
 	while (true) {
 		// Load next user and assign its max time (3 ticks)
-		dispatcher();
+		dispatcher(flag);
 		switchTime = sysclock + 3;
-		int flag = 1;
+		flag = 1;
 
 		while (sysclock < switchTime) {
 			bool running = !(getOpcode(machine.IR) == 15);
