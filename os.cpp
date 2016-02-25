@@ -105,10 +105,9 @@ void scheduler()
 			} else if (currentUser.id != sys && running) {
 				interpreter();
 				// If last executed command was halt, call semsignal and break
-				// if (getOpCode(machine.IR) == 15) {
-				//   semsignal();
-				//	 break;
-				// }
+				if (getOpcode(machine.IR) == 15) {
+				  semsignal();
+				}
 				// If current user is system, prompt as system
 			} else {
 				cout << "SYS > ";
@@ -226,7 +225,25 @@ void init(){
 }
 
 bool semsignal() {
+	string titleFiller = "####################"\
+	"################################";
+	if (semaphore == true) {
 
+		cout << titleFiller << endl;
+		cout << "USER " << currentUser.id << " HAS SIGNALED FOR UNLOCK OF MEMORY\n";
+		cout << titleFiller << endl << endl;
+
+		cout << titleFiller << endl;
+		int i = 0;
+		for (int i = 0; i < blockedQueue.size(); i++) {
+
+			User x = blockedQueue.front();
+			blockedQueue.pop();
+			cout << "USER " << x.id << " WAS PUT BACK INTO READY QUEUE\n";
+			readyQueue.push(x);
+		}
+		cout << titleFiller << endl;
+	}
 }
 
 bool semwait() {
