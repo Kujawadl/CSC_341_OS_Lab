@@ -8,9 +8,6 @@
 
 #include "machine.hpp"
 
-//Needed for formatting when printing
-//</stdio.h></stdio.h></string.h></string.h>
-
 // Initialize machine registers
 registers machine = {0, 0, 0, 0, 0, 0, 0};
 
@@ -447,3 +444,6 @@ void printDebug(string op) {
 #ifdef DEBUG
 #undef DEBUG
 #endif
+
+//Needed for formatting when printing
+//</stdio.h></stdio.h></string.h></string.h>

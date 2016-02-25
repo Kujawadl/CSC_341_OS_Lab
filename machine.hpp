@@ -14,9 +14,6 @@
 #include <iomanip>
 	using namespace std;
 
-// Needed for formatting when printing
-//</string></iostream></iomanip>
-
 // Debugging flags
 #define DEBUG
 #define DEBUG_VERBOSE
@@ -112,3 +109,6 @@ void printDebug(string);
 #endif
 
 #endif
+
+// Needed for formatting when printing
+//</string></iostream></iomanip>
