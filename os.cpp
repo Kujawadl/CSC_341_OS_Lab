@@ -115,41 +115,41 @@ void scheduler()
 			if (!running || currentUser.id == sys) {
 				string input;
 				getline(cin, input);
-
 				switch (cmdToInt(input)) {
 					case 0: // "run"
-					if (currentUser.id != sys) {
-						machine.IR = main_memory[machine.PC];
-						// semwait();
-						interpreter();
-						// semsignal if necessary
-					} else {
-						cout << "Invalid command for system" << endl;
-					}
-					break;
+						if (currentUser.id != sys) {
+							machine.IR = main_memory[machine.PC];
+							// semwait();
+							interpreter();
+							// semsignal if necessary
+						} else {
+							cout << "Invalid command for system" << endl;
+						}
+						break;
 					case 1: // "dmp"
-					if (currentUser.id == sys) {
-						dump(false);
-					} else {
-						cout << "Invalid command for users" << endl;
-					}
-					break;
+						if (currentUser.id == sys) {
+							dump(false);
+						} else {
+							cout << "Invalid command for users" << endl;
+						}
+						break;
 					case 2: // "nop"
-					switchTime = sysclock;
-					break;
+						switchTime = sysclock;
+						break;
 					case 3: // "stp"
-					if (currentUser.id == sys) {
-						exit(EXIT_SUCCESS);
-					} else {
-						cout << "Invalid command for users" << endl;
-					}
-					break;
+						if (currentUser.id == sys) {
+							exit(EXIT_SUCCESS);
+						} else {
+							cout << "Invalid command for users" << endl;
+						}
+						break;
 					default:
-					cout << "Invalid command: " << input << endl;
-					break;
+						cout << "Invalid command: " << input << endl;
+						break;
 				}
 			}
 		}
+		dispatcher();
 	}
 
 }
@@ -162,6 +162,7 @@ int main(int argc, char** argv)
 		<< titleText << endl \
 		<< titleFiller << endl << endl;
 	init();
+	dispatcher();
 	scheduler();
 	return 0;
 }
@@ -240,6 +241,7 @@ unsigned short int readFile(unsigned short int start){
 		char * ptr;
     current = strtol(line.c_str(), & ptr, 2);
 		main_memory[i] = current;
+		i++;
 	}
 
 }
@@ -247,9 +249,9 @@ unsigned short int readFile(unsigned short int start){
 // Convert a command as a string into an integer value to simplify
 // switch statements using commands.
 int cmdToInt(string cmd) {
-	if (strcasecmp(cmd.c_str(), "run")) return 0;
-	else if (strcasecmp(cmd.c_str(), "dmp")) return 1;
-	else if (strcasecmp(cmd.c_str(), "nop")) return 2;
-	else if (strcasecmp(cmd.c_str(), "stp")) return 3;
+	if (cmd == "run") return 0;
+	else if (cmd == "dmp") return 1;
+	else if (cmd == "nop") return 2;
+	else if (cmd == "stp") return 3;
 	else return -1;
 }
