@@ -243,22 +243,29 @@ unsigned short int readFile(unsigned short int start){
 		main_memory[i] = current;
 		i++;
 	}
-
 }
 
 // Convert a command as a string into an integer value to simplify
 // switch statements using commands.
 int cmdToInt(string cmd) {
-	if my_strcasecmp(cmd, "run") return 0;
-	else if my_strcasecmp(cmd, "dmp") return 1;
-	else if my_strcasecmp(cmd, "nop") return 2;
-	else if my_strcasecmp(cmd, "stp") return 3;
+	if (my_strcasecmp(cmd, "run")) return 0;
+	else if (my_strcasecmp(cmd, "dmp")) return 1;
+	else if (my_strcasecmp(cmd, "nop")) return 2;
+	else if (my_strcasecmp(cmd, "stp")) return 3;
 	else return -1;
 }
 
 bool my_strcasecmp(string str1, string str2)
 {
-	transform(str1.begin(), str1.end(), str1.begin(), tolower);
-	transform(str2.begin(), str2.end(), str2.begin(), tolower);
+	int length1 = str1.length();
+	for (int i = 0; i < length1; i++) {
+		char &c = str1.at(i);
+		c = tolower(c);
+	}
+	int length2 = str2.length();
+	for (int i = 0; i < length2; i++) {
+		char &c = str2.at(i);
+		c = tolower(c);
+	}
 	return ((str1 == str2) ? true : false);
 }

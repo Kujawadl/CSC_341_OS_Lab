@@ -7,7 +7,7 @@
 #include <sstream>
 #include <fstream>
 #include <string>
-#include <algorithm>
+#include <cctype>
 #include "machine.hpp"
   using namespace std;
 

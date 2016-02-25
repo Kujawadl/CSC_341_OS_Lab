@@ -4,8 +4,13 @@
 #include <string>
 #include <iostream>
 #include <iomanip>
-#include <cstring>
 	using namespace std;
+
+/*
+</string>
+</iostream>
+</iomanip>
+*/
 
 // Debugging flags
 #define DEBUG
