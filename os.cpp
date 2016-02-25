@@ -156,9 +156,11 @@ void scheduler()
 
 int main(int argc, char** argv)
 {
-	char const *titleFiller = "####################################################";
-	char const *titleText = "################ CSC 341 OS Lab ####################";
-	cout << endl << titleFiller << endl << titleText << endl << titleFiller << endl << endl;
+	string titleFiller = "####################################################";
+	string titleText = "################ CSC 341 OS Lab ####################";
+	cout << endl << titleFiller << endl \
+		<< titleText << endl \
+		<< titleFiller << endl << endl;
 	init();
 	scheduler();
 	return 0;
