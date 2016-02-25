@@ -1,4 +1,4 @@
-#include "os.h"
+#include "os.hpp"
 
 registers U1 = {0, 0, 0, 0, 0, 0, 0};
 registers U2 = {0, 0, 0, 0, 0, 0, 0};
@@ -15,7 +15,7 @@ something by testing the opcode of the IR for HLT (1111).
 */
 
 users currentUser;
-int clock;
+int sysclock;
 int switchTime;
 
 void dump(bool dumpRegs)
@@ -40,8 +40,8 @@ void dump(bool dumpRegs)
 
 void scheduler()
 {
-	char* titleFiller = "####################################################";
-	char* titleText = "################ CSC 341 OS Lab ####################";
+	char const *titleFiller = "####################################################";
+	char const *titleText = "################ CSC 341 OS Lab ####################";
 	printf("\n%s\n%s\n%s\n\n", titleFiller, titleText, titleFiller);
 	/* Scheduler code */
 	while (true) {
@@ -51,9 +51,9 @@ void scheduler()
 			case sys: machine = SYS; break;
 		}
 
-		while (clock < switchTime) {
+		while (sysclock < switchTime) {
 			bool running = !(getOpcode(machine.IR) == 15);
-			clock++;
+			sysclock++;
 			if (currentUser != sys && !running) {
 				printf("USER%d > ", (currentUser == u1 ? 1 : 2));
 			} else if (currentUser != sys && running) {
@@ -101,7 +101,7 @@ void scheduler()
 			case sys: SYS = machine; break;
 		}
 
-		switchTime = clock + 3;
+		switchTime = sysclock + 3;
 		currentUser = nextUser(currentUser);
 
 		printf("\n%s\n", titleFiller);
@@ -134,9 +134,9 @@ void init(){
 	U2.PC = u2_start;
 	currentUser = u1;
 
-	/* Initialize clock and switchTime */
-	clock = 0;
-	switchTime = clock + 3;
+	/* Initialize sysclock and switchTime */
+	sysclock = 0;
+	switchTime = sysclock + 3;
 }
 
 /* Read program into memory */

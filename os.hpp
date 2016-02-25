@@ -1,7 +1,9 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "machine.h"
+#include <string>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include "machine.hpp"
+  using namespace std;
 
 //Needed for formatting when printing
 //</stdio.h></stdlib.h></string.h>
@@ -26,7 +28,7 @@ users nextUser(users user) {
 
 /* Variables used by the scheduler */
 extern users currentUser;
-extern int clock;
+extern int sysclock;
 extern int switchTime;
 
 

@@ -1,6 +1,11 @@
 #ifndef MACHINE
 #define MACHINE
 
+#include <cstdio>
+#include <cstring>
+#include <string>
+	using namespace std;
+
 /* Debugging flags */
 #define DEBUG
 #define DEBUG_VERBOSE
@@ -33,9 +38,6 @@
 #define DIRECT 0
 #define IMMEDIATE 1
 
-/* Define boolean type */
-typedef enum { false, true } bool;
-
 /* Define machine registers type */
 /* Machine register type also has a condition code register */
 typedef struct {
@@ -47,7 +49,7 @@ typedef struct {
 extern registers machine;
 
 /* Declare main memory */
-unsigned short int main_memory[256];
+extern unsigned short int main_memory[256];
 
 /* Uses value in IR to determine course of action */
 /* Returns false if errors */
@@ -90,7 +92,7 @@ unsigned short int getCondCode(unsigned short int);
 unsigned short int* getRegister();
 
 #ifdef DEBUG
-void printDebug(char*);
+void printDebug(string);
 #endif
 
 #endif

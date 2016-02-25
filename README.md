@@ -78,7 +78,7 @@ We specified a `struct` which would hold one of each kind of register, then decl
 
 We then defined an enum in os.h with `u1`, `u2`, and `sys`, to be representative of all the users on the system. The OS declares a variable of this type to keep track of the current user, and uses the `nextUser()` method to increment the value on switch.
 
-Finally, the OS keeps an integer value for the clock, which is incremented each time an instruction executes (either prompting for input on the CLI or by running another line of the program in memory). On switch, the variable switchTime is set to three values higher than the current clock. The scheduler then allows the next user time on the processor while `clock < switchTime`. If the user specifies `NOP`, the program breaks from the loop and the switch is called early.
+Finally, the OS keeps an integer value for the sysclock, which is incremented each time an instruction executes (either prompting for input on the CLI or by running another line of the program in memory). On switch, the variable switchTime is set to three values higher than the current sysclock. The scheduler then allows the next user time on the processor while `sysclock < switchTime`. If the user specifies `NOP`, the program breaks from the loop and the switch is called early.
 
 ### Difficulties Encountered
 The biggest difficulty that we ran into during this project was having getting a precise idea of what each op code was supposed to do, and how it would affect registers. Even after discussing it with our instructor and each other we still found topics that were not immediately clear (e.g., should the jump command be able to use immediate addressing?).

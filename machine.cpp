@@ -1,12 +1,12 @@
-#include "machine.h"
-#include <stdio.h>
-#include <string.h>
+#include "machine.hpp"
 
 //Needed for formatting when printing
 //</stdio.h></stdio.h></string.h></string.h>
 
 /* Initialize machine registers */
 registers machine = {0, 0, 0, 0, 0, 0, 0};
+
+unsigned short int main_memory[256];
 
 /* Uses value in IR to determine course of action */
 /* Returns false if errors */
@@ -409,7 +409,8 @@ unsigned short int* getRegister() {
 }
 
 #ifdef DEBUG
-void printDebug(char* op) {
+void printDebug(string strOP) {
+	char const *op = strOP.c_str();
 	unsigned short int oldPC = machine.PC - 1;
 	unsigned short int addr = getAddrMode(machine.IR);
 	unsigned short int code = getRegCode(machine.IR);
