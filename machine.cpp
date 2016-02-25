@@ -41,7 +41,7 @@ unsigned short int getOpcode(unsigned short int num) {
 	unsigned short int ret = (num & 61440)>>12;
 
 	#ifdef DEBUG_VERBOSE
-	cerr<< "In getOpCode(). IR: " << machine.IR << ", Opcode: " << ret << endl;
+	cerr << "In getOpCode(). IR: " << machine.IR << ", Opcode: " << ret << endl;
 	#endif
 
 	return ret;

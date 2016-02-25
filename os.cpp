@@ -21,12 +21,12 @@ void dump(bool dumpRegs)
 {
 	// Dump Registers
 	User temp;
-	cout << "\n\t>>>>>>DUMPING REGISTERS<<<<<<\n";
-	printQueue(readyQueue, readyQueue.size());
-	printQueue(blockedQueue, blockedQueue.size());
+	cout << endl << ">>>>>>DUMPING REGISTERS<<<<<<" << endl;
+	printQueue("readyQueue", readyQueue, readyQueue.size());
+	printQueue("blockedQueue", blockedQueue, blockedQueue.size());
 
 	// Dump memory
-	cout << "\n\t>>>>>>DUMPING MEMORY<<<<<<\n";
+	cout << endl << ">>>>>>DUMPING MEMORY<<<<<<" << endl;
 	int i;
 	for (i = 0; i < 256; i++) {
 		if (i % 4 == 0)
@@ -35,25 +35,34 @@ void dump(bool dumpRegs)
 		cout << " | ";
 		cout << "#" << setw(3) << i << ": " << setw(8) << main_memory[i];
 	}
-	cout << "\n\n>\tEnd of dump\n\n";
+	cout << endl << endl << ">\tEnd of dump" << endl << endl;
 
 }
 
-void printQueue(queue<User> &s,int num)
+void printQueue(string queueName, queue<User> &q, int num)
+{
+	cout << endl << ">>>>>>QUEUE: " << queueName << "<<<<<<" << endl;
+	printQueue(q, num);
+}
+void printQueue(queue<User> &q, int num)
 {
     if(!num)
     {
         cout << endl;
         return;
     }
-    User x= s.front();
-    s.pop();
-    cout << "\nUSER " << x.id << " REGISTERS";
-		cout << "\n\trA: " << x.regs.rA << ", r1: " << x.regs.r1 << ", r2: " \
-			<< x.regs.r2 << ", r3: " << x.regs.r3 << endl;
-		cout << "\tIR: " << x.regs.IR << ", PC: " << x.regs.PC << ", CR: " << x.regs.CR << endl;
-    s.push(x);
-    printQueue(s,--num);
+    User curr= q.front();
+    q.pop();
+		registers regs = curr.regs;
+    cout << "\tUSER " << curr.id << ":" << endl;
+
+		cout << "\tDumping Registers..." << endl;
+		cout << "\t\trA: " << regs.rA << ", r1: " << regs.r1 << ", r2: " \
+			<< regs.r2 << ", r3: " << regs.r3 << endl;
+		cout << "\t\tIR: " << regs.IR << ", PC: " << regs.PC << ", CR: " \
+			<< regs.CR << endl;
+    q.push(curr);
+    printQueue(q,--num);
 }
 
 void dispatcher() {
