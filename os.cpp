@@ -13,16 +13,19 @@ something by testing the opcode of the IR for HLT (1111).
 queue<User> readyQueue = queue<User>();
 queue<User> blockedQueue = queue<User>();
 User currentUser;
-bool semaphore = false; // Default value is unlocked
+bool semaphore = unlocked;
 
 int sysclock;
 int switchTime;
 
-void dump(bool dumpRegs)
+void dump()
 {
 	// Dump Registers
 	User temp;
 	cout << endl << ">>>>>>DUMPING REGISTERS<<<<<<" << endl;
+	// Dump semaphore
+	cout << endl << "Semaphore status: " << \
+		(semaphore == locked ? "Locked" : "Unlocked") << endl;
 	printQueue("readyQueue", readyQueue, readyQueue.size());
 	printQueue("blockedQueue", blockedQueue, blockedQueue.size());
 
@@ -42,7 +45,7 @@ void dump(bool dumpRegs)
 
 void printQueue(string queueName, queue<User> &q, int num)
 {
-	cout << endl << ">>>>>>QUEUE: " << queueName << "<<<<<<" << endl;
+	cout << endl << "\t>>>>>>QUEUE: " << queueName << "<<<<<<" << endl;
 	printQueue(q, num);
 }
 void printQueue(queue<User> &q, int num)
@@ -55,9 +58,7 @@ void printQueue(queue<User> &q, int num)
     User curr= q.front();
     q.pop();
 		registers regs = curr.regs;
-    cout << "\tUSER " << curr.id << ":" << endl;
-
-		cout << "\tDumping Registers..." << endl;
+    cout << "\tUSER " << curr.id << ": Dumping Registers..." << endl;
 		cout << "\t\trA: " << regs.rA << ", r1: " << regs.r1 << ", r2: " \
 			<< regs.r2 << ", r3: " << regs.r3 << endl;
 		cout << "\t\tIR: " << regs.IR << ", PC: " << regs.PC << ", CR: " \
@@ -97,13 +98,14 @@ void dispatcher(int action) {
 
 void scheduler()
 {
-	int flag = 1;
 	// Scheduler code
 	while (true) {
 		// Load next user and assign its max time (3 ticks)
-		dispatcher(flag);
+		// NOTE: If we return to this point in the loop, the dispatcher was not
+		// 			 called during last iteration, i.e. current user was not BLOCKED,
+		// 			 i.e. current user must be READY.
+		dispatcher(READY);
 		switchTime = sysclock + 3;
-		flag = 1;
 
 		while (sysclock < switchTime) {
 			bool running = !(getOpcode(machine.IR) == 15);
@@ -114,9 +116,10 @@ void scheduler()
 				// If current user is running, continue execution
 			} else if (currentUser.id != sys && running) {
 				interpreter();
-				// If last executed command was halt, call semsignal and break
+				// If last instruction executed was HLT, call semsignal and break
 				if (getOpcode(machine.IR) == 15) {
 				  semsignal();
+					break;
 				}
 				// If current user is system, prompt as system
 			} else {
@@ -131,26 +134,35 @@ void scheduler()
 					case 0: // "run"
 					if (currentUser.id != sys) {
 						machine.IR = main_memory[machine.PC];
-						// if memory is free, run as usual.
-						if (semwait() == true) {
+						// If memory is free, run as usual.
+						if (semwait() == false) {
 							interpreter();
+							// If last instruction executed was HLT
+							if (machine.IR == 61440) {
+								// Signal semaphore is unlocked
+								semsignal();
+								// Exit loop (current user is done)
+								switchTime = sysclock;
+							}
+						// If memory is locked, dispatch to blockedQueue, load next user
+						// Reset switchtime (i.e. reset the loop) so next user gets
+						// 3 ticks.
 						} else {
-							flag = 0;
-							switchTime = sysclock;
+							switchTime = sysclock + 3;
 						}
-						// semsignal if necessary
 					} else {
 						cout << "Invalid command for system" << endl;
 					}
 					break;
 					case 1: // "dmp"
 					if (currentUser.id == sys) {
-						dump(false);
+						dump();
 					} else {
 						cout << "Invalid command for users" << endl;
 					}
 					break;
 					case 2: // "nop"
+					// Exit loop (current user is done)
 					switchTime = sysclock;
 					break;
 					case 3: // "stp"
@@ -186,12 +198,10 @@ int main(int argc, char** argv)
 
 void init(){
 	// Initialize main_memory
-	int i;
-
-	for (i = 0; i < 255; i++) {
+	for (int i = 0; i < 255; i++) {
 		main_memory[i] = 0;
 	}
-
+	semaphore = unlocked;
 
 	registers defaultRegisterValues =
 	{				// Registers:
@@ -203,22 +213,9 @@ void init(){
 		0,			// PC
 		0				// CR
 	};
-	User U1 =
-	{
-		u1,			// UID
-		defaultRegisterValues
-	};
-
-	User U2 =
-	{
-		u2,			// UID
-		defaultRegisterValues
-	};
-	User SYS =
-	{
-		sys,			// UID
-		defaultRegisterValues
-	};
+	User U1 = {u1, defaultRegisterValues};
+	User U2 = {u2, defaultRegisterValues};
+	User SYS = {sys, defaultRegisterValues};
 
 	// Read in the program for u1 and u2
 	int u1_start = 0;
@@ -236,36 +233,38 @@ void init(){
 	switchTime = sysclock + 3;
 }
 
-bool semsignal() {
+void semsignal() {
 	string titleFiller = "####################"\
 	"################################";
-	if (semaphore == true) {
-
+	if (semaphore == locked) {
+		semaphore = unlocked;
 		cout << titleFiller << endl;
-		cout << "USER " << currentUser.id << " HAS SIGNALED FOR UNLOCK OF MEMORY\n";
+		cout << "USER " << currentUser.id << " HAS SIGNALED FOR " \
+			"UNLOCK OF MEMORY" << endl;
 		cout << titleFiller << endl << endl;
 
-		cout << titleFiller << endl;
 		int i = 0;
 		for (int i = 0; i < blockedQueue.size(); i++) {
 
 			User x = blockedQueue.front();
 			blockedQueue.pop();
-			cout << "USER " << x.id << " WAS PUT BACK INTO READY QUEUE\n";
+			cout << "USER " << x.id << " WAS PUT BACK INTO READY QUEUE" << endl;
 			readyQueue.push(x);
 		}
 		cout << titleFiller << endl;
 	}
-	return true;
 }
 
+// Returns bool: does user have to wait?
 bool semwait() {
-	// If the memory is unlocked then return true, else false.
-	if (semaphore == false) {
-		semaphore = true;
-		return true;
-	} else {
+	// If the memory is unlocked, lock it, return false
+	if (semaphore == unlocked) {
+		semaphore = locked;
 		return false;
+	// If memory is blocked, call dispatcher with BLOCKED keyword, return true
+	} else {
+		dispatcher(BLOCKED);
+		return true;
 	}
 }
 

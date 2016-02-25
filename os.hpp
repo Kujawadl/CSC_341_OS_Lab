@@ -29,7 +29,11 @@ struct User {
 extern queue<User> readyQueue;
 extern queue<User> blockedQueue;
 extern User currentUser;
-extern bool semaphore;
+
+// Declare semaphor as enum (locked/unlocked) and READY and BLOCKED constants
+enum e_semaphor {locked, unlocked} semaphor;
+#define READY 1
+#define BLOCKED 0
 
 
 
@@ -39,7 +43,7 @@ extern int switchTime;
 
 
 // Dump contents of main memory
-void dump(bool dumpRegs);
+void dump();
 void printQueue(string queueName, queue<User> &q,int num);
 void printQueue(queue<User> &q,int num);
 
@@ -56,7 +60,7 @@ unsigned short int readFile(unsigned short int);
 
 void init();
 
-bool semsignal();
+void semsignal();
 bool semwait();
 
 
