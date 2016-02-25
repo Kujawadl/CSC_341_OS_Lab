@@ -27,6 +27,7 @@ struct User {
 extern queue<User> readyQueue;
 extern queue<User> blockedQueue;
 extern User currentUser;
+extern bool semaphore;
 
 
 
@@ -40,7 +41,7 @@ void dump(bool dumpRegs);
 void printQueue(string queueName, queue<User> &q,int num);
 void printQueue(queue<User> &q,int num);
 
-void dispatcher();
+void dispatcher(int action);
 
 // Round-robin scheduler
 void scheduler();
@@ -52,6 +53,10 @@ int main(int argc, char** argv);
 unsigned short int readFile(unsigned short int);
 
 void init();
+
+bool semsignal();
+bool semwait();
+
 
 int cmdToInt(string);
 
