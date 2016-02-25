@@ -1,3 +1,11 @@
+/*
+ * machine.cpp
+ *
+ * Baker, Ballard, Jager-Kujawa
+ * CSC 341
+ * Spring 2016
+ */
+
 #include "machine.hpp"
 
 //Needed for formatting when printing

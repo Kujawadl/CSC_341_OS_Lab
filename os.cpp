@@ -1,14 +1,12 @@
-#include "os.hpp"
-
 /*
-Note: U1 & U2 instruction registers contain 61440 (HLT)
-while user is not running any program. The run function
-will later assign the IR to the value of the starting
-memory address of the program.
+ * os.cpp
+ *
+ * Baker, Ballard, Jager-Kujawa
+ * CSC 341
+ * Spring 2016
+ */
 
-The scheduler can quickly determine if a user is running
-something by testing the opcode of the IR for HLT (1111).
-*/
+#include "os.hpp"
 
 queue<User> readyQueue = queue<User>();
 queue<User> blockedQueue = queue<User>();
@@ -18,6 +16,7 @@ bool semaphore = unlocked;
 int sysclock;
 int switchTime;
 
+// Dump contents of main memory and all registers and semaphore status
 void dump()
 {
 	// Dump Registers
@@ -51,11 +50,14 @@ void dump()
 	cout << endl << endl << ">\tEnd of dump" << endl << endl;
 }
 
+// Print the contents of a queue, with a header containing the queue name
 void printQueue(string queueName, queue<User> &q, int num)
 {
 	cout << endl << "\t>>>>>>QUEUE: " << queueName << "<<<<<<" << endl;
 	printQueue(q, num);
 }
+
+// Print the contents of a queue
 void printQueue(queue<User> &q, int num)
 {
     if(!num)
@@ -75,7 +77,51 @@ void printQueue(queue<User> &q, int num)
     printQueue(q,--num);
 }
 
-void dispatcher(int action) {
+// If main memory is unlocked and a process requests it, lock it.
+// If it's already locked, block the process.
+// Returns true if user has to wait, false if user doesn't have to wait.
+bool semwait()
+{
+	// If the memory is unlocked, lock it, return false
+	if (semaphore == unlocked) {
+		semaphore = locked;
+		return false;
+	// If memory is blocked, call dispatcher with BLOCKED keyword, return true
+	} else {
+		dispatcher(BLOCKED);
+		return true;
+	}
+}
+
+// Signal that main memory has become available, and the
+// current program is no longer running.
+void semsignal()
+{
+	string titleFiller = "####################"\
+	"################################";
+	if (semaphore == locked) {
+		semaphore = unlocked;
+		cout << titleFiller << endl;
+		cout << "USER " << currentUser.id << " HAS SIGNALED FOR " \
+			"UNLOCK OF MEMORY" << endl;
+		cout << titleFiller << endl << endl;
+
+		int i = 0;
+		for (int i = 0; i < blockedQueue.size(); i++) {
+			User x = blockedQueue.front();
+			blockedQueue.pop();
+			cout << titleFiller << endl;
+			cout << "USER " << x.id << " WAS PUT BACK INTO READY QUEUE" << endl;
+			cout << titleFiller << endl << endl;
+			readyQueue.push(x);
+		}
+	}
+}
+
+// Responsible for swapping users in and out, and controlling
+// which users are blocked vs which are ready.
+void dispatcher(int action)
+{
 	string titleFiller = "####################################################";
 	// Save user state
 	currentUser.regs = machine;
@@ -102,9 +148,9 @@ void dispatcher(int action) {
 		cout << "############### Switching to user " << currentUser.id \
 		<< " ################" << endl;
 		cout << titleFiller << endl << endl;
-
 }
 
+// Round-robin scheduler, 3 ticks per user
 void scheduler()
 {
 	string titleFiller = "######################################" \
@@ -229,22 +275,57 @@ void scheduler()
 	}
 }
 
-int main(int argc, char** argv)
+// Read program into memory
+void readFile()
 {
-	// Print OS startup header
-	string titleFiller = "####################################################";
-	string titleText = "################ CSC 341 OS Lab ####################";
-	cout << endl << titleFiller << endl \
-		<< titleText << endl \
-		<< titleFiller << endl << endl;
-	// Initialization
-	init();
-	// Start scheduler
-	scheduler();
-	return 0;
+	// This method will need to be rewritten entirely using c++ streams
+	ifstream infile("part2.dat");
+	int i = 0;
+	short unsigned int current;
+	string line;
+	while (std::getline(infile, line))
+	{
+		if (line == "*") {
+			i = 100;
+			continue;
+		}
+		char * ptr;
+		current = strtol(line.c_str(), & ptr, 2);
+		main_memory[i] = current;
+		i++;
+	}
 }
 
-void init(){
+// Convert a command as a string into an integer value to simplify
+// switch statements using commands.
+int cmdToInt(string cmd)
+{
+	if (my_strcasecmp(cmd, "run")) return 0;
+	else if (my_strcasecmp(cmd, "dmp")) return 1;
+	else if (my_strcasecmp(cmd, "nop")) return 2;
+	else if (my_strcasecmp(cmd, "stp")) return 3;
+	else return -1;
+}
+
+// Case-insensitive string comparison
+bool my_strcasecmp(string str1, string str2)
+{
+	int length1 = str1.length();
+	for (int i = 0; i < length1; i++) {
+		char &c = str1.at(i);
+		c = tolower(c);
+	}
+	int length2 = str2.length();
+	for (int i = 0; i < length2; i++) {
+		char &c = str2.at(i);
+		c = tolower(c);
+	}
+	return ((str1 == str2) ? true : false);
+}
+
+// Initializes all values required by the OS
+void init()
+{
 	// Initialize main_memory
 	for (int i = 0; i < 255; i++) {
 		main_memory[i] = 0;
@@ -266,11 +347,9 @@ void init(){
 	User SYS = {sys, false, defaultRegisterValues};
 
 	// Read in the program for u1 and u2
-	int u1_start = 0;
-	int u2_start = 100;
-	readFile(u2_start);
-	U1.regs.PC = u1_start;
-	U2.regs.PC = u2_start;
+	readFile();
+	U1.regs.PC = 0;
+	U2.regs.PC = 100;
 
 	readyQueue.push(U1);
 	readyQueue.push(U2);
@@ -281,86 +360,18 @@ void init(){
 	switchTime = sysclock + 3;
 }
 
-void semsignal() {
-	string titleFiller = "####################"\
-	"################################";
-	if (semaphore == locked) {
-		semaphore = unlocked;
-		cout << titleFiller << endl;
-		cout << "USER " << currentUser.id << " HAS SIGNALED FOR " \
-			"UNLOCK OF MEMORY" << endl;
-		cout << titleFiller << endl << endl;
-
-		int i = 0;
-		for (int i = 0; i < blockedQueue.size(); i++) {
-
-			User x = blockedQueue.front();
-			blockedQueue.pop();
-			cout << titleFiller << endl;
-			cout << "USER " << x.id << " WAS PUT BACK INTO READY QUEUE" << endl;
-			cout << titleFiller << endl << endl;
-			readyQueue.push(x);
-		}
-	}
-}
-
-// Returns bool: does user have to wait?
-bool semwait() {
-	// If the memory is unlocked, lock it, return false
-	if (semaphore == unlocked) {
-		semaphore = locked;
-		return false;
-	// If memory is blocked, call dispatcher with BLOCKED keyword, return true
-	} else {
-		dispatcher(BLOCKED);
-		return true;
-	}
-}
-
-// Read program into memory
-// Takes the address to start loading into
-// Returns the size of the program in words
-unsigned short int readFile(unsigned short int start){
-	// This method will need to be rewritten entirely using c++ streams
-	ifstream infile("part2.dat");
-	int i = 0;
-	short unsigned int current;
-	string line;
-	while (std::getline(infile, line))
-	{
-		if (line == "*") {
-			i = 100;
-			continue;
-		}
-		char * ptr;
-		current = strtol(line.c_str(), & ptr, 2);
-		main_memory[i] = current;
-		i++;
-	}
-	return current;
-}
-
-// Convert a command as a string into an integer value to simplify
-// switch statements using commands.
-int cmdToInt(string cmd) {
-	if (my_strcasecmp(cmd, "run")) return 0;
-	else if (my_strcasecmp(cmd, "dmp")) return 1;
-	else if (my_strcasecmp(cmd, "nop")) return 2;
-	else if (my_strcasecmp(cmd, "stp")) return 3;
-	else return -1;
-}
-
-bool my_strcasecmp(string str1, string str2)
+// Main function (starts the OS)
+int main(int argc, char** argv)
 {
-	int length1 = str1.length();
-	for (int i = 0; i < length1; i++) {
-		char &c = str1.at(i);
-		c = tolower(c);
-	}
-	int length2 = str2.length();
-	for (int i = 0; i < length2; i++) {
-		char &c = str2.at(i);
-		c = tolower(c);
-	}
-	return ((str1 == str2) ? true : false);
+	// Print OS startup header
+	string titleFiller = "####################################################";
+	string titleText = "################ CSC 341 OS Lab ####################";
+	cout << endl << titleFiller << endl \
+		<< titleText << endl \
+		<< titleFiller << endl << endl;
+	// Initialization
+	init();
+	// Start scheduler
+	scheduler();
+	return 0;
 }

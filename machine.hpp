@@ -1,3 +1,11 @@
+/*
+ * machine.hpp
+ *
+ * Baker, Ballard, Jager-Kujawa
+ * CSC 341
+ * Spring 2016
+ */
+
 #ifndef MACHINE
 #define MACHINE
 
@@ -24,12 +32,12 @@
 #endif
 
 /* Define condition codes for hardware functions
-	 > : 001
-	 < : 100
-	 = : 010
-	!= : 101
-	>= : 011
-	<= : 110
+> : 001
+< : 100
+= : 010
+!= : 101
+>= : 011
+<= : 110
 */
 #define GRT 1
 #define LST 4
@@ -75,6 +83,7 @@ unsigned short int getRegCode(unsigned short int num);
 // Returns an int 0-255
 unsigned short int getOperand(unsigned short int num);
 
+// Opcode functions
 bool LOD();
 bool STO();
 bool ADD();
@@ -92,7 +101,10 @@ bool CMP();
 bool CLR();
 bool HLT();
 
+// Determines if a result is >, <, = (or +, -, 0)
 unsigned short int getCondCode(unsigned short int);
+
+// Take a register code and return a pointer to that register
 unsigned short int* getRegister();
 
 #ifdef DEBUG
