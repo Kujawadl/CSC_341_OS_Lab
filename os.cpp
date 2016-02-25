@@ -31,16 +31,24 @@ void dump()
 
 	// Dump memory
 	cout << endl << ">>>>>>DUMPING MEMORY<<<<<<" << endl;
-	int i;
-	for (i = 0; i < 256; i++) {
-		if (i % 4 == 0)
+	// Print table header
+	cout << "_____________________________________" \
+		<< "__________________________" << endl;
+	cout << "ad: valu | ad: valu | ad: valu | ad: " \
+		<< "valu | ad: valu | ad: valu" << endl;
+	cout << "_____________________________________" \
+		<< "__________________________" << endl;
+	// Print table contents
+	for (int i = 0; i < 256; i++) {
+		if (i % 6 == 0)
 		cout << endl;
 		else
 		cout << " | ";
-		cout << "#" << setw(3) << i << ": " << setw(8) << main_memory[i];
+		cout << hex;
+		cout << setw(2) << i << ": " << setw(4) << main_memory[i];
+		cout << dec;
 	}
 	cout << endl << endl << ">\tEnd of dump" << endl << endl;
-
 }
 
 void printQueue(string queueName, queue<User> &q, int num)
@@ -71,7 +79,7 @@ void dispatcher(int action) {
 	string titleFiller = "####################################################";
 	// Save user state
 	currentUser.regs = machine;
-	if (action == 1) {
+	if (action == READY) {
 		// Return user to readyQueue
 		readyQueue.push(currentUser);
 	} else {
@@ -80,7 +88,7 @@ void dispatcher(int action) {
 		cout << endl << "USER "  << currentUser.id << " WAS DENIED ACCESS TO "\
 			<< "MEMORY AND PUT INTO" << endl << "THE BLOCKED QUEUE UNTIL ANOTHER " \
 			<< "PROCESS FINISHES";
-		cout << "\n" << titleFiller << "\n\n";
+		cout << endl << titleFiller << endl << endl;
 	}
 		// Load next user
 		currentUser = readyQueue.front();
@@ -114,7 +122,7 @@ void scheduler()
 			// If current user is not running, prompt for a command
 			if (currentUser.id != sys && !running) {
 				cout << "USER" << (currentUser.id == u1 ? 1 : 2) << " > ";
-				// If current user is running, continue execution
+			// If current user is running, continue execution
 			} else if (currentUser.id != sys && running) {
 				interpreter();
 				// If last instruction executed was HLT, call semsignal and break
@@ -227,7 +235,7 @@ void init(){
 
 	readyQueue.push(U1);
 	readyQueue.push(U2);
-	readyQueue.push(SYS);
+	currentUser = SYS;
 
 	// Initialize sysclock and switchTime
 	sysclock = 0;
