@@ -165,7 +165,7 @@
       
         $(document).ready(function(){
           var loadResult = loadFiles();
-          while (loadResult != true)
+          while (loadResult != true){
             // On load failure, prompt for reload
             swal({
               title: "Oops!",
@@ -184,7 +184,7 @@
                 loadResult = true;
               }
             });
-          });
+          }
           
           // Attempt to highlight syntax once load is complete
           SyntaxHighlighter.all();
