@@ -53,17 +53,141 @@
 
       <h2><a id="project-listing" class="anchor" href="#project-listing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Project Listing</h2>
       <script>
+        function loadFiles() {
+          var errors = 0;
+          var errorlist = "";
+          
+          $("#out_txt_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/out.txt",
+            function(response, status) {
+              if (status == "success") {
+                respont = response.replace(/>/g, "&gt;").replace(/</g, "&lt;");
+                document.getElementById("out_txt_code").text = response;
+              } else {
+                errors += 1;
+                errorlist = "<li>out.txt</li> \n";
+              }
+            }
+          );
+          
+          $("#machine_hpp_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/machine.hpp",
+            function(response, status) {
+              if (status == "success") {
+                respont = response.replace(/>/g, "&gt;").replace(/</g, "&lt;");
+                document.getElementById("machine_hpp_code").text = response;
+              } else {
+                errors += 1;
+                errorlist = "<li>machine.hpp</li> \n";
+              }
+            }
+          );
+          
+          $("#machine_cpp_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/machine.cpp",
+            function(response, status) {
+              if (status == "success") {
+                respont = response.replace(/>/g, "&gt;").replace(/</g, "&lt;");
+                document.getElementById("machine_cpp_code").text = response;
+              } else {
+                errors += 1;
+                errorlist = "<li>machine.cpp</li> \n";
+              }
+            }
+          );
+          
+          $("#os_hpp_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/os.hpp",
+            function(response, status) {
+              if (status == "success") {
+                respont = response.replace(/>/g, "&gt;").replace(/</g, "&lt;");
+                document.getElementById("os_hpp_code").text = response;
+              } else {
+                errors += 1;
+                errorlist = "<li>os.hpp</li> \n";
+              }
+            }
+          );
+          
+          $("#os_cpp_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/os.cpp",
+            function(response, status) {
+              if (status == "success") {
+                respont = response.replace(/>/g, "&gt;").replace(/</g, "&lt;");
+                document.getElementById("os_cpp_code").text = response;
+              } else {
+                errors += 1;
+                errorlist = "<li>os.cpp</li> \n";
+              }
+            }
+          );
+          
+          $("#part2_dat_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/part2.dat",
+            function(response, status) {
+              if (status == "success") {
+                respont = response.replace(/>/g, "&gt;").replace(/</g, "&lt;");
+                document.getElementById("part2_dat_code").text = response;
+              } else {
+                errors += 1;
+                errorlist = "<li>part2.dat</li> \n";
+              }
+            }
+          );
+          
+          $("#part2x_dat_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/part2x.dat",
+            function(response, status) {
+              if (status == "success") {
+                respont = response.replace(/>/g, "&gt;").replace(/</g, "&lt;");
+                document.getElementById("part2x_dat_code").text = response;
+              } else {
+                errors += 1;
+                errorlist = "<li>part2x.dat</li> \n";
+              }
+            }
+          );
+          
+          $("#makefile_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/makefile",
+            function(response, status) {
+              if (status == "success") {
+                respont = response.replace(/>/g, "&gt;").replace(/</g, "&lt;");
+                document.getElementById("makefile").text = response;
+              } else {
+                errors += 1;
+                errorlist = "<li>makefile</li> \n";
+              }
+            }
+          );
+          
+          // Give errorlist a heading and surround with ol tags
+          errorslist = "<strong>The following files could not be loaded: </strong>\n<ol>" + errorslist + "</ol>";
+          
+          if (errors == 0) {
+            return true;
+          } else {
+            return errorlist;
+          }
+        }
+      
         $(document).ready(function(){
-          $("#out_txt_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/out.txt")
-          $("#machine_hpp_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/machine.hpp");
-          $("#machine_cpp_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/machine.cpp");
-          $("#os_hpp_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/os.hpp");
-          $("#os_cpp_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/os.cpp");
-          $("#part2_dat_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/part2.dat");
-          $("#part2x_dat_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/part2x.dat");
-          $("#makefile_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/makefile");
+          var loadResult = loadFiles();
+          while (loadResult != true)
+            // On load failure, prompt for reload
+            swal({
+              title: "Oops!",
+              text: errorlist,
+              type: "error",
+              showCancelButton: true,
+              confirmButtonText: "Retry",
+              closeOnConfirm: true
+            },
+            function(isConfirm){
+              // If confirm, try again
+              if (isConfirm) {
+                loadResult = loadFiles();
+              // If cancel, exit while loop
+              } else {
+                loadResult = true;
+              }
+            });
+          }
+          
+          // Attempt to highlight syntax once load is complete
           SyntaxHighlighter.all();
-
         });
       </script>
 
