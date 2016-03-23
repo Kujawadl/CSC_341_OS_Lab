@@ -96,7 +96,7 @@
           $("#os_hpp_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/os.hpp",
             function(response, status) {
               if (status == "success") {
-                respont = response.replace(/>/g, "&gt;").replace(/</g, "&lt;");
+                response = response.replace(/>/g, "&gt;").replace(/</g, "&lt;");
                 document.getElementById("os_hpp_code").text = response;
               } else {
                 errors += 1;
@@ -154,7 +154,7 @@
           );
           
           // Give errorlist a heading and surround with ol tags
-          errorslist = "<strong>The following files could not be loaded: </strong>\n<ol>" + errorslist + "</ol>";
+          errorlist = "<strong>The following files could not be loaded: </strong>\n<ol>" + errorslist + "</ol>";
           
           if (errors == 0) {
             return true;
