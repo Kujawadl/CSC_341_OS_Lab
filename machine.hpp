@@ -59,6 +59,7 @@ extern registers machine;
 
 // Declare main memory
 extern unsigned short int main_memory[256];
+extern unsigned short int disk[512];
 
 // Uses value in IR to determine course of action
 // Returns false if errors
