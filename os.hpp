@@ -38,10 +38,33 @@ struct Process {
   registers regs;
   // list<int>* tlb;
 };
-
+extern Process currentProcess;
 extern queue<Process> readyQueue;
 extern queue<Process> blockedQueue;
-extern Process currentProcess;
+struct Users {
+  userID id;
+  queue<Process>& ready;
+  queue<Process>& blocked;
+//
+  queue<Process> readyQueues[3];
+  queue<Process> blockedQueues[3];
+
+  Users& operator++(int& user) {
+    // Save current process registers
+    currentProcess.regs = machine;
+    // Return current process to user's ready queue
+    ready.push(currentProcess);
+    // Get next user
+    id = nextUser(id);
+    // Get the next user's ready and blocked queues
+    ready = readyQueues[id];
+    blocked = blockedQueues[id];
+    // Pop next process off current user's ready queue and into running state
+    currentProcess = ready.pop();
+    // Load process state from PCB into machine registers
+    machine = currentProcess.regs;
+  }
+};
 
 // Declare semaphor as enum (locked/unlocked) and READY and BLOCKED constants
 enum e_semaphor {locked, unlocked} semaphor;
