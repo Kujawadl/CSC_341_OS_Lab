@@ -23,13 +23,28 @@ unsigned short int MMU(unsigned short int logicalAddress) {
 	if (!machine.PTBR) { // If PTBR pointer is null, throw an exception
 		throw std::out_of_range("Page table base register is not initialized!");
 	}
+
 	unsigned short int page = (logicalAddress&252)>>2; // Returns 0-63
-	unsigned short int offset = logicalAddress & 4; // Returns 0-3
+	unsigned short int offset = logicalAddress & 3; // Returns 0-3
+
+	#ifdef MMU_DEBUG
+	#include <bitset>
+	bitset<8> x(logicalAddress);
+	cout << "Attempting to translate logical address " << x << " (p#" << page
+			 << " w#" << offset << ")" << endl;
+	#endif
 
 	// Dereferenced PTBR pointer = PageTable object
 	// operator[] either returns a fram number (if one is allocated to the page)
 	// or allocates an empty frame to the page, then returns that frame number
 	unsigned short int frame = (*machine.PTBR)[page];
+
+	#ifdef MMU_DEBUG
+	bitset<8> y((frame<<2) + offset);
+	cout << "Found physical address " << y << " (f#" << frame
+			 << " w#" << offset << ")" << endl;
+	#endif
+
 	return ((frame<<2) + offset); // Bitshift frame# to the frame offset position.
 																// Offset remains the same
 }

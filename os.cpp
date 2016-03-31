@@ -43,6 +43,17 @@ void dump()
 		cout << setw(2) << i << ": " << setw(4) << main_memory[i];
 		cout << dec;
 	}
+
+	cout << endl << endl << "User1 Page Table:" << endl;
+
+	U1.proc->regs.PTBR->print();
+
+	cout << endl << endl << "User2 Page Table:";
+
+	U2.proc->regs.PTBR->print();
+
+	cout << endl << endl;
+
 	cout << endl << endl << ">\tEnd of dump" << endl << endl;
 }
 
@@ -70,6 +81,7 @@ void loader()
 		currentPage = (currentWord == 3 ? currentPage + 1 : currentPage);
 		// If at the last word in the page, reset currentWord to 0
 		currentWord = (currentWord == 3 ? 0 : currentWord + 1);
+		currentDiskAddr++;
 	} while (currentInstr != 61440);
 
 	// For User 2, read from disk starting at location 100
@@ -86,6 +98,7 @@ void loader()
 		currentPage = (currentWord == 3 ? currentPage + 1 : currentPage);
 		// If at the last word in the page, reset currentWord to 0
 		currentWord = (currentWord == 3 ? 0 : currentWord + 1);
+		currentDiskAddr++;
 	} while (currentInstr != 61440);
 }
 
@@ -96,23 +109,12 @@ void dispatcher(int action)
 	string titleFiller = "####################################################";
 	// Save user state
 	currentUser.proc->regs = machine;
-	if (action == READY) {
-		// Return user to readyQueue
-		readyQueue.push(currentUser);
-	} else {
-		blockedQueue.push(currentUser);
-		cout << endl << titleFiller;
-		cout << endl << "USER "  << currentUser.id << " WAS DENIED ACCESS TO "\
-			<< "MEMORY AND PUT INTO" << endl << "THE BLOCKED QUEUE UNTIL ANOTHER " \
-			<< "PROCESS FINISHES";
-		cout << endl << titleFiller << endl << endl;
+	switch (currentUser.id++) {
+		case sys: currentUser = U1; break;
+    case u1: currentUser = U2; break;
+    case u2: currentUser = SYS; break;
 	}
-		// Load next user
-		currentUser = readyQueue.front();
-		readyQueue.pop();
-		// Load user state
 		machine = currentUser.proc->regs;
-
 		// Output information about user switch
 
 		cout << endl << titleFiller << endl;
@@ -132,7 +134,8 @@ void scheduler()
 		// NOTE: If we return to this point in the loop, the dispatcher was not
 		// 			 called during last iteration, i.e. current user was not BLOCKED,
 		// 			 i.e. current user must be READY.
-		dispatcher(READY);
+		if (sysclock != 0)
+			dispatcher(READY);
 		switchTime = sysclock + 5;
 
 		while (sysclock < switchTime) {
@@ -199,7 +202,8 @@ void scheduler()
 							switchTime = sysclock + 5;
 						}
 					} else {
-						cout << "Invalid command for system" << endl;
+						loader();
+						cout << "The loader function was called" << endl;
 					}
 					break;
 				case 1: // "dmp"
