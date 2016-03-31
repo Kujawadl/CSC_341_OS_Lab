@@ -165,7 +165,9 @@
 
           // Attempt to highlight syntax once load is complete
           SyntaxHighlighter.all();
+        });
 
+        $(window).load(function() {
           $("code").each(function() {
             $(this).text($(this).text().replace(/<\/[^\n]+>/g, ""));
           });
