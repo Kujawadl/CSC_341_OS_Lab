@@ -12,7 +12,6 @@
 #include <iostream> // cout
 #include <iomanip>  // setw(), left, right
 #include <random>   // random number generators
-#include <stdexcept>
 
 #define MMU_DEBUG
 
