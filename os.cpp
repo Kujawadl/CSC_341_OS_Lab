@@ -96,23 +96,12 @@ void dispatcher(int action)
 	string titleFiller = "####################################################";
 	// Save user state
 	currentUser.proc->regs = machine;
-	if (action == READY) {
-		// Return user to readyQueue
-		readyQueue.push(currentUser);
-	} else {
-		blockedQueue.push(currentUser);
-		cout << endl << titleFiller;
-		cout << endl << "USER "  << currentUser.id << " WAS DENIED ACCESS TO "\
-			<< "MEMORY AND PUT INTO" << endl << "THE BLOCKED QUEUE UNTIL ANOTHER " \
-			<< "PROCESS FINISHES";
-		cout << endl << titleFiller << endl << endl;
+	switch (currentUser.id++) {
+		case sys: currentUser = U1; break;
+    case u1: currentUser = U2; break;
+    case u2: currentUser = SYS; break;
 	}
-		// Load next user
-		currentUser = readyQueue.front();
-		readyQueue.pop();
-		// Load user state
 		machine = currentUser.proc->regs;
-
 		// Output information about user switch
 
 		cout << endl << titleFiller << endl;
@@ -288,7 +277,7 @@ void init()
 	SYS = User(sys);
 	// SYS does not need a page table; it has no pages
 
-	currentUser = SYS;
+	currentUser = U2;
 
 	// Initialize sysclock and switchTime
 	sysclock = 0;
