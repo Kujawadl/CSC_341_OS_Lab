@@ -29,7 +29,7 @@
           /* Determine which lab we're working with by determining the due dates we're within */
           var labNum = 1;
           var today = new Date();
-          var dueDates = new Array(new Date("February 11, 2016 3:30 PM"), new Date("February 25, 2016 3:30 PM"), new Date("March 29, 2016 3:30 PM"), new Date("April 12, 2016 3:30 PM"), new Date("April 28, 2016 3:30 PM"));
+          var dueDates = new Array(new Date("February 11, 2016 3:30 PM"), new Date("February 25, 2016 3:30 PM"), new Date("March 31, 2016 11:59 PM"), new Date("April 12, 2016 3:30 PM"), new Date("April 28, 2016 3:30 PM"));
           for (i = 0; i < 5; i++) {
             if (today > dueDates[i]) {
               labNum++;
@@ -56,7 +56,7 @@
         function loadFiles() {
           var errors = 0;
           var errorlist = "";
-          
+
           $("#out_txt_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/out.txt",
             function(response, status) {
               if (status == "success") {
@@ -68,7 +68,7 @@
               }
             }
           );
-          
+
           $("#machine_hpp_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/machine.hpp",
             function(response, status) {
               if (status == "success") {
@@ -80,7 +80,7 @@
               }
             }
           );
-          
+
           $("#machine_cpp_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/machine.cpp",
             function(response, status) {
               if (status == "success") {
@@ -92,7 +92,7 @@
               }
             }
           );
-          
+
           $("#os_hpp_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/os.hpp",
             function(response, status) {
               if (status == "success") {
@@ -104,7 +104,7 @@
               }
             }
           );
-          
+
           $("#os_cpp_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/os.cpp",
             function(response, status) {
               if (status == "success") {
@@ -116,31 +116,31 @@
               }
             }
           );
-          
-          $("#part2_dat_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/part2.dat",
+
+          $("#utils_hpp_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/utils.hpp",
             function(response, status) {
               if (status == "success") {
                 response = response.replace(/>/g, "&gt;").replace(/</g, "&lt;");
                 document.getElementById("part2_dat_code").text = response;
               } else {
                 errors += 1;
-                errorlist = "<li>part2.dat</li> \n";
+                errorlist = "<li>utils.hpp</li> \n";
               }
             }
           );
-          
-          $("#part2x_dat_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/part2x.dat",
+
+          $("#utils_cpp_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/utils.cpp",
             function(response, status) {
               if (status == "success") {
                 response = response.replace(/>/g, "&gt;").replace(/</g, "&lt;");
                 document.getElementById("part2x_dat_code").text = response;
               } else {
                 errors += 1;
-                errorlist = "<li>part2x.dat</li> \n";
+                errorlist = "<li>utils.cpp</li> \n";
               }
             }
           );
-          
+
           $("#makefile_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/makefile",
             function(response, status) {
               if (status == "success") {
@@ -152,17 +152,17 @@
               }
             }
           );
-          
+
           // Give errorlist a heading and surround with ol tags
           errorlist = "<strong>The following files could not be loaded: </strong>\n<ol>" + errorlist + "</ol>";
-          
+
           if (errors == 0) {
             return true;
           } else {
             return errorlist;
           }
         }
-      
+
         $(document).ready(function(){
           var loadResult = loadFiles();
           while (loadResult != true){
@@ -185,9 +185,9 @@
               }
             });
           }
-          
+
           // Attempt to highlight syntax once load is complete
-          //SyntaxHighlighter.all();
+          SyntaxHighlighter.all();
         });
       </script>
 
@@ -216,14 +216,14 @@
       <pre id="os_cpp_code" class="syntaxhighlighter brush: c; toolbar: false; tab-size: 2; ruler: false"></pre>
 
   <p class="pagebreak" />
-      <p><a name="listing_part2_dat"></a></p>
-      <h3><a id="part2dat" class="anchor" href="#part2dat" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>part2.dat</h3>
-      <pre id="part2_dat_code" class="syntaxhighlighter brush: c; toolbar: false; tab-size: 2; ruler: false"></pre>
+      <p><a name="listing_utils_hpp"></a></p>
+      <h3><a id="utilshpp" class="anchor" href="#utilshpp" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>utils.hpp</h3>
+      <pre id="utils_hpp_code" class="syntaxhighlighter brush: c; toolbar: false; tab-size: 2; ruler: false"></pre>
 
   <p class="pagebreak" />
-      <p><a name="listing_part2x_dat"></a></p>
-      <h3><a id="part2xdat" class="anchor" href="#part2xdat" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>part2x.dat</h3>
-      <pre id="part2x_dat_code" class="syntaxhighlighter brush: c; toolbar: false; tab-size: 2; ruler: false"></pre>
+      <p><a name="listing_utils_cpp"></a></p>
+      <h3><a id="utilscpp" class="anchor" href="#utilscpp" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>utils.cpp</h3>
+      <pre id="utils_cpp_code" class="syntaxhighlighter brush: c; toolbar: false; tab-size: 2; ruler: false"></pre>
 
   <p class="pagebreak" />
       <p><a name="listing_makefile"></a></p>
