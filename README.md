@@ -17,6 +17,7 @@
   - [How to Run](#how-to-run)
   - [Time Spent](#time-spent)
   - [Verification](#verification)
+  - [References](#references)
   - [Project Listing](#project-listing)
     - [Execution Listing](#out_txt)
     - [machine.hpp](#listing_machine_hpp)
@@ -173,3 +174,9 @@ Finally, looking at the frame table and page tables, we can verify that "In use"
 Thus all aspects of the virtual memory system work as expected.
 
 Furthermore, the operating system does prompt the user for input, even though they have a program running. After typing `run`, execution continues where it left off, as we can see starting at line 478.
+
+## References
+
+Silberschatz, A., & Galvin, P. B. (1998). Operating system concepts. Reading, MA: Addison Wesley Longman.
+
+Stack Overflow. (2013, July 21). Retrieved March 29, 2016, from http://stackoverflow.com/a/17777130 
