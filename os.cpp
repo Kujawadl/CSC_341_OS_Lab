@@ -140,7 +140,7 @@ void scheduler()
 	 "##############";
 	// Scheduler code
 	while (true) {
-		// Load next user and assign its max time (3 ticks)
+		// Load next user and assign its max time (5 ticks)
 		// NOTE: If we return to this point in the loop, the dispatcher was not
 		// 			 called during last iteration, i.e. current user was not BLOCKED,
 		// 			 i.e. current user must be READY.
@@ -153,25 +153,8 @@ void scheduler()
 			bool instrLoaded = !(getOpcode(machine.IR) == 15);
 			sysclock++;
 			// If current user is not running, prompt for a command
-			if (currentUser.id != sys && !running && !instrLoaded) {
+			if (currentUser.id != sys && !running) {
 				cout << "USER" << (currentUser.id == u1 ? 1 : 2) << " > ";
-			// If current user is not running, but has an instruction loaded, begin
-			// executing instructions (user just restored from blocked state)
-			} else if (currentUser.id != sys && !running && instrLoaded) {
-					cout << endl << titleFiller;
-					cout << endl << "USER " << currentUser.id << " REQUESTED MEM " \
-						<< "ACCESS AND ACCESS WAS GRANTED." << endl << "USER MAY " \
-						<< "EXECUTE INSTRUCTIONS.";
-					cout << endl << titleFiller << endl << endl;
-					currentUser.proc->running = true;
-					interpreter();
-					// If last instruction executed was HLT
-					if (machine.IR == 61440) {
-						currentUser.proc->running = false;
-						// Exit loop (current user is done)
-						switchTime = sysclock;
-					}
-			// If current user is system, prompt as system
 			} else if (currentUser.id != sys && running) {
 				interpreter();
 				// If last instruction executed was HLT
@@ -185,26 +168,21 @@ void scheduler()
 			}
 
 		// If necessary, take input from command line
-		if ((!running  && !instrLoaded) || currentUser.id == sys) {
+		if (!running || currentUser.id == sys) {
 			string input;
 			getline(cin, input);
 			switch (cmdToInt(input)) {
 				case 0: // "run"
 					if (currentUser.id != sys) {
 						machine.IR = main_memory[machine.PC];
-							cout << endl << titleFiller;
-							cout << endl << "USER " << currentUser.id << " REQUESTED MEM " \
-								<< "ACCESS AND ACCESS WAS GRANTED." << endl << "USER MAY " \
-								<< "EXECUTE INSTRUCTIONS.";
-							cout << endl << titleFiller << endl << endl;
-							currentUser.proc->running = true;
-							interpreter();
-							// If last instruction executed was HLT
-							if (machine.IR == 61440) {
-								currentUser.proc->running = false;
-								// Exit loop (current user is done)
-								switchTime = sysclock;
-							}
+						currentUser.proc->running = true;
+						interpreter();
+						// If last instruction executed was HLT
+						if (machine.IR == 61440) {
+							currentUser.proc->running = false;
+							// Exit loop (current user is done)
+							switchTime = sysclock;
+						}
 					} else {
 						loader();
 						cout << "The loader function was called" << endl;
@@ -232,6 +210,11 @@ void scheduler()
 					cout << "Invalid command: " << input << endl;
 					break;
 				}
+			}
+
+			// If user's time is up, set running to false
+			if (sysclock >= switchTime) {
+				currentUser.proc->running = false;
 			}
 		}
 	}
