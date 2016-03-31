@@ -5,17 +5,18 @@
 #### Submitted under cs341109
 
 # Table of Contents
-  - [Project overview](#project-overview)
+  - ~~[Project overview](#project-overview)~~ AGB
     - [Machine](#machine)
-      - [Memory](#memory)
-        - [MMU](#mmu)
+      - ~~[Memory](#memory)~~ DJK
+         - ~~[Paging](#Paging)~~ DJK
+	      - ~~[MMU](#mmu)~~ DJK
     - [OS](#os)
-      - [UI](#ui)
-      - [Scheduler](#scheduler)
-      - [Data](#data)
-    - [Difficulties Encountered](#difficulties-encountered)
-  - [How to Run](#how-to-run)
-  - [Time Spent](#time-spent)
+      - ~~[UI](#ui)~~ AGB
+      - ~~[Scheduler](#scheduler)~~ DJK
+      - ~~[Data](#data)~~ AGB
+    - ~~[Difficulties Encountered](#difficulties-encountered)~~ DJK
+  - ~~[How to Run](#how-to-run)~~ DJK
+  - ~~[Time Spent](#time-spent)~~ DJK
   - [Verification](#verification)
   - [Project Listing](#project-listing)
     - [Execution Listing](#out_txt)
