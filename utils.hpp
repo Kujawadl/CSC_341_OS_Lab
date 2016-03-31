@@ -15,6 +15,7 @@
 #include <ctime>    // time
 #include <iterator> // begin, end
 #include <sstream>  // stringstream
+#include <stdexcept>// out_of_range
 
 #define MMU_DEBUG
 
