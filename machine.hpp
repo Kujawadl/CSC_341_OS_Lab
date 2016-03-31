@@ -52,6 +52,7 @@
 typedef struct {
 	unsigned short int r1, r2, r3, rA, IR, PC:8;
 	unsigned short int CR:3;
+	PageTable& PTBR;
 } registers;
 
 // Declare and initialize machine registers
