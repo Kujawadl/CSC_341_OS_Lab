@@ -60,7 +60,9 @@
 
           $("#out_txt_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/out.txt",
             function(response, status) {
-              if (status != "success") {
+              if (status == "success") {
+                this.text(this.text().replace(/</g, "&lt;"));
+              } else {
                 errors += 1;
                 errorlist = "<li>out.txt</li> \n";
               }
@@ -69,7 +71,9 @@
 
           $("#machine_hpp_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/machine.hpp",
             function(response, status) {
-              if (status != "success") {
+              if (status == "success") {
+                this.text(this.text().replace(/</g, "&lt;"));
+              } else {
                 errors += 1;
                 errorlist = "<li>machine.hpp</li> \n";
               }
@@ -78,7 +82,9 @@
 
           $("#machine_cpp_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/machine.cpp",
             function(response, status) {
-              if (status != "success") {
+              if (status == "success") {
+                this.text(this.text().replace(/</g, "&lt;"));
+              } else {
                 errors += 1;
                 errorlist = "<li>machine.cpp</li> \n";
               }
@@ -87,7 +93,9 @@
 
           $("#os_hpp_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/os.hpp",
             function(response, status) {
-              if (status != "success") {
+              if (status == "success") {
+                this.text(this.text().replace(/</g, "&lt;"));
+              } else {
                 errors += 1;
                 errorlist = "<li>os.hpp</li> \n";
               }
@@ -96,7 +104,9 @@
 
           $("#os_cpp_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/os.cpp",
             function(response, status) {
-              if (status != "success") {
+              if (status == "success") {
+                this.text(this.text().replace(/</g, "&lt;"));
+              } else {
                 errors += 1;
                 errorlist = "<li>os.cpp</li> \n";
               }
@@ -105,7 +115,9 @@
 
           $("#utils_hpp_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/utils.hpp",
             function(response, status) {
-              if (status != "success") {
+              if (status == "success") {
+                this.text(this.text().replace(/</g, "&lt;"));
+              } else {
                 errors += 1;
                 errorlist = "<li>utils.hpp</li> \n";
               }
@@ -114,7 +126,9 @@
 
           $("#utils_cpp_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/utils.cpp",
             function(response, status) {
-              if (status != "success") {
+              if (status == "success") {
+                this.text(this.text().replace(/</g, "&lt;"));
+              } else {
                 errors += 1;
                 errorlist = "<li>utils.cpp</li> \n";
               }
@@ -123,7 +137,9 @@
 
           $("#makefile_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/makefile",
             function(response, status) {
-              if (status != "success") {
+              if (status == "success") {
+                this.text(this.text().replace(/</g, "&lt;"));
+              } else {
                 errors += 1;
                 errorlist = "<li>makefile</li> \n";
               }
@@ -206,13 +222,5 @@
       <p><a name="listing_makefile"></a></p>
       <h3><a id="makefile" class="anchor" href="#makefile" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>makefile</h3>
       <pre id="makefile_code" class="syntaxhighlighter brush: c; toolbar: false; tab-size: 2; ruler: false"></pre>
-    </div>
-    <script>    
-      $(window).load(function() {
-        $("code").each(function() {
-          $(this).text($(this).text().replace(/<\/[^\n]+>/g, ""));
-        });
-      });
-    </script>
-  </body>
+    </div></body>
 </html>
