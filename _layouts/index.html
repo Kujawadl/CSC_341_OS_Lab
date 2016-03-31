@@ -145,7 +145,7 @@
             function(response, status) {
               if (status == "success") {
                 response = response.replace(/>/g, "&gt;").replace(/</g, "&lt;");
-                document.getElementById("makefile").text = response;
+                document.getElementById("makefile_code").text = response;
               } else {
                 errors += 1;
                 errorlist = "<li>makefile</li> \n";
