@@ -29,17 +29,18 @@
     - [makefile](#listing_makefile)
 
 ## Project Overview
-During this course of this class we are going to be exploring and creating operating system concepts and components. This second part of our project involves thinking about concurrency, mutal exclusion, synchronization, enforcement, deadlock and starvation avoidance. In order to develop and explore these operating system issues, we are to implement a new way of handling access to memory locations.
+This project overview has been to explore, understand, and implement basic operating system concepts and components. The portion of this third lab involved the implementation of paging for logical addressing. This entailed an overhaul of some of the components that were previously developed for our simple console operating system.
 
 ### Machine
-The following is a brief review of the virtual system we have built:
+Here is an updated version of the specifications of our operating system:
  - 16-bit words
  - 256-word memory (16 bits) word addressable
+ - 512-word disk space (16 bits)
  - 3 general purpose registers (1-3), 1 special: A (0)
+ - A Page Table Buffer Register
  - 8-bit program counter (PC)
  - condition code flags : equals or zero-(010), positive-(001), negative-(100)
  - Machine instruction cycle - fetch, decode, opfetch, execute, writeback
-
 
 Furthermore, the following is a list of the instructions that can be executed on our hardware, along with their opcodes and mnemonics. These instructions will serve as the foundation for any programs running on the machine.
 
@@ -80,7 +81,7 @@ The `dmp` function will now dump all the registers, the queues for the semaphore
 We will now briefly talk about how components of the OS have changed during this portion of the project:
 
 #### UI
-User interface has not changed significantly between these versions of the operating system. The primary difference is that the dispatcher writes to the console to inform users when their processes have been blocked, and when they resume execution. Beyond this, the UI should be effectively the same as that of Lab 1.
+User interface changes have not been incredibly significant since it's implementation in lab 1. The dump command has been vastly expanded to include information on page tables and the frames that are located in main memory. Otherwise, you can fully expect the same UI that was found in the previous iteration of our simulated console OS.
 
 #### Memory
 In terms of the implementation, memory is exactly the same in Lab 2 as in Lab 1. The primary difference is that there is a global variable, semaphore, which, when locked, redirects all new requests to access memory to the blocked queue, to be recalled to the ready queue once the semaphore is unlocked.
@@ -93,9 +94,9 @@ Our former approach to implementing the users, having an enum for the users whic
 Finally, while the initial version was simple enough that the scheduler could essentially perform the job of the dispatcher as well, this program grew such that the resulting scheduler was enormous and unwieldy. The decision was made to split this up into two separate functions, the scheduler and the dispatcher.
 
 #### Data
-One of the advantages C++ brought with it was the ability to quickly and easily convert to hex in our output. Thus, the `dmp` function now reports in hexadecimal as opposed to binary, allowing us to fit 50% more content along the width of the screen. We expect this will greatly improve readability, and reduce paper use in our printouts.
+Readability should now be increased. We have the input files hardcoded into disk, thus on load the "data" is already located on the disk waiting for our loader to appropriately bring the data into the frames in main_memory. We use to had a read file method to scan for text input on file, but for efficiency's sake we decided that scanning a file was just extra resources we did not really need to expend if we did not have to.
 
-In addition, our inputs changed slightly as well. This time around, our input was one file with two programs, separated by a single * on its own line. The first program was to be loaded into user 1's memory (starting at location 0), while the second program was to be loaded into user 2's memory (starting at location 100). The readfile method did have to be rewritten from the ground up to accomodate C++'s use of streams, however this did not take long.
+Once again, Process 1 starts at location 0 and process 2 starts at location 100, as indicated in the previous handout.
 
 
 ### Difficulties Encountered
