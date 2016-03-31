@@ -300,6 +300,3 @@ int main(int argc, char** argv)
 	scheduler();
 	return 0;
 }
-
-//Needed for formatting when printing
-//</user></user></user></user></user></user>

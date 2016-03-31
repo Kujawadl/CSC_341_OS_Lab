@@ -74,8 +74,3 @@ void init();
 int main(int argc, char** argv);
 
 #endif
-
-//Needed for formatting when printing
-//</string></queue></iostream></iomanip>
-//</cstdlib></cstring></sstream></fstream>
-//</string></cctype></user></user></user></user>
