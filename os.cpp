@@ -217,27 +217,6 @@ void scheduler()
 	}
 }
 
-// Read program into memory
-void readFile()
-{
-	// This method will need to be rewritten entirely using c++ streams
-	ifstream infile("part2.dat");
-	int i = 0;
-	short unsigned int current;
-	string line;
-	while (std::getline(infile, line))
-	{
-		if (line == "*") {
-			i = 100;
-			continue;
-		}
-		char * ptr;
-		current = strtol(line.c_str(), & ptr, 2);
-		main_memory[i] = current;
-		i++;
-	}
-}
-
 // Convert a command as a string into an integer value to simplify
 // switch statements using commands.
 int cmdToInt(string cmd)
