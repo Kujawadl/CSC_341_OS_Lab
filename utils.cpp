@@ -45,7 +45,10 @@ int& PageTable::operator[] (const int index)
 {
   // If index out of bounds, throw an exception
   if (index > 63 || index < 0) {
-    throw std::out_of_range("PageTable index " + std::to_string(index) +
+    std::stringstream ss;
+    ss << index;
+    std::string strIndex = ss.str();
+    throw std::out_of_range("PageTable index " + strIndex +
                             " is invalid! Index must be 0-63!\n");
   }
   // If page table contains no frame for specified page
@@ -97,13 +100,16 @@ void PageTable::print()
               " | Page#  | Frame# || Frame# | FrameInUse?  | \n" +
               rowdiv;
   for (int i = 0; i < NUM_FRAMES; i++) {
+    std::stringstream ss;
+    ss << _pageTable[i];
+    std::string strFrame = ss.str();
     std::cout << " | "
               // Output page number
               << std::setw(6) << std::right << i
                 << " | "
               // Output associated frame, if any
               << std::setw(6) << std::left
-                << (_pageTable[i] < 0 ? "-" : std::to_string(_pageTable[i]))
+                << (_pageTable[i] < 0 ? "-" : strFrame)
                 << " || "
               // Output frame number
               << std::setw(6) << std::right << i

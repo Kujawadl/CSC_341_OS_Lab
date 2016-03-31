@@ -14,7 +14,7 @@
 #include <cstdlib>  // srand, rand
 #include <ctime>    // time
 #include <iterator> // begin, end
-#include <string>   // to_string
+#include <sstream>  // stringstream
 
 #define MMU_DEBUG
 
