@@ -269,7 +269,7 @@ void init()
 	disk[i++] = 61440;
 	for (i = i; i < 100; i++) {disk[i] = 0;}
 	disk[i++] = 2073;
-	disk[i++] = 4102;
+	disk[i++] = 4202;
 	disk[i++] = 2309;
 	disk[i++] = 20736;
 	disk[i++] = 4103;
