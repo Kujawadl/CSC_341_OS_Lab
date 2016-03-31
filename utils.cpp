@@ -26,7 +26,7 @@ PageTable::PageTable(FrameTable& F) : _framesInUse(F)
 */
 int& PageTable::operator[] (const int index)
 {
-  // If index out of bounds, return -1
+  // If index out of bounds, throw an exception
   if (index > 63 || index < 0) {
     throw std::out_of_range("PageTable index " + std::to_string(index) +
                             " is invalid! Index must be 0-63!\n");
@@ -37,6 +37,12 @@ int& PageTable::operator[] (const int index)
     std::cout << "Page #" << index << " has no associated frame." << std::endl;
     std::cout << "Searching for next available frame:" << std::endl;
     #endif
+
+    // If no more available frames to allocate, throw an exception
+    if (std::find(std::begin(_framesInUse), std::end(_framesInUse), false)
+        == std::end(_framesInUse)) {
+      throw std::out_of_range("No more available frames!");
+    }
 
     // Random number generator setup
     std::default_random_engine rng;
