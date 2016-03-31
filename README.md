@@ -7,10 +7,11 @@
 # Table of Contents
   - [Project overview](#project-overview)
     - [Machine](#machine)
+      - [Memory](#memory)
+        - [MMU](#mmu)
     - [OS](#os)
       - [UI](#ui)
-      - [Memory](#memory)
-      - [Organization](#organization)
+      - [Scheduler](#scheduler)
       - [Data](#data)
     - [Difficulties Encountered](#difficulties-encountered)
   - [How to Run](#how-to-run)
@@ -22,8 +23,8 @@
     - [machine.cpp](#listing_machine_cpp)
     - [os.hpp](#listing_os_hpp)
     - [os.cpp](#listing_os_cpp)
-    - [part2.dat](#listing_part2_dat)
-    - [part2x.dat](#listing_part2x_dat)
+    - [utils.hpp](#listing_utils_hpp)
+    - [utils.cpp](#listing_utils_cpp)
     - [makefile](#listing_makefile)
 
 ## Project Overview
