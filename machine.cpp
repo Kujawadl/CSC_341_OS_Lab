@@ -28,9 +28,8 @@ unsigned short int MMU(unsigned short int logicalAddress) {
 	unsigned short int offset = logicalAddress & 3; // Returns 0-3
 
 	#ifdef MMU_DEBUG
-	bitset<8> x(logicalAddress);
-	cout << "Attempting to translate logical address " << x << " (p#" << page
-			 << " w#" << offset << ")" << endl;
+	cout << "Attempting to translate logical address " << logicalAddress
+			 << " (p#" << page << " w#" << offset << ")" << endl;
 	#endif
 
 	// Dereferenced PTBR pointer = PageTable object
@@ -39,8 +38,7 @@ unsigned short int MMU(unsigned short int logicalAddress) {
 	unsigned short int frame = (*machine.PTBR)[page];
 
 	#ifdef MMU_DEBUG
-	bitset<8> y((frame<<2) + offset);
-	cout << "Found physical address " << y << " (f#" << frame
+	cout << "Found physical address " << (frame<<2) + offset << " (f#" << frame
 			 << " w#" << offset << ")" << endl;
 	#endif
 

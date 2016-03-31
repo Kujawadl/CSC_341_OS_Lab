@@ -16,7 +16,6 @@
 #include <fstream>
 #include <string>
 #include <cctype>
-#include <bitset>
 #include "machine.hpp"
 #include "utils.hpp"
   using namespace std;
