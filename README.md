@@ -64,9 +64,7 @@ Furthermore, the following is a list of the instructions that can be executed on
 |Halt                |1111           |HLT              |
 
 ### OS
-The OS saw some siginifcant overhaul in this portion of the project. We had to rework our scheduling of users to accomidate the addition of a Semaphore or locking feature. Additionally the OS saw the addition of data structures to accomodate the new features.
-
-The OS is still running the simplistic round-robin scheduler. The main difference, however, is in the use of a dispatcher, which determines through `semwait` and `semsignal` functions whether the next process should be allowed to run, or blocked.
+The biggest re-work of OS was the addition of processes (independent from users). Before this portion of the lab our users and processes were essentially the exact same. With this version of our simulated Operating System we have distinguished the two from eachother. This allows for more modifiability and expandability for upcoming projects. A simple addition of an array of processes to the new user structure would allow a Process table so that users could execute more than one process at a time. This update coupled with the new `run` functionality should allow us a good foundation in the next iteration of the OS.
 
 Once again here is the list of commands that can be entered at the interactive ui console:
  - `run` - run the program in main memory *(user)*
@@ -74,7 +72,7 @@ Once again here is the list of commands that can be entered at the interactive u
  - `nop` - none (no command to execute) *(user or o/s)*
  - `stp` - stop the program *(o/s only)*
 
-The `dmp` function will now dump all the registers, the queues for the semaphore (the ready queue and the blocked queue), and the status of the semaphore. Additionally we have a debug mode that will print the registers of the current user after every instruction executed, as well as the "assembly" printout of the instruction that was just executed.
+The `dmp` function will now dump all the registers, and now the frames and pages of the memory.
 
 >**Note:** The program submitted to the cs.sfasu.edu server was done so with the `DEBUG` flag **defined**.  To disable debug output, simply change line 24 of machine.hpp from `//undef DEBUG` to `#undef DEBUG`, then remake the project with the `make` command.
 
