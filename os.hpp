@@ -25,33 +25,46 @@
 
 // Define the user struct
 enum userID {sys, u1, u2};
-struct User {
-  userID id;
-  bool running;
+userID nextUser(userID user) {
+  switch(user) {
+    case sys: return u1; break;
+    case u1: return u2; break;
+    case u2: return sys; break;
+  }
+  return user;
+}
+struct Process {
+  int id;
+  int status;
   registers regs;
+  // list<int>* tlb;
 };
 
-extern queue<User> readyQueue;
-extern queue<User> blockedQueue;
-extern User currentUser;
+extern queue<Process> readyQueue;
+extern queue<Process> blockedQueue;
+extern Process currentProcess;
 
 // Declare semaphor as enum (locked/unlocked) and READY and BLOCKED constants
 enum e_semaphor {locked, unlocked} semaphor;
 #define READY 1
 #define BLOCKED 0
+#define RUNNING 2
+#define NONE 3
 
 // Variables used by the scheduler
 extern int sysclock;
 extern int switchTime;
+extern userID currentUser;
+extern Process processTable[64];
 
 // Dump contents of main memory and all registers and semaphore status
 void dump();
 
 // Print the contents of a queue, with a header containing the queue name
-void printQueue(string queueName, queue<User> &q,int num);
+void printQueue(string queueName, queue<Process> &q,int num);
 
 // Print the contents of a queue
-void printQueue(queue<User> &q,int num);
+void printQueue(queue<Process> &q,int num);
 
 // If main memory is unlocked and a process requests it, lock it.
 // If it's already locked, block the process.
