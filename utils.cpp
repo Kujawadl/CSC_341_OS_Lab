@@ -59,8 +59,15 @@ int& PageTable::operator[] (const int index)
     #endif
 
     // If no more available frames to allocate, throw an exception
-    if (std::find(std::begin(_framesInUse), std::end(_framesInUse), false)
-        == std::end(_framesInUse)) {
+    struct ary {
+      static int* begin(int (&arr)[64]) {return arr;}
+      static int* end(int (&arr)[64]) {return begin(arr) + NUM_FRAMES;}
+      static int* begin(FrameTable& arr) {
+        return static_cast<int*>(static_cast<void*>(arr));}
+      static int* end(FrameTable& arr) {return begin(arr) + NUM_FRAMES;}
+    };
+    if (std::find(ary::begin(_pageTable), ary::end(_pageTable), false)
+        == ary::end(_framesInUse)) {
       throw std::out_of_range("No more available frames!");
     }
 
