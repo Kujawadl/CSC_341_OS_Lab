@@ -144,3 +144,32 @@ As a rough estimate, it is safe to say that we began our design about two weeks 
 In the future, we will keep the complexity of the design in mind as we make our estimates, and be more diligent about keeping accurate records of our hours.
 
 ## Verification
+
+It is very clear from the Sys user's `run` command and it's corresponding output that the MMU is working as expected. For each given page, it looks up an entry, and if it finds none, it searches for an available frame to allocate to that page. After that, the page can be read in from disk, as you can clearly see from the `Attempting to translate logical address _ (p#_ w#_)` statements, which are closely followed by `Found physical address _ (f#_ w#_)`.
+
+On line 36 of out.txt we can see that the OS finds frames that are in use, and continues its search until it finds one that is available.
+
+After the programs are loaded into memory, the system enters `nop` and context switches to user 1. User 1 `run`s. We can see from the interpreter's output that the appropriate instructions are being fetched from memory (the execution trace exactly matches the short int values hard-coded into the disk for each process).
+
+User 1 gets 4 ticks (5, including the `run` command), after which it is preempted for user 2. User 2 also `run`s. Again, user 2's interpreter output shows instructions identical to those hard-coded into the disk for said user, and the OS preempts the user after their 5 total clock ticks.
+
+We can then use the `dmp` output from user to see the contents of each from of memory, and pair it up with the pages from the users' page tables. You can see that user 1's virtual address space consists of frames 39 and 18. The contents of those frames (in decimal) are:
+
+```
+2058
+4102
+2309
+16640
+4103
+61440
+10
+0
+```
+
+The first 6 values exactly match the executable loaded from disk. The next value is the 10 that is stored in memory address 7 by the `4103 (STO R0 7)` instruction (R0 is set to 10 in the first line of the program). The last word is not touched in execution, and therefore remains at its initialized value of 0. From this we can infer that the processes run correctly within their new virtual address spaces.
+
+Finally, looking at the frame table and page tables, we can verify that "In use" frame has a corresponding entry in one of the page tables. There are no frames incorrectly marked "In use," and there are no frames incorrectly marked "Free."
+
+Thus all aspects of the virtual memory system work as expected.
+
+Furthermore, the operating system does prompt the user for input, even though they have a program running. After typing `run`, execution continues where it left off, as we can see starting at line 478.
