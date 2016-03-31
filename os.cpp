@@ -8,23 +8,23 @@
 
 #include "os.hpp"
 
+FrameTable framesInUse;
+FrameTable framesLocked;
+
 queue<User> readyQueue = queue<User>();
 queue<User> blockedQueue = queue<User>();
 User currentUser;
-bool semaphore = unlocked;
 
 int sysclock;
 int switchTime;
 
-// Dump contents of main memory and all registers and semaphore status
+// Dump contents of main memory and all registers
 void dump()
 {
 	// Dump Registers
 	User temp;
 	cout << endl << ">>>>>>DUMPING REGISTERS<<<<<<" << endl;
-	// Dump semaphore
-	cout << endl << "Semaphore status: " << \
-		(semaphore == locked ? "Locked" : "Unlocked") << endl;
+
 	printQueue("readyQueue", readyQueue, readyQueue.size());
 	printQueue("blockedQueue", blockedQueue, blockedQueue.size());
 
@@ -75,47 +75,6 @@ void printQueue(queue<User> &q, int num)
 			<< regs.CR << endl;
     q.push(curr);
     printQueue(q,--num);
-}
-
-// If main memory is unlocked and a process requests it, lock it.
-// If it's already locked, block the process.
-// Returns true if user has to wait, false if user doesn't have to wait.
-bool semwait()
-{
-	// If the memory is unlocked, lock it, return false
-	if (semaphore == unlocked) {
-		semaphore = locked;
-		return false;
-	// If memory is blocked, call dispatcher with BLOCKED keyword, return true
-	} else {
-		dispatcher(BLOCKED);
-		return true;
-	}
-}
-
-// Signal that main memory has become available, and the
-// current program is no longer running.
-void semsignal()
-{
-	string titleFiller = "####################"\
-	"################################";
-	if (semaphore == locked) {
-		semaphore = unlocked;
-		cout << titleFiller << endl;
-		cout << "USER " << currentUser.id << " HAS SIGNALED FOR " \
-			"UNLOCK OF MEMORY" << endl;
-		cout << titleFiller << endl << endl;
-
-		int i = 0;
-		for (int i = 0; i < blockedQueue.size(); i++) {
-			User x = blockedQueue.front();
-			blockedQueue.pop();
-			cout << titleFiller << endl;
-			cout << "USER " << x.id << " WAS PUT BACK INTO READY QUEUE" << endl;
-			cout << titleFiller << endl << endl;
-			readyQueue.push(x);
-		}
-	}
 }
 
 // Responsible for swapping users in and out, and controlling
@@ -174,8 +133,6 @@ void scheduler()
 			// If current user is not running, but has an instruction loaded, begin
 			// executing instructions (user just restored from blocked state)
 			} else if (currentUser.id != sys && !running && instrLoaded) {
-				// If memory is free, run as usual.
-				if (semwait() == false) {
 					cout << endl << titleFiller;
 					cout << endl << "USER " << currentUser.id << " REQUESTED MEM " \
 						<< "ACCESS AND ACCESS WAS GRANTED." << endl << "USER MAY " \
@@ -185,26 +142,15 @@ void scheduler()
 					interpreter();
 					// If last instruction executed was HLT
 					if (machine.IR == 61440) {
-						// Signal semaphore is unlocked
-						semsignal();
 						currentUser.running = false;
 						// Exit loop (current user is done)
 						switchTime = sysclock;
 					}
-				// If memory is locked, dispatch to blockedQueue, load next user
-				// Reset switchtime (i.e. reset the loop) so next user gets
-				// 3 ticks.
-				} else {
-					switchTime = sysclock + 3;
-					break;
-				}
 			// If current user is system, prompt as system
 			} else if (currentUser.id != sys && running) {
 				interpreter();
 				// If last instruction executed was HLT
 				if (machine.IR == 61440) {
-					// Signal semaphore is unlocked
-					semsignal();
 					currentUser.running = false;
 					// Exit loop (current user is done)
 					switchTime = sysclock;
@@ -221,8 +167,6 @@ void scheduler()
 				case 0: // "run"
 					if (currentUser.id != sys) {
 						machine.IR = main_memory[machine.PC];
-						// If memory is free, run as usual.
-						if (semwait() == false) {
 							cout << endl << titleFiller;
 							cout << endl << "USER " << currentUser.id << " REQUESTED MEM " \
 								<< "ACCESS AND ACCESS WAS GRANTED." << endl << "USER MAY " \
@@ -232,12 +176,10 @@ void scheduler()
 							interpreter();
 							// If last instruction executed was HLT
 							if (machine.IR == 61440) {
-								// Signal semaphore is unlocked
-								semsignal();
 								currentUser.running = false;
 								// Exit loop (current user is done)
 								switchTime = sysclock;
-							}
+							//}
 						// If memory is locked, dispatch to blockedQueue, load next user
 						// Reset switchtime (i.e. reset the loop) so next user gets
 						// 3 ticks.
@@ -330,7 +272,9 @@ void init()
 	for (int i = 0; i < 255; i++) {
 		main_memory[i] = 0;
 	}
-	semaphore = unlocked;
+	for (int i = 0; i < NUM_FRAMES; i++) {
+		framesInUse[i] = false;
+	}
 
 	registers defaultRegisterValues =
 	{				// Registers:
@@ -342,9 +286,14 @@ void init()
 		0,			// PC
 		0				// CR
 	};
+
+	// Initialize user registers; PTBR must be handled separately
 	User U1 = {u1, false, defaultRegisterValues};
+	U1.regs.PTBR = new PageTable(framesInUse);
 	User U2 = {u2, false, defaultRegisterValues};
+	U2.regs.PTBR = new PageTable(framesInUse);
 	User SYS = {sys, false, defaultRegisterValues};
+	SYS.regs.PTBR = new PageTable(framesInUse);
 
 	// Read in the program for u1 and u2
 	readFile();

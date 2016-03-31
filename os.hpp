@@ -23,6 +23,11 @@
 #ifndef OS
 #define OS
 
+extern FrameTable framesInUse;
+extern FrameTable framesLocked;
+#define LOCKED true
+#define UNLOCKED false
+
 // Define the user struct
 enum userID {sys, u1, u2};
 struct User {
@@ -35,8 +40,6 @@ extern queue<User> readyQueue;
 extern queue<User> blockedQueue;
 extern User currentUser;
 
-// Declare semaphor as enum (locked/unlocked) and READY and BLOCKED constants
-enum e_semaphor {locked, unlocked} semaphor;
 #define READY 1
 #define BLOCKED 0
 
@@ -44,7 +47,7 @@ enum e_semaphor {locked, unlocked} semaphor;
 extern int sysclock;
 extern int switchTime;
 
-// Dump contents of main memory and all registers and semaphore status
+// Dump contents of main memory and all registers
 void dump();
 
 // Print the contents of a queue, with a header containing the queue name
@@ -52,14 +55,6 @@ void printQueue(string queueName, queue<User> &q,int num);
 
 // Print the contents of a queue
 void printQueue(queue<User> &q,int num);
-
-// If main memory is unlocked and a process requests it, lock it.
-// If it's already locked, block the process.
-bool semwait();
-
-// Signal that main memory has become available, and the
-// current program is no longer running.
-void semsignal();
 
 // Responsible for swapping users in and out, and controlling
 // which users are blocked vs which are ready.
