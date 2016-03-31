@@ -28,7 +28,6 @@ unsigned short int MMU(unsigned short int logicalAddress) {
 	unsigned short int offset = logicalAddress & 3; // Returns 0-3
 
 	#ifdef MMU_DEBUG
-	#include <bitset>
 	bitset<8> x(logicalAddress);
 	cout << "Attempting to translate logical address " << x << " (p#" << page
 			 << " w#" << offset << ")" << endl;
