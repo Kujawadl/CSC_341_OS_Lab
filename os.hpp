@@ -30,18 +30,36 @@ extern FrameTable framesLocked;
 
 // Define the user struct
 enum userID {sys, u1, u2};
+userID& operator++ (userID& curr) {
+  switch (curr) {
+    case sys: curr = u1; break;
+    case u1: curr = u2; break;
+    case u2: curr = sys; break;
+  }
+  return curr;
+}
+userID operator++ (userID& curr, int) {
+  userID orig = curr;
+  switch (curr) {
+    case sys: curr = u1; break;
+    case u1: curr = u2; break;
+    case u2: curr = sys; break;
+  }
+  return orig;
+}
 struct Process {
   userID id;
   bool running;
   registers regs;
 
   Process(userID uid) : id(uid), running(false),
-    regs {0, 0, 0, 0, 61440, 0, 0} {}
+    regs(0, 0, 0, 0, 61440, 0, 0) {}
 };
 struct User {
   userID id;
   Process* proc;
 
+  User() : proc(NULL) {}
   User(userID uid) : id(uid), proc(new Process(uid)) {}
 };
 

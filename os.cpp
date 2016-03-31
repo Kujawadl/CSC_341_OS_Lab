@@ -23,9 +23,6 @@ void dump()
 	User temp;
 	cout << endl << ">>>>>>DUMPING REGISTERS<<<<<<" << endl;
 
-	printQueue("readyQueue", readyQueue, readyQueue.size());
-	printQueue("blockedQueue", blockedQueue, blockedQueue.size());
-
 	// Dump memory
 	cout << endl << ">>>>>>DUMPING MEMORY<<<<<<" << endl;
 	// Print table header
@@ -46,33 +43,6 @@ void dump()
 		cout << dec;
 	}
 	cout << endl << endl << ">\tEnd of dump" << endl << endl;
-}
-
-// Print the contents of a queue, with a header containing the queue name
-void printQueue(string queueName, queue<Process> &q, int num)
-{
-	cout << endl << "\t>>>>>>QUEUE: " << queueName << "<<<<<<" << endl;
-	printQueue(q, num);
-}
-
-// Print the contents of a queue
-void printQueue(queue<Process> &q, int num)
-{
-    if(!num)
-    {
-        cout << endl;
-        return;
-    }
-    Process curr= q.front();
-    q.pop();
-		registers regs = curr.regs;
-    cout << "\tUSER " << curr.id << ": Dumping Registers..." << endl;
-		cout << "\t\trA: " << regs.rA << ", r1: " << regs.r1 << ", r2: " \
-			<< regs.r2 << ", r3: " << regs.r3 << endl;
-		cout << "\t\tIR: " << regs.IR << ", PC: " << regs.PC << ", CR: " \
-			<< regs.CR << endl;
-    q.push(curr);
-    printQueue(q,--num);
 }
 
 // Loads the two user programs from disk into main memory, paging them as
@@ -101,7 +71,7 @@ void dispatcher(int action)
 {
 	string titleFiller = "####################################################";
 	// Save user state
-	currentUser.regs = machine;
+	currentUser.proc->regs = machine;
 	if (action == READY) {
 		// Return user to readyQueue
 		readyQueue.push(currentUser);
@@ -117,7 +87,7 @@ void dispatcher(int action)
 		currentUser = readyQueue.front();
 		readyQueue.pop();
 		// Load user state
-		machine = currentUser.regs;
+		machine = currentUser.proc->regs;
 
 		// Output information about user switch
 
@@ -142,7 +112,7 @@ void scheduler()
 		switchTime = sysclock + 5;
 
 		while (sysclock < switchTime) {
-			bool running = currentUser.running;
+			bool running = currentUser.proc->running;
 			bool instrLoaded = !(getOpcode(machine.IR) == 15);
 			sysclock++;
 			// If current user is not running, prompt for a command
@@ -156,11 +126,11 @@ void scheduler()
 						<< "ACCESS AND ACCESS WAS GRANTED." << endl << "USER MAY " \
 						<< "EXECUTE INSTRUCTIONS.";
 					cout << endl << titleFiller << endl << endl;
-					currentUser.running = true;
+					currentUser.proc->running = true;
 					interpreter();
 					// If last instruction executed was HLT
 					if (machine.IR == 61440) {
-						currentUser.running = false;
+						currentUser.proc->running = false;
 						// Exit loop (current user is done)
 						switchTime = sysclock;
 					}
@@ -169,7 +139,7 @@ void scheduler()
 				interpreter();
 				// If last instruction executed was HLT
 				if (machine.IR == 61440) {
-					currentUser.running = false;
+					currentUser.proc->running = false;
 					// Exit loop (current user is done)
 					switchTime = sysclock;
 				}
@@ -190,11 +160,11 @@ void scheduler()
 								<< "ACCESS AND ACCESS WAS GRANTED." << endl << "USER MAY " \
 								<< "EXECUTE INSTRUCTIONS.";
 							cout << endl << titleFiller << endl << endl;
-							currentUser.running = true;
+							currentUser.proc->running = true;
 							interpreter();
 							// If last instruction executed was HLT
 							if (machine.IR == 61440) {
-								currentUser.running = false;
+								currentUser.proc->running = false;
 								// Exit loop (current user is done)
 								switchTime = sysclock;
 							//}
@@ -275,8 +245,8 @@ void init()
 	for (i = i; i < 512; i++) {disk [i] = 0;}
 
 	// Initialize default register values
-	registers defaultRegisterValues =
-	{				// Registers:
+	registers defaultRegisterValues = registers
+	(				// Registers:
 		0,			// R1
 		0,			// R2
 		0,			// R3
@@ -284,7 +254,7 @@ void init()
 		61440,	// IR
 		0,			// PC
 		0				// CR
-	};
+	);
 
 	// Initialize user registers; PTBR must be handled separately
 	User U1 = User(u1);

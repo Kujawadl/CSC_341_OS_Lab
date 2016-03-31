@@ -49,11 +49,14 @@
 
 // Define machine registers type
 // Machine register type also has a condition code register
-typedef struct {
+struct registers{
 	unsigned short int r1, r2, r3, rA, IR, PC:8;
 	unsigned short int CR:3;
 	PageTable* PTBR;
-} registers;
+
+	registers(int pR1, int pR2, int pR3, int pRA, int pIR, int pPC, int pCR) :
+		r1(pR1), r2(pR2), r3(pR3), rA(pRA), IR(pIR), PC(pPC), CR(pCR), PTBR(NULL) {}
+};
 
 // Declare machine registers
 extern registers machine;

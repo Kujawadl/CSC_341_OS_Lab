@@ -9,7 +9,7 @@
 #include "machine.hpp"
 
 // Initialize machine registers
-registers machine = {0, 0, 0, 0, 0, 0, 0};
+registers machine = registers(0, 0, 0, 0, 0, 0, 0);
 
 // Declare main memory and disk
 unsigned short int main_memory[256];
