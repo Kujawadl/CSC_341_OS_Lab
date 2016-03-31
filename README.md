@@ -6,7 +6,7 @@
 
 # Table of Contents
   - ~~[Project overview](#project-overview)~~ AGB
-    - [Machine](#machine)
+    - ~~[Machine](#machine)~~ AGB
       - ~~[Memory](#memory)~~ DJK
          - ~~[Paging](#Paging)~~ DJK
 	      - ~~[MMU](#mmu)~~ DJK
@@ -63,6 +63,29 @@ Furthermore, the following is a list of the instructions that can be executed on
 |Clear               |1110           |CLR              |
 |Halt                |1111           |HLT              |
 
+#### Memory
+Memory access has been significantly overhauled in this version of the lab. Main memory is now paged, and hardware support for paging has been implented in the form of a Memory Management Unit.
+
+##### Paging
+256 words of memory have been divided into 64 4-word frames. Because the logical memory addresses referred to in the operand of our 16 bit instructions can only be 8 bits max, this essentially limits our logical addresses to 256 words or less, i.e. exactly 64 pages.
+
+Page tables are maintained by the operating system for each process. Each process control block contains a pointer to its page table. The operating system uses a global frame table to determine which frames are free to be allocated, and then allocates space dynamically for any referenced logical addresses that are outside the currently allocated virtual address space.
+
+For example, if a process is loaded by the operating system into its first n pages (n being the number required to load the executable code; for this example, let's arbitrarily pick 5 pages), then the existing virtual address space for that process is 5 4-word pages, i.e. 20 words of memory. If the program makes a reference to the logical memory address 25 (the 26th memory word -> frame 6 word 1), the operating system would catch the page fault, allocate an entry in the page table for page 6 using an arbitrarily chosen available frame, and then return that frame number. The page table would then contain entries for pages 0, 1, 2, 3, 4, and 6.
+
+
+##### MMU
+The MMU resides in hardware, and uses a special register called the Page Table Base Register (PTBR) to access the appropriate page table. Because each process control block contains a pointer to its page table (i.e. the "address" to go into the PTBR), the PTBR is set to the appropriate page table with each context switch.
+
+The MMU takes a logical address, performs the page to frame translation using the page table object (keep in mind that page faults are caught and handled by the operating system independent of the MMU), then replaces the page bits with the corresponding frame bits to form the physical address. Page faults are completely transparent to the MMU for the time being; because we only have one process per user, and only two users, ready/blocked queues were a tricky design decision, and the lack thereof makes it difficult to actually signal an interrupt and "block" the program while the page fault is handled. The queue design will be discussed in further detail under OS.
+
+In an actual system, the MMU would also contain its own cache, the TLB, which would significantly improve performance. However, as this is an extremely simplified system, and we are not worried with such low-level details, we implemented only the translation aspect of the MMU.
+
+The primary advantage of this implementation is data protection. All of the processor instructions now deal solely with logical addresses which are translated dynamically at runtime through the MMU. With a dedicated piece of hardware controlling all memory accesses, it becomes impossible for any process to access an area of memory which it has not been allocated.
+
+Typically there would be some form of frame sharing to support file handles and dlls, however, again, we are not concerning ourselves with such complex details. For now, we made the assumption that all processes are self-contained, and they do not share any frame references. The immediate implication of this is that the frame table now essentially acts as a semaphore. A simple bit array indicating where a frame has already been allocated prevents said frame from being allocated elsewhere. Simply put, there is no way that a process could access a frame that has not been allocated to it, as that process would never be returned by the MMU. So in effect, each frame has a "semaphore" that is only unlocked for the process that owns it.
+
+
 ### OS
 The biggest re-work of OS was the addition of processes (independent from users). Before this portion of the lab our users and processes were essentially the exact same. With this version of our simulated Operating System we have distinguished the two from eachother. This allows for more modifiability and expandability for upcoming projects. A simple addition of an array of processes to the new user structure would allow a Process table so that users could execute more than one process at a time. This update coupled with the new `run` functionality should allow us a good foundation in the next iteration of the OS.
 
@@ -82,9 +105,6 @@ We will now briefly talk about how components of the OS have changed during this
 User interface changes have not been incredibly significant since it's implementation in lab 1. The dump command has been vastly expanded to include information on page tables and the frames that are located in main memory. Otherwise, you can fully expect the same UI that was found in the previous iteration of our simulated console OS.
 
 Additionally, the running user processes has been changed. "Run" will now only utilize the rest of the user ticks, if a process is 6 ticks long, and they use only 4, then they would need to type "Run" a second time to finish off the 2 last ticks once they receive the CPU's time again. This allows the user to execute any additional commands they might want to utilize.
-
-#### Memory
-In terms of the implementation, memory is exactly the same in Lab 2 as in Lab 1. The primary difference is that there is a global variable, semaphore, which, when locked, redirects all new requests to access memory to the blocked queue, to be recalled to the ready queue once the semaphore is unlocked.
 
 #### Organization
 Significant restructuring was necessary for this project. We initially attempted to implement a queue class in C, and while we found many examples online, none of them ended up working for our purposes. Thus, the decision was made to migrate to C++.
