@@ -1,581 +1,580 @@
+
 ####################################################
 ################ CSC 341 OS Lab ####################
 ####################################################
 
+In getOpCode(). IR: 0, Opcode: 0
+SYS > run
+Attempting to translate logical address 0 (p#0 w#0)
+Page #0 has no associated frame.
+Searching for next available frame:
+Frame #39 is available!
+Page #0 was referenced and has Frame #39
+Found physical address 156 (f#39 w#0)
+Attempting to translate logical address 1 (p#0 w#1)
+Page #0 was referenced and has Frame #39
+Found physical address 157 (f#39 w#1)
+Attempting to translate logical address 2 (p#0 w#2)
+Page #0 was referenced and has Frame #39
+Found physical address 158 (f#39 w#2)
+Attempting to translate logical address 3 (p#0 w#3)
+Page #0 was referenced and has Frame #39
+Found physical address 159 (f#39 w#3)
+Attempting to translate logical address 4 (p#1 w#0)
+Page #1 has no associated frame.
+Searching for next available frame:
+	Frame #39 is in use...
+Frame #18 is available!
+Page #1 was referenced and has Frame #18
+Found physical address 72 (f#18 w#0)
+Attempting to translate logical address 5 (p#1 w#1)
+Page #1 was referenced and has Frame #18
+Found physical address 73 (f#18 w#1)
+Attempting to translate logical address 0 (p#0 w#0)
+Page #0 has no associated frame.
+Searching for next available frame:
+	Frame #39 is in use...
+	Frame #18 is in use...
+Frame #47 is available!
+Page #0 was referenced and has Frame #47
+Found physical address 188 (f#47 w#0)
+Attempting to translate logical address 1 (p#0 w#1)
+Page #0 was referenced and has Frame #47
+Found physical address 189 (f#47 w#1)
+Attempting to translate logical address 2 (p#0 w#2)
+Page #0 was referenced and has Frame #47
+Found physical address 190 (f#47 w#2)
+Attempting to translate logical address 3 (p#0 w#3)
+Page #0 was referenced and has Frame #47
+Found physical address 191 (f#47 w#3)
+Attempting to translate logical address 4 (p#1 w#0)
+Page #1 has no associated frame.
+Searching for next available frame:
+	Frame #39 is in use...
+	Frame #18 is in use...
+	Frame #47 is in use...
+Frame #49 is available!
+Page #1 was referenced and has Frame #49
+Found physical address 196 (f#49 w#0)
+Attempting to translate logical address 5 (p#1 w#1)
+Page #1 was referenced and has Frame #49
+Found physical address 197 (f#49 w#1)
+The loader function was called
+In getOpCode(). IR: 0, Opcode: 0
+SYS > nop
 
 ####################################################
 ############### Switching to user 1 ################
 ####################################################
 
+In getOpCode(). IR: 61440, Opcode: 15
 USER1 > run
-
-####################################################
-USER 1 REQUESTED MEM ACCESS AND ACCESS WAS GRANTED.
-USER MAY EXECUTE INSTRUCTIONS.
-####################################################
-
+Attempting to translate logical address 0 (p#0 w#0)
+Page #0 was referenced and has Frame #39
+Found physical address 156 (f#39 w#0)
+In getOpCode(). IR: 2058, Opcode: 0
+In getAddrMode(). IR: 2058, Addr: 1
+In getOperand(). IR: 2058, Operand: 10
+In getRegCode(). IR: 2058, Regcode: 0
+In getRegister(). IR: 2058, Regcode: %d0
+In getAddrMode(). IR: 2058, Addr: 1
+In getRegCode(). IR: 2058, Regcode: 0
+In getOperand(). IR: 2058, Operand: 10
 Instruction with opcode LOD finished executing.
 	0x0: LOD 1 rA 10
 	Dumping Registers:
 	rA: 10, r1: 0, r2: 0, r3: 0
 	IR: 2058, PC: 1, CR: 0
+In getOpCode(). IR: 2058, Opcode: 0
+Attempting to translate logical address 1 (p#0 w#1)
+Page #0 was referenced and has Frame #39
+Found physical address 157 (f#39 w#1)
+In getOpCode(). IR: 4102, Opcode: 1
+In getOperand(). IR: 4102, Operand: 6
+In getRegCode(). IR: 4102, Regcode: 0
+In getRegister(). IR: 4102, Regcode: %d0
+Attempting to translate logical address 6 (p#1 w#2)
+Page #1 was referenced and has Frame #18
+Found physical address 74 (f#18 w#2)
+In getAddrMode(). IR: 4102, Addr: 0
+In getRegCode(). IR: 4102, Regcode: 0
+In getOperand(). IR: 4102, Operand: 6
 Instruction with opcode STO finished executing.
 	0x1: STO 0 rA 6
 	Dumping Registers:
 	rA: 10, r1: 0, r2: 0, r3: 0
 	IR: 4102, PC: 2, CR: 0
+In getOpCode(). IR: 4102, Opcode: 1
+Attempting to translate logical address 2 (p#0 w#2)
+Page #0 was referenced and has Frame #39
+Found physical address 158 (f#39 w#2)
+In getOpCode(). IR: 2309, Opcode: 0
+In getAddrMode(). IR: 2309, Addr: 1
+In getOperand(). IR: 2309, Operand: 5
+In getRegCode(). IR: 2309, Regcode: 1
+In getRegister(). IR: 2309, Regcode: %d1
+In getAddrMode(). IR: 2309, Addr: 1
+In getRegCode(). IR: 2309, Regcode: 1
+In getOperand(). IR: 2309, Operand: 5
 Instruction with opcode LOD finished executing.
 	0x2: LOD 1 r1 5
 	Dumping Registers:
 	rA: 10, r1: 5, r2: 0, r3: 0
 	IR: 2309, PC: 3, CR: 0
-
-####################################################
-############### Switching to user 2 ################
-####################################################
-
-USER2 > run
-
-####################################################
-USER 2 WAS DENIED ACCESS TO MEMORY AND PUT INTO
-THE BLOCKED QUEUE UNTIL ANOTHER PROCESS FINISHES
-####################################################
-
-
-####################################################
-############### Switching to user 0 ################
-####################################################
-
-SYS > dmp
-
->>>>>>DUMPING REGISTERS<<<<<<
-
-Semaphore status: Locked
-
-	>>>>>>QUEUE: readyQueue<<<<<<
-	USER 1: Dumping Registers...
-		rA: 10, r1: 5, r2: 0, r3: 0
-		IR: 2309, PC: 3, CR: 0
-
-
-	>>>>>>QUEUE: blockedQueue<<<<<<
-	USER 2: Dumping Registers...
-		rA: 0, r1: 0, r2: 0, r3: 0
-		IR: 2073, PC: 100, CR: 0
-
-
->>>>>>DUMPING MEMORY<<<<<<
-_______________________________________________________________
-ad: valu | ad: valu | ad: valu | ad: valu | ad: valu | ad: valu
-_______________________________________________________________
-
- 0:  80a |  1: 1006 |  2:  905 |  3: 4100 |  4: 1007 |  5: f000
- 6:    a |  7:    0 |  8:    0 |  9:    0 |  a:    0 |  b:    0
- c:    0 |  d:    0 |  e:    0 |  f:    0 | 10:    0 | 11:    0
-12:    0 | 13:    0 | 14:    0 | 15:    0 | 16:    0 | 17:    0
-18:    0 | 19:    0 | 1a:    0 | 1b:    0 | 1c:    0 | 1d:    0
-1e:    0 | 1f:    0 | 20:    0 | 21:    0 | 22:    0 | 23:    0
-24:    0 | 25:    0 | 26:    0 | 27:    0 | 28:    0 | 29:    0
-2a:    0 | 2b:    0 | 2c:    0 | 2d:    0 | 2e:    0 | 2f:    0
-30:    0 | 31:    0 | 32:    0 | 33:    0 | 34:    0 | 35:    0
-36:    0 | 37:    0 | 38:    0 | 39:    0 | 3a:    0 | 3b:    0
-3c:    0 | 3d:    0 | 3e:    0 | 3f:    0 | 40:    0 | 41:    0
-42:    0 | 43:    0 | 44:    0 | 45:    0 | 46:    0 | 47:    0
-48:    0 | 49:    0 | 4a:    0 | 4b:    0 | 4c:    0 | 4d:    0
-4e:    0 | 4f:    0 | 50:    0 | 51:    0 | 52:    0 | 53:    0
-54:    0 | 55:    0 | 56:    0 | 57:    0 | 58:    0 | 59:    0
-5a:    0 | 5b:    0 | 5c:    0 | 5d:    0 | 5e:    0 | 5f:    0
-60:    0 | 61:    0 | 62:    0 | 63:    0 | 64:  819 | 65: 106a
-66:  905 | 67: 5100 | 68: 106b | 69: f000 | 6a:    0 | 6b:    0
-6c:    0 | 6d:    0 | 6e:    0 | 6f:    0 | 70:    0 | 71:    0
-72:    0 | 73:    0 | 74:    0 | 75:    0 | 76:    0 | 77:    0
-78:    0 | 79:    0 | 7a:    0 | 7b:    0 | 7c:    0 | 7d:    0
-7e:    0 | 7f:    0 | 80:    0 | 81:    0 | 82:    0 | 83:    0
-84:    0 | 85:    0 | 86:    0 | 87:    0 | 88:    0 | 89:    0
-8a:    0 | 8b:    0 | 8c:    0 | 8d:    0 | 8e:    0 | 8f:    0
-90:    0 | 91:    0 | 92:    0 | 93:    0 | 94:    0 | 95:    0
-96:    0 | 97:    0 | 98:    0 | 99:    0 | 9a:    0 | 9b:    0
-9c:    0 | 9d:    0 | 9e:    0 | 9f:    0 | a0:    0 | a1:    0
-a2:    0 | a3:    0 | a4:    0 | a5:    0 | a6:    0 | a7:    0
-a8:    0 | a9:    0 | aa:    0 | ab:    0 | ac:    0 | ad:    0
-ae:    0 | af:    0 | b0:    0 | b1:    0 | b2:    0 | b3:    0
-b4:    0 | b5:    0 | b6:    0 | b7:    0 | b8:    0 | b9:    0
-ba:    0 | bb:    0 | bc:    0 | bd:    0 | be:    0 | bf:    0
-c0:    0 | c1:    0 | c2:    0 | c3:    0 | c4:    0 | c5:    0
-c6:    0 | c7:    0 | c8:    0 | c9:    0 | ca:    0 | cb:    0
-cc:    0 | cd:    0 | ce:    0 | cf:    0 | d0:    0 | d1:    0
-d2:    0 | d3:    0 | d4:    0 | d5:    0 | d6:    0 | d7:    0
-d8:    0 | d9:    0 | da:    0 | db:    0 | dc:    0 | dd:    0
-de:    0 | df:    0 | e0:    0 | e1:    0 | e2:    0 | e3:    0
-e4:    0 | e5:    0 | e6:    0 | e7:    0 | e8:    0 | e9:    0
-ea:    0 | eb:    0 | ec:    0 | ed:    0 | ee:    0 | ef:    0
-f0:    0 | f1:    0 | f2:    0 | f3:    0 | f4:    0 | f5:    0
-f6:    0 | f7:    0 | f8:    0 | f9:    0 | fa:    0 | fb:    0
-fc:    0 | fd:    0 | fe:    0 | ff:    0
-
->	End of dump
-
-SYS > nop
-
-####################################################
-############### Switching to user 1 ################
-####################################################
-
+In getOpCode(). IR: 2309, Opcode: 0
+Attempting to translate logical address 3 (p#0 w#3)
+Page #0 was referenced and has Frame #39
+Found physical address 159 (f#39 w#3)
+In getOpCode(). IR: 16640, Opcode: 4
+In getRegCode(). IR: 16640, Regcode: 1
+In getRegister(). IR: 16640, Regcode: %d1
+In getAddrMode(). IR: 16640, Addr: 0
+In getOperand(). IR: 16640, Operand: 0
+Attempting to translate logical address 0 (p#0 w#0)
+Page #0 was referenced and has Frame #39
+Found physical address 156 (f#39 w#0)
+Attempting to translate logical address 0 (p#0 w#0)
+Page #0 was referenced and has Frame #39
+Found physical address 156 (f#39 w#0)
+In getAddrMode(). IR: 16640, Addr: 0
+In getRegCode(). IR: 16640, Regcode: 1
+In getOperand(). IR: 16640, Operand: 0
 Instruction with opcode ADR finished executing.
 	0x3: ADR 0 r1 0
 	Dumping Registers:
 	rA: 10, r1: 2063, r2: 0, r3: 0
 	IR: 16640, PC: 4, CR: 0
-Instruction with opcode STO finished executing.
-	0x4: STO 0 rA 7
-	Dumping Registers:
-	rA: 10, r1: 2063, r2: 0, r3: 0
-	IR: 4103, PC: 5, CR: 1
-Instruction with opcode HLT finished executing.
-	0x65535: HLT 0 rA 0
-	Dumping Registers:
-	rA: 0, r1: 0, r2: 0, r3: 0
-	IR: 61440, PC: 0, CR: 0
-####################################################
-USER 1 HAS SIGNALED FOR UNLOCK OF MEMORY
-####################################################
-
-####################################################
-USER 2 WAS PUT BACK INTO READY QUEUE
-####################################################
-
-
-####################################################
-############### Switching to user 0 ################
-####################################################
-
-SYS > nop
 
 ####################################################
 ############### Switching to user 2 ################
 ####################################################
 
-
-####################################################
-USER 2 REQUESTED MEM ACCESS AND ACCESS WAS GRANTED.
-USER MAY EXECUTE INSTRUCTIONS.
-####################################################
-
+In getOpCode(). IR: 61440, Opcode: 15
+USER2 > run
+Attempting to translate logical address 0 (p#0 w#0)
+Page #0 was referenced and has Frame #47
+Found physical address 188 (f#47 w#0)
+In getOpCode(). IR: 2073, Opcode: 0
+In getAddrMode(). IR: 2073, Addr: 1
+In getOperand(). IR: 2073, Operand: 25
+In getRegCode(). IR: 2073, Regcode: 0
+In getRegister(). IR: 2073, Regcode: %d0
+In getAddrMode(). IR: 2073, Addr: 1
+In getRegCode(). IR: 2073, Regcode: 0
+In getOperand(). IR: 2073, Operand: 25
 Instruction with opcode LOD finished executing.
-	0x100: LOD 1 rA 25
+	0x0: LOD 1 rA 25
 	Dumping Registers:
 	rA: 25, r1: 0, r2: 0, r3: 0
-	IR: 2073, PC: 101, CR: 0
+	IR: 2073, PC: 1, CR: 0
+In getOpCode(). IR: 2073, Opcode: 0
+Attempting to translate logical address 1 (p#0 w#1)
+Page #0 was referenced and has Frame #47
+Found physical address 189 (f#47 w#1)
+In getOpCode(). IR: 4202, Opcode: 1
+In getOperand(). IR: 4202, Operand: 106
+In getRegCode(). IR: 4202, Regcode: 0
+In getRegister(). IR: 4202, Regcode: %d0
+Attempting to translate logical address 106 (p#26 w#2)
+Page #26 has no associated frame.
+Searching for next available frame:
+	Frame #39 is in use...
+Frame #20 is available!
+Page #26 was referenced and has Frame #20
+Found physical address 82 (f#20 w#2)
+In getAddrMode(). IR: 4202, Addr: 0
+In getRegCode(). IR: 4202, Regcode: 0
+In getOperand(). IR: 4202, Operand: 106
 Instruction with opcode STO finished executing.
-	0x101: STO 0 rA 106
+	0x1: STO 0 rA 106
 	Dumping Registers:
 	rA: 25, r1: 0, r2: 0, r3: 0
-	IR: 4202, PC: 102, CR: 0
+	IR: 4202, PC: 2, CR: 0
+In getOpCode(). IR: 4202, Opcode: 1
+Attempting to translate logical address 2 (p#0 w#2)
+Page #0 was referenced and has Frame #47
+Found physical address 190 (f#47 w#2)
+In getOpCode(). IR: 2309, Opcode: 0
+In getAddrMode(). IR: 2309, Addr: 1
+In getOperand(). IR: 2309, Operand: 5
+In getRegCode(). IR: 2309, Regcode: 1
+In getRegister(). IR: 2309, Regcode: %d1
+In getAddrMode(). IR: 2309, Addr: 1
+In getRegCode(). IR: 2309, Regcode: 1
+In getOperand(). IR: 2309, Operand: 5
 Instruction with opcode LOD finished executing.
-	0x102: LOD 1 r1 5
+	0x2: LOD 1 r1 5
 	Dumping Registers:
 	rA: 25, r1: 5, r2: 0, r3: 0
-	IR: 2309, PC: 103, CR: 0
-
-####################################################
-############### Switching to user 1 ################
-####################################################
-
-USER1 > run
-
-####################################################
-USER 1 WAS DENIED ACCESS TO MEMORY AND PUT INTO
-THE BLOCKED QUEUE UNTIL ANOTHER PROCESS FINISHES
-####################################################
-
-
-####################################################
-############### Switching to user 0 ################
-####################################################
-
-SYS > dmp
-
->>>>>>DUMPING REGISTERS<<<<<<
-
-Semaphore status: Locked
-
-	>>>>>>QUEUE: readyQueue<<<<<<
-	USER 2: Dumping Registers...
-		rA: 25, r1: 5, r2: 0, r3: 0
-		IR: 2309, PC: 103, CR: 0
-
-
-	>>>>>>QUEUE: blockedQueue<<<<<<
-	USER 1: Dumping Registers...
-		rA: 0, r1: 0, r2: 0, r3: 0
-		IR: 2058, PC: 0, CR: 0
-
-
->>>>>>DUMPING MEMORY<<<<<<
-_______________________________________________________________
-ad: valu | ad: valu | ad: valu | ad: valu | ad: valu | ad: valu
-_______________________________________________________________
-
- 0:  80a |  1: 1006 |  2:  905 |  3: 4100 |  4: 1007 |  5: f000
- 6:    a |  7:    a |  8:    0 |  9:    0 |  a:    0 |  b:    0
- c:    0 |  d:    0 |  e:    0 |  f:    0 | 10:    0 | 11:    0
-12:    0 | 13:    0 | 14:    0 | 15:    0 | 16:    0 | 17:    0
-18:    0 | 19:    0 | 1a:    0 | 1b:    0 | 1c:    0 | 1d:    0
-1e:    0 | 1f:    0 | 20:    0 | 21:    0 | 22:    0 | 23:    0
-24:    0 | 25:    0 | 26:    0 | 27:    0 | 28:    0 | 29:    0
-2a:    0 | 2b:    0 | 2c:    0 | 2d:    0 | 2e:    0 | 2f:    0
-30:    0 | 31:    0 | 32:    0 | 33:    0 | 34:    0 | 35:    0
-36:    0 | 37:    0 | 38:    0 | 39:    0 | 3a:    0 | 3b:    0
-3c:    0 | 3d:    0 | 3e:    0 | 3f:    0 | 40:    0 | 41:    0
-42:    0 | 43:    0 | 44:    0 | 45:    0 | 46:    0 | 47:    0
-48:    0 | 49:    0 | 4a:    0 | 4b:    0 | 4c:    0 | 4d:    0
-4e:    0 | 4f:    0 | 50:    0 | 51:    0 | 52:    0 | 53:    0
-54:    0 | 55:    0 | 56:    0 | 57:    0 | 58:    0 | 59:    0
-5a:    0 | 5b:    0 | 5c:    0 | 5d:    0 | 5e:    0 | 5f:    0
-60:    0 | 61:    0 | 62:    0 | 63:    0 | 64:  819 | 65: 106a
-66:  905 | 67: 5100 | 68: 106b | 69: f000 | 6a:   19 | 6b:    0
-6c:    0 | 6d:    0 | 6e:    0 | 6f:    0 | 70:    0 | 71:    0
-72:    0 | 73:    0 | 74:    0 | 75:    0 | 76:    0 | 77:    0
-78:    0 | 79:    0 | 7a:    0 | 7b:    0 | 7c:    0 | 7d:    0
-7e:    0 | 7f:    0 | 80:    0 | 81:    0 | 82:    0 | 83:    0
-84:    0 | 85:    0 | 86:    0 | 87:    0 | 88:    0 | 89:    0
-8a:    0 | 8b:    0 | 8c:    0 | 8d:    0 | 8e:    0 | 8f:    0
-90:    0 | 91:    0 | 92:    0 | 93:    0 | 94:    0 | 95:    0
-96:    0 | 97:    0 | 98:    0 | 99:    0 | 9a:    0 | 9b:    0
-9c:    0 | 9d:    0 | 9e:    0 | 9f:    0 | a0:    0 | a1:    0
-a2:    0 | a3:    0 | a4:    0 | a5:    0 | a6:    0 | a7:    0
-a8:    0 | a9:    0 | aa:    0 | ab:    0 | ac:    0 | ad:    0
-ae:    0 | af:    0 | b0:    0 | b1:    0 | b2:    0 | b3:    0
-b4:    0 | b5:    0 | b6:    0 | b7:    0 | b8:    0 | b9:    0
-ba:    0 | bb:    0 | bc:    0 | bd:    0 | be:    0 | bf:    0
-c0:    0 | c1:    0 | c2:    0 | c3:    0 | c4:    0 | c5:    0
-c6:    0 | c7:    0 | c8:    0 | c9:    0 | ca:    0 | cb:    0
-cc:    0 | cd:    0 | ce:    0 | cf:    0 | d0:    0 | d1:    0
-d2:    0 | d3:    0 | d4:    0 | d5:    0 | d6:    0 | d7:    0
-d8:    0 | d9:    0 | da:    0 | db:    0 | dc:    0 | dd:    0
-de:    0 | df:    0 | e0:    0 | e1:    0 | e2:    0 | e3:    0
-e4:    0 | e5:    0 | e6:    0 | e7:    0 | e8:    0 | e9:    0
-ea:    0 | eb:    0 | ec:    0 | ed:    0 | ee:    0 | ef:    0
-f0:    0 | f1:    0 | f2:    0 | f3:    0 | f4:    0 | f5:    0
-f6:    0 | f7:    0 | f8:    0 | f9:    0 | fa:    0 | fb:    0
-fc:    0 | fd:    0 | fe:    0 | ff:    0
-
->	End of dump
-
-SYS > nop
-
-####################################################
-############### Switching to user 2 ################
-####################################################
-
-Instruction with opcode SUR finished executing.
-	0x103: SUR 0 r1 0
-	Dumping Registers:
-	rA: 25, r1: 63483, r2: 0, r3: 0
-	IR: 20736, PC: 104, CR: 0
-!! OVERFLOW IN SUR()
-Instruction with opcode STO finished executing.
-	0x104: STO 0 rA 107
-	Dumping Registers:
-	rA: 25, r1: 63483, r2: 0, r3: 0
-	IR: 4203, PC: 105, CR: 0
-Instruction with opcode HLT finished executing.
-	0x65535: HLT 0 rA 0
-	Dumping Registers:
-	rA: 0, r1: 0, r2: 0, r3: 0
-	IR: 61440, PC: 0, CR: 0
-####################################################
-USER 2 HAS SIGNALED FOR UNLOCK OF MEMORY
-####################################################
-
-####################################################
-USER 1 WAS PUT BACK INTO READY QUEUE
-####################################################
-
-
-####################################################
-############### Switching to user 0 ################
-####################################################
-
-SYS > dmp
-
->>>>>>DUMPING REGISTERS<<<<<<
-
-Semaphore status: Unlocked
-
-	>>>>>>QUEUE: readyQueue<<<<<<
-	USER 1: Dumping Registers...
-		rA: 0, r1: 0, r2: 0, r3: 0
-		IR: 2058, PC: 0, CR: 0
-	USER 2: Dumping Registers...
-		rA: 0, r1: 0, r2: 0, r3: 0
-		IR: 61440, PC: 0, CR: 0
-
-
-	>>>>>>QUEUE: blockedQueue<<<<<<
-
-
->>>>>>DUMPING MEMORY<<<<<<
-_______________________________________________________________
-ad: valu | ad: valu | ad: valu | ad: valu | ad: valu | ad: valu
-_______________________________________________________________
-
- 0:  80a |  1: 1006 |  2:  905 |  3: 4100 |  4: 1007 |  5: f000
- 6:    a |  7:    a |  8:    0 |  9:    0 |  a:    0 |  b:    0
- c:    0 |  d:    0 |  e:    0 |  f:    0 | 10:    0 | 11:    0
-12:    0 | 13:    0 | 14:    0 | 15:    0 | 16:    0 | 17:    0
-18:    0 | 19:    0 | 1a:    0 | 1b:    0 | 1c:    0 | 1d:    0
-1e:    0 | 1f:    0 | 20:    0 | 21:    0 | 22:    0 | 23:    0
-24:    0 | 25:    0 | 26:    0 | 27:    0 | 28:    0 | 29:    0
-2a:    0 | 2b:    0 | 2c:    0 | 2d:    0 | 2e:    0 | 2f:    0
-30:    0 | 31:    0 | 32:    0 | 33:    0 | 34:    0 | 35:    0
-36:    0 | 37:    0 | 38:    0 | 39:    0 | 3a:    0 | 3b:    0
-3c:    0 | 3d:    0 | 3e:    0 | 3f:    0 | 40:    0 | 41:    0
-42:    0 | 43:    0 | 44:    0 | 45:    0 | 46:    0 | 47:    0
-48:    0 | 49:    0 | 4a:    0 | 4b:    0 | 4c:    0 | 4d:    0
-4e:    0 | 4f:    0 | 50:    0 | 51:    0 | 52:    0 | 53:    0
-54:    0 | 55:    0 | 56:    0 | 57:    0 | 58:    0 | 59:    0
-5a:    0 | 5b:    0 | 5c:    0 | 5d:    0 | 5e:    0 | 5f:    0
-60:    0 | 61:    0 | 62:    0 | 63:    0 | 64:  819 | 65: 106a
-66:  905 | 67: 5100 | 68: 106b | 69: f000 | 6a:   19 | 6b:   19
-6c:    0 | 6d:    0 | 6e:    0 | 6f:    0 | 70:    0 | 71:    0
-72:    0 | 73:    0 | 74:    0 | 75:    0 | 76:    0 | 77:    0
-78:    0 | 79:    0 | 7a:    0 | 7b:    0 | 7c:    0 | 7d:    0
-7e:    0 | 7f:    0 | 80:    0 | 81:    0 | 82:    0 | 83:    0
-84:    0 | 85:    0 | 86:    0 | 87:    0 | 88:    0 | 89:    0
-8a:    0 | 8b:    0 | 8c:    0 | 8d:    0 | 8e:    0 | 8f:    0
-90:    0 | 91:    0 | 92:    0 | 93:    0 | 94:    0 | 95:    0
-96:    0 | 97:    0 | 98:    0 | 99:    0 | 9a:    0 | 9b:    0
-9c:    0 | 9d:    0 | 9e:    0 | 9f:    0 | a0:    0 | a1:    0
-a2:    0 | a3:    0 | a4:    0 | a5:    0 | a6:    0 | a7:    0
-a8:    0 | a9:    0 | aa:    0 | ab:    0 | ac:    0 | ad:    0
-ae:    0 | af:    0 | b0:    0 | b1:    0 | b2:    0 | b3:    0
-b4:    0 | b5:    0 | b6:    0 | b7:    0 | b8:    0 | b9:    0
-ba:    0 | bb:    0 | bc:    0 | bd:    0 | be:    0 | bf:    0
-c0:    0 | c1:    0 | c2:    0 | c3:    0 | c4:    0 | c5:    0
-c6:    0 | c7:    0 | c8:    0 | c9:    0 | ca:    0 | cb:    0
-cc:    0 | cd:    0 | ce:    0 | cf:    0 | d0:    0 | d1:    0
-d2:    0 | d3:    0 | d4:    0 | d5:    0 | d6:    0 | d7:    0
-d8:    0 | d9:    0 | da:    0 | db:    0 | dc:    0 | dd:    0
-de:    0 | df:    0 | e0:    0 | e1:    0 | e2:    0 | e3:    0
-e4:    0 | e5:    0 | e6:    0 | e7:    0 | e8:    0 | e9:    0
-ea:    0 | eb:    0 | ec:    0 | ed:    0 | ee:    0 | ef:    0
-f0:    0 | f1:    0 | f2:    0 | f3:    0 | f4:    0 | f5:    0
-f6:    0 | f7:    0 | f8:    0 | f9:    0 | fa:    0 | fb:    0
-fc:    0 | fd:    0 | fe:    0 | ff:    0
-
->	End of dump
-
-SYS > nop
-
-####################################################
-############### Switching to user 1 ################
-####################################################
-
-
-####################################################
-USER 1 REQUESTED MEM ACCESS AND ACCESS WAS GRANTED.
-USER MAY EXECUTE INSTRUCTIONS.
-####################################################
-
-Instruction with opcode LOD finished executing.
-	0x0: LOD 1 rA 10
-	Dumping Registers:
-	rA: 10, r1: 0, r2: 0, r3: 0
-	IR: 2058, PC: 1, CR: 0
-Instruction with opcode STO finished executing.
-	0x1: STO 0 rA 6
-	Dumping Registers:
-	rA: 10, r1: 0, r2: 0, r3: 0
-	IR: 4102, PC: 2, CR: 0
-Instruction with opcode LOD finished executing.
-	0x2: LOD 1 r1 5
-	Dumping Registers:
-	rA: 10, r1: 5, r2: 0, r3: 0
 	IR: 2309, PC: 3, CR: 0
-
-####################################################
-############### Switching to user 2 ################
-####################################################
-
-USER2 > nop
+In getOpCode(). IR: 2309, Opcode: 0
+Attempting to translate logical address 3 (p#0 w#3)
+Page #0 was referenced and has Frame #47
+Found physical address 191 (f#47 w#3)
+In getOpCode(). IR: 20736, Opcode: 5
+In getRegCode(). IR: 20736, Regcode: 1
+In getRegister(). IR: 20736, Regcode: %d1
+In getAddrMode(). IR: 20736, Addr: 0
+In getOperand(). IR: 20736, Operand: 0
+Attempting to translate logical address 0 (p#0 w#0)
+Page #0 was referenced and has Frame #47
+Found physical address 188 (f#47 w#0)
+Attempting to translate logical address 0 (p#0 w#0)
+Page #0 was referenced and has Frame #47
+Found physical address 188 (f#47 w#0)
+In getAddrMode(). IR: 20736, Addr: 0
+In getRegCode(). IR: 20736, Regcode: 1
+In getOperand(). IR: 20736, Operand: 0
+Instruction with opcode SUR finished executing.
+	0x3: SUR 0 r1 0
+	Dumping Registers:
+	rA: 25, r1: 63468, r2: 0, r3: 0
+	IR: 20736, PC: 4, CR: 0
+!! OVERFLOW IN SUR()
 
 ####################################################
 ############### Switching to user 0 ################
 ####################################################
 
+In getOpCode(). IR: 0, Opcode: 0
 SYS > dmp
 
 >>>>>>DUMPING REGISTERS<<<<<<
 
-Semaphore status: Locked
+	Dumping Registers USER 1:
+	rA: 10, r1: 2063, r2: 0, r3: 0
+	IR: 16640, PC: 4, CR: 1
 
-	>>>>>>QUEUE: readyQueue<<<<<<
-	USER 1: Dumping Registers...
-		rA: 10, r1: 5, r2: 0, r3: 0
-		IR: 2309, PC: 3, CR: 0
-	USER 2: Dumping Registers...
-		rA: 0, r1: 0, r2: 0, r3: 0
-		IR: 61440, PC: 0, CR: 0
-
-
-	>>>>>>QUEUE: blockedQueue<<<<<<
-
+	Dumping Registers USER 2:
+	rA: 10, r1: 2063, r2: 0, r3: 0
+	IR: 16640, PC: 4, CR: 1
 
 >>>>>>DUMPING MEMORY<<<<<<
 _______________________________________________________________
-ad: valu | ad: valu | ad: valu | ad: valu | ad: valu | ad: valu
+FRAME # | ad: valu | ad: valu | ad: valu | ad: valu
 _______________________________________________________________
 
- 0:  80a |  1: 1006 |  2:  905 |  3: 4100 |  4: 1007 |  5: f000
- 6:    a |  7:    a |  8:    0 |  9:    0 |  a:    0 |  b:    0
- c:    0 |  d:    0 |  e:    0 |  f:    0 | 10:    0 | 11:    0
-12:    0 | 13:    0 | 14:    0 | 15:    0 | 16:    0 | 17:    0
-18:    0 | 19:    0 | 1a:    0 | 1b:    0 | 1c:    0 | 1d:    0
-1e:    0 | 1f:    0 | 20:    0 | 21:    0 | 22:    0 | 23:    0
-24:    0 | 25:    0 | 26:    0 | 27:    0 | 28:    0 | 29:    0
-2a:    0 | 2b:    0 | 2c:    0 | 2d:    0 | 2e:    0 | 2f:    0
-30:    0 | 31:    0 | 32:    0 | 33:    0 | 34:    0 | 35:    0
-36:    0 | 37:    0 | 38:    0 | 39:    0 | 3a:    0 | 3b:    0
-3c:    0 | 3d:    0 | 3e:    0 | 3f:    0 | 40:    0 | 41:    0
-42:    0 | 43:    0 | 44:    0 | 45:    0 | 46:    0 | 47:    0
-48:    0 | 49:    0 | 4a:    0 | 4b:    0 | 4c:    0 | 4d:    0
-4e:    0 | 4f:    0 | 50:    0 | 51:    0 | 52:    0 | 53:    0
-54:    0 | 55:    0 | 56:    0 | 57:    0 | 58:    0 | 59:    0
-5a:    0 | 5b:    0 | 5c:    0 | 5d:    0 | 5e:    0 | 5f:    0
-60:    0 | 61:    0 | 62:    0 | 63:    0 | 64:  819 | 65: 106a
-66:  905 | 67: 5100 | 68: 106b | 69: f000 | 6a:   19 | 6b:   19
-6c:    0 | 6d:    0 | 6e:    0 | 6f:    0 | 70:    0 | 71:    0
-72:    0 | 73:    0 | 74:    0 | 75:    0 | 76:    0 | 77:    0
-78:    0 | 79:    0 | 7a:    0 | 7b:    0 | 7c:    0 | 7d:    0
-7e:    0 | 7f:    0 | 80:    0 | 81:    0 | 82:    0 | 83:    0
-84:    0 | 85:    0 | 86:    0 | 87:    0 | 88:    0 | 89:    0
-8a:    0 | 8b:    0 | 8c:    0 | 8d:    0 | 8e:    0 | 8f:    0
-90:    0 | 91:    0 | 92:    0 | 93:    0 | 94:    0 | 95:    0
-96:    0 | 97:    0 | 98:    0 | 99:    0 | 9a:    0 | 9b:    0
-9c:    0 | 9d:    0 | 9e:    0 | 9f:    0 | a0:    0 | a1:    0
-a2:    0 | a3:    0 | a4:    0 | a5:    0 | a6:    0 | a7:    0
-a8:    0 | a9:    0 | aa:    0 | ab:    0 | ac:    0 | ad:    0
-ae:    0 | af:    0 | b0:    0 | b1:    0 | b2:    0 | b3:    0
-b4:    0 | b5:    0 | b6:    0 | b7:    0 | b8:    0 | b9:    0
-ba:    0 | bb:    0 | bc:    0 | bd:    0 | be:    0 | bf:    0
-c0:    0 | c1:    0 | c2:    0 | c3:    0 | c4:    0 | c5:    0
-c6:    0 | c7:    0 | c8:    0 | c9:    0 | ca:    0 | cb:    0
-cc:    0 | cd:    0 | ce:    0 | cf:    0 | d0:    0 | d1:    0
-d2:    0 | d3:    0 | d4:    0 | d5:    0 | d6:    0 | d7:    0
-d8:    0 | d9:    0 | da:    0 | db:    0 | dc:    0 | dd:    0
-de:    0 | df:    0 | e0:    0 | e1:    0 | e2:    0 | e3:    0
-e4:    0 | e5:    0 | e6:    0 | e7:    0 | e8:    0 | e9:    0
-ea:    0 | eb:    0 | ec:    0 | ed:    0 | ee:    0 | ef:    0
-f0:    0 | f1:    0 | f2:    0 | f3:    0 | f4:    0 | f5:    0
-f6:    0 | f7:    0 | f8:    0 | f9:    0 | fa:    0 | fb:    0
-fc:    0 | fd:    0 | fe:    0 | ff:    0
+    0   |  0:    0 |  1:    0 |  2:    0 |  3:    0
+    1   |  4:    0 |  5:    0 |  6:    0 |  7:    0
+    2   |  8:    0 |  9:    0 |  a:    0 |  b:    0
+    3   |  c:    0 |  d:    0 |  e:    0 |  f:    0
+    4   | 10:    0 | 11:    0 | 12:    0 | 13:    0
+    5   | 14:    0 | 15:    0 | 16:    0 | 17:    0
+    6   | 18:    0 | 19:    0 | 1a:    0 | 1b:    0
+    7   | 1c:    0 | 1d:    0 | 1e:    0 | 1f:    0
+    8   | 20:    0 | 21:    0 | 22:    0 | 23:    0
+    9   | 24:    0 | 25:    0 | 26:    0 | 27:    0
+   10   | 28:    0 | 29:    0 | 2a:    0 | 2b:    0
+   11   | 2c:    0 | 2d:    0 | 2e:    0 | 2f:    0
+   12   | 30:    0 | 31:    0 | 32:    0 | 33:    0
+   13   | 34:    0 | 35:    0 | 36:    0 | 37:    0
+   14   | 38:    0 | 39:    0 | 3a:    0 | 3b:    0
+   15   | 3c:    0 | 3d:    0 | 3e:    0 | 3f:    0
+   16   | 40:    0 | 41:    0 | 42:    0 | 43:    0
+   17   | 44:    0 | 45:    0 | 46:    0 | 47:    0
+   18   | 48: 1007 | 49: f000 | 4a:    a | 4b:    0
+   19   | 4c:    0 | 4d:    0 | 4e:    0 | 4f:    0
+   20   | 50:    0 | 51:    0 | 52:   19 | 53:    0
+   21   | 54:    0 | 55:    0 | 56:    0 | 57:    0
+   22   | 58:    0 | 59:    0 | 5a:    0 | 5b:    0
+   23   | 5c:    0 | 5d:    0 | 5e:    0 | 5f:    0
+   24   | 60:    0 | 61:    0 | 62:    0 | 63:    0
+   25   | 64:    0 | 65:    0 | 66:    0 | 67:    0
+   26   | 68:    0 | 69:    0 | 6a:    0 | 6b:    0
+   27   | 6c:    0 | 6d:    0 | 6e:    0 | 6f:    0
+   28   | 70:    0 | 71:    0 | 72:    0 | 73:    0
+   29   | 74:    0 | 75:    0 | 76:    0 | 77:    0
+   30   | 78:    0 | 79:    0 | 7a:    0 | 7b:    0
+   31   | 7c:    0 | 7d:    0 | 7e:    0 | 7f:    0
+   32   | 80:    0 | 81:    0 | 82:    0 | 83:    0
+   33   | 84:    0 | 85:    0 | 86:    0 | 87:    0
+   34   | 88:    0 | 89:    0 | 8a:    0 | 8b:    0
+   35   | 8c:    0 | 8d:    0 | 8e:    0 | 8f:    0
+   36   | 90:    0 | 91:    0 | 92:    0 | 93:    0
+   37   | 94:    0 | 95:    0 | 96:    0 | 97:    0
+   38   | 98:    0 | 99:    0 | 9a:    0 | 9b:    0
+   39   | 9c:  80a | 9d: 1006 | 9e:  905 | 9f: 4100
+   40   | a0:    0 | a1:    0 | a2:    0 | a3:    0
+   41   | a4:    0 | a5:    0 | a6:    0 | a7:    0
+   42   | a8:    0 | a9:    0 | aa:    0 | ab:    0
+   43   | ac:    0 | ad:    0 | ae:    0 | af:    0
+   44   | b0:    0 | b1:    0 | b2:    0 | b3:    0
+   45   | b4:    0 | b5:    0 | b6:    0 | b7:    0
+   46   | b8:    0 | b9:    0 | ba:    0 | bb:    0
+   47   | bc:  819 | bd: 106a | be:  905 | bf: 5100
+   48   | c0:    0 | c1:    0 | c2:    0 | c3:    0
+   49   | c4: 1007 | c5: f000 | c6:    0 | c7:    0
+   50   | c8:    0 | c9:    0 | ca:    0 | cb:    0
+   51   | cc:    0 | cd:    0 | ce:    0 | cf:    0
+   52   | d0:    0 | d1:    0 | d2:    0 | d3:    0
+   53   | d4:    0 | d5:    0 | d6:    0 | d7:    0
+   54   | d8:    0 | d9:    0 | da:    0 | db:    0
+   55   | dc:    0 | dd:    0 | de:    0 | df:    0
+   56   | e0:    0 | e1:    0 | e2:    0 | e3:    0
+   57   | e4:    0 | e5:    0 | e6:    0 | e7:    0
+   58   | e8:    0 | e9:    0 | ea:    0 | eb:    0
+   59   | ec:    0 | ed:    0 | ee:    0 | ef:    0
+   60   | f0:    0 | f1:    0 | f2:    0 | f3:    0
+   61   | f4:    0 | f5:    0 | f6:    0 | f7:    0
+   62   | f8:    0 | f9:    0 | fa:    0 | fb:    0
+   63   | fc:    0 | fd:    0 | fe:    0 | ff:    0
+
+User1 Page Table:
+
+ *------------------------------------------*
+ |   Page Table    ||    FrameInUse Table   |
+ *------------------------------------------*
+ | Page#  | Frame# || Frame# | FrameInUse?  |
+ *------------------------------------------*
+ |      0 | 39     ||      0 | Free         |
+ |      1 | 18     ||      1 | Free         |
+ |      2 | -      ||      2 | Free         |
+ |      3 | -      ||      3 | Free         |
+ |      4 | -      ||      4 | Free         |
+ |      5 | -      ||      5 | Free         |
+ |      6 | -      ||      6 | Free         |
+ |      7 | -      ||      7 | Free         |
+ |      8 | -      ||      8 | Free         |
+ |      9 | -      ||      9 | Free         |
+ |     10 | -      ||     10 | Free         |
+ |     11 | -      ||     11 | Free         |
+ |     12 | -      ||     12 | Free         |
+ |     13 | -      ||     13 | Free         |
+ |     14 | -      ||     14 | Free         |
+ |     15 | -      ||     15 | Free         |
+ |     16 | -      ||     16 | Free         |
+ |     17 | -      ||     17 | Free         |
+ |     18 | -      ||     18 | In use       |
+ |     19 | -      ||     19 | Free         |
+ |     20 | -      ||     20 | In use       |
+ |     21 | -      ||     21 | Free         |
+ |     22 | -      ||     22 | Free         |
+ |     23 | -      ||     23 | Free         |
+ |     24 | -      ||     24 | Free         |
+ |     25 | -      ||     25 | Free         |
+ |     26 | -      ||     26 | Free         |
+ |     27 | -      ||     27 | Free         |
+ |     28 | -      ||     28 | Free         |
+ |     29 | -      ||     29 | Free         |
+ |     30 | -      ||     30 | Free         |
+ |     31 | -      ||     31 | Free         |
+ |     32 | -      ||     32 | Free         |
+ |     33 | -      ||     33 | Free         |
+ |     34 | -      ||     34 | Free         |
+ |     35 | -      ||     35 | Free         |
+ |     36 | -      ||     36 | Free         |
+ |     37 | -      ||     37 | Free         |
+ |     38 | -      ||     38 | Free         |
+ |     39 | -      ||     39 | In use       |
+ |     40 | -      ||     40 | Free         |
+ |     41 | -      ||     41 | Free         |
+ |     42 | -      ||     42 | Free         |
+ |     43 | -      ||     43 | Free         |
+ |     44 | -      ||     44 | Free         |
+ |     45 | -      ||     45 | Free         |
+ |     46 | -      ||     46 | Free         |
+ |     47 | -      ||     47 | In use       |
+ |     48 | -      ||     48 | Free         |
+ |     49 | -      ||     49 | In use       |
+ |     50 | -      ||     50 | Free         |
+ |     51 | -      ||     51 | Free         |
+ |     52 | -      ||     52 | Free         |
+ |     53 | -      ||     53 | Free         |
+ |     54 | -      ||     54 | Free         |
+ |     55 | -      ||     55 | Free         |
+ |     56 | -      ||     56 | Free         |
+ |     57 | -      ||     57 | Free         |
+ |     58 | -      ||     58 | Free         |
+ |     59 | -      ||     59 | Free         |
+ |     60 | -      ||     60 | Free         |
+ |     61 | -      ||     61 | Free         |
+ |     62 | -      ||     62 | Free         |
+ |     63 | -      ||     63 | Free         |
+ *------------------------------------------*
+
+
+
+User2 Page Table:
+ *------------------------------------------*
+ |   Page Table    ||    FrameInUse Table   |
+ *------------------------------------------*
+ | Page#  | Frame# || Frame# | FrameInUse?  |
+ *------------------------------------------*
+ |      0 | 47     ||      0 | Free         |
+ |      1 | 49     ||      1 | Free         |
+ |      2 | -      ||      2 | Free         |
+ |      3 | -      ||      3 | Free         |
+ |      4 | -      ||      4 | Free         |
+ |      5 | -      ||      5 | Free         |
+ |      6 | -      ||      6 | Free         |
+ |      7 | -      ||      7 | Free         |
+ |      8 | -      ||      8 | Free         |
+ |      9 | -      ||      9 | Free         |
+ |     10 | -      ||     10 | Free         |
+ |     11 | -      ||     11 | Free         |
+ |     12 | -      ||     12 | Free         |
+ |     13 | -      ||     13 | Free         |
+ |     14 | -      ||     14 | Free         |
+ |     15 | -      ||     15 | Free         |
+ |     16 | -      ||     16 | Free         |
+ |     17 | -      ||     17 | Free         |
+ |     18 | -      ||     18 | In use       |
+ |     19 | -      ||     19 | Free         |
+ |     20 | -      ||     20 | In use       |
+ |     21 | -      ||     21 | Free         |
+ |     22 | -      ||     22 | Free         |
+ |     23 | -      ||     23 | Free         |
+ |     24 | -      ||     24 | Free         |
+ |     25 | -      ||     25 | Free         |
+ |     26 | 20     ||     26 | Free         |
+ |     27 | -      ||     27 | Free         |
+ |     28 | -      ||     28 | Free         |
+ |     29 | -      ||     29 | Free         |
+ |     30 | -      ||     30 | Free         |
+ |     31 | -      ||     31 | Free         |
+ |     32 | -      ||     32 | Free         |
+ |     33 | -      ||     33 | Free         |
+ |     34 | -      ||     34 | Free         |
+ |     35 | -      ||     35 | Free         |
+ |     36 | -      ||     36 | Free         |
+ |     37 | -      ||     37 | Free         |
+ |     38 | -      ||     38 | Free         |
+ |     39 | -      ||     39 | In use       |
+ |     40 | -      ||     40 | Free         |
+ |     41 | -      ||     41 | Free         |
+ |     42 | -      ||     42 | Free         |
+ |     43 | -      ||     43 | Free         |
+ |     44 | -      ||     44 | Free         |
+ |     45 | -      ||     45 | Free         |
+ |     46 | -      ||     46 | Free         |
+ |     47 | -      ||     47 | In use       |
+ |     48 | -      ||     48 | Free         |
+ |     49 | -      ||     49 | In use       |
+ |     50 | -      ||     50 | Free         |
+ |     51 | -      ||     51 | Free         |
+ |     52 | -      ||     52 | Free         |
+ |     53 | -      ||     53 | Free         |
+ |     54 | -      ||     54 | Free         |
+ |     55 | -      ||     55 | Free         |
+ |     56 | -      ||     56 | Free         |
+ |     57 | -      ||     57 | Free         |
+ |     58 | -      ||     58 | Free         |
+ |     59 | -      ||     59 | Free         |
+ |     60 | -      ||     60 | Free         |
+ |     61 | -      ||     61 | Free         |
+ |     62 | -      ||     62 | Free         |
+ |     63 | -      ||     63 | Free         |
+ *------------------------------------------*
+
+
+
+
 
 >	End of dump
 
+In getOpCode(). IR: 0, Opcode: 0
 SYS > nop
 
 ####################################################
 ############### Switching to user 1 ################
 ####################################################
 
-Instruction with opcode ADR finished executing.
-	0x3: ADR 0 r1 0
-	Dumping Registers:
-	rA: 10, r1: 2063, r2: 0, r3: 0
-	IR: 16640, PC: 4, CR: 0
+In getOpCode(). IR: 16640, Opcode: 4
+USER1 > run
+Attempting to translate logical address 4 (p#1 w#0)
+Page #1 was referenced and has Frame #18
+Found physical address 72 (f#18 w#0)
+In getOpCode(). IR: 4103, Opcode: 1
+In getOperand(). IR: 4103, Operand: 7
+In getRegCode(). IR: 4103, Regcode: 0
+In getRegister(). IR: 4103, Regcode: %d0
+Attempting to translate logical address 7 (p#1 w#3)
+Page #1 was referenced and has Frame #18
+Found physical address 75 (f#18 w#3)
+In getAddrMode(). IR: 4103, Addr: 0
+In getRegCode(). IR: 4103, Regcode: 0
+In getOperand(). IR: 4103, Operand: 7
 Instruction with opcode STO finished executing.
 	0x4: STO 0 rA 7
 	Dumping Registers:
 	rA: 10, r1: 2063, r2: 0, r3: 0
 	IR: 4103, PC: 5, CR: 1
+In getOpCode(). IR: 4103, Opcode: 1
+Attempting to translate logical address 5 (p#1 w#1)
+Page #1 was referenced and has Frame #18
+Found physical address 73 (f#18 w#1)
+In getOpCode(). IR: 61440, Opcode: 15
+In getAddrMode(). IR: 61440, Addr: 0
+In getRegCode(). IR: 61440, Regcode: 0
+In getOperand(). IR: 61440, Operand: 0
 Instruction with opcode HLT finished executing.
 	0x65535: HLT 0 rA 0
 	Dumping Registers:
 	rA: 0, r1: 0, r2: 0, r3: 0
 	IR: 61440, PC: 0, CR: 0
-####################################################
-USER 1 HAS SIGNALED FOR UNLOCK OF MEMORY
-####################################################
-
 
 ####################################################
 ############### Switching to user 2 ################
 ####################################################
 
+In getOpCode(). IR: 20736, Opcode: 5
+USER2 > run
+Attempting to translate logical address 4 (p#1 w#0)
+Page #1 was referenced and has Frame #49
+Found physical address 196 (f#49 w#0)
+In getOpCode(). IR: 4103, Opcode: 1
+In getOperand(). IR: 4103, Operand: 7
+In getRegCode(). IR: 4103, Regcode: 0
+In getRegister(). IR: 4103, Regcode: %d0
+Attempting to translate logical address 7 (p#1 w#3)
+Page #1 was referenced and has Frame #49
+Found physical address 199 (f#49 w#3)
+In getAddrMode(). IR: 4103, Addr: 0
+In getRegCode(). IR: 4103, Regcode: 0
+In getOperand(). IR: 4103, Operand: 7
+Instruction with opcode STO finished executing.
+	0x4: STO 0 rA 7
+	Dumping Registers:
+	rA: 25, r1: 63468, r2: 0, r3: 0
+	IR: 4103, PC: 5, CR: 0
+In getOpCode(). IR: 4103, Opcode: 1
+Attempting to translate logical address 5 (p#1 w#1)
+Page #1 was referenced and has Frame #49
+Found physical address 197 (f#49 w#1)
+In getOpCode(). IR: 61440, Opcode: 15
+In getAddrMode(). IR: 61440, Addr: 0
+In getRegCode(). IR: 61440, Regcode: 0
+In getOperand(). IR: 61440, Operand: 0
+Instruction with opcode HLT finished executing.
+	0x65535: HLT 0 rA 0
+	Dumping Registers:
+	rA: 0, r1: 0, r2: 0, r3: 0
+	IR: 61440, PC: 0, CR: 0
+
+####################################################
+############### Switching to user 0 ################
+####################################################
+
+In getOpCode(). IR: 0, Opcode: 0
+SYS > nop
+
+####################################################
+############### Switching to user 1 ################
+####################################################
+
+In getOpCode(). IR: 61440, Opcode: 15
+USER1 > nop
+
+####################################################
+############### Switching to user 2 ################
+####################################################
+
+In getOpCode(). IR: 61440, Opcode: 15
 USER2 > nop
 
 ####################################################
 ############### Switching to user 0 ################
 ####################################################
 
-SYS > dmp
-
->>>>>>DUMPING REGISTERS<<<<<<
-
-Semaphore status: Unlocked
-
-	>>>>>>QUEUE: readyQueue<<<<<<
-	USER 1: Dumping Registers...
-		rA: 0, r1: 0, r2: 0, r3: 0
-		IR: 61440, PC: 0, CR: 0
-	USER 2: Dumping Registers...
-		rA: 0, r1: 0, r2: 0, r3: 0
-		IR: 61440, PC: 0, CR: 0
-
-
-	>>>>>>QUEUE: blockedQueue<<<<<<
-
-
->>>>>>DUMPING MEMORY<<<<<<
-_______________________________________________________________
-ad: valu | ad: valu | ad: valu | ad: valu | ad: valu | ad: valu
-_______________________________________________________________
-
- 0:  80a |  1: 1006 |  2:  905 |  3: 4100 |  4: 1007 |  5: f000
- 6:    a |  7:    a |  8:    0 |  9:    0 |  a:    0 |  b:    0
- c:    0 |  d:    0 |  e:    0 |  f:    0 | 10:    0 | 11:    0
-12:    0 | 13:    0 | 14:    0 | 15:    0 | 16:    0 | 17:    0
-18:    0 | 19:    0 | 1a:    0 | 1b:    0 | 1c:    0 | 1d:    0
-1e:    0 | 1f:    0 | 20:    0 | 21:    0 | 22:    0 | 23:    0
-24:    0 | 25:    0 | 26:    0 | 27:    0 | 28:    0 | 29:    0
-2a:    0 | 2b:    0 | 2c:    0 | 2d:    0 | 2e:    0 | 2f:    0
-30:    0 | 31:    0 | 32:    0 | 33:    0 | 34:    0 | 35:    0
-36:    0 | 37:    0 | 38:    0 | 39:    0 | 3a:    0 | 3b:    0
-3c:    0 | 3d:    0 | 3e:    0 | 3f:    0 | 40:    0 | 41:    0
-42:    0 | 43:    0 | 44:    0 | 45:    0 | 46:    0 | 47:    0
-48:    0 | 49:    0 | 4a:    0 | 4b:    0 | 4c:    0 | 4d:    0
-4e:    0 | 4f:    0 | 50:    0 | 51:    0 | 52:    0 | 53:    0
-54:    0 | 55:    0 | 56:    0 | 57:    0 | 58:    0 | 59:    0
-5a:    0 | 5b:    0 | 5c:    0 | 5d:    0 | 5e:    0 | 5f:    0
-60:    0 | 61:    0 | 62:    0 | 63:    0 | 64:  819 | 65: 106a
-66:  905 | 67: 5100 | 68: 106b | 69: f000 | 6a:   19 | 6b:   19
-6c:    0 | 6d:    0 | 6e:    0 | 6f:    0 | 70:    0 | 71:    0
-72:    0 | 73:    0 | 74:    0 | 75:    0 | 76:    0 | 77:    0
-78:    0 | 79:    0 | 7a:    0 | 7b:    0 | 7c:    0 | 7d:    0
-7e:    0 | 7f:    0 | 80:    0 | 81:    0 | 82:    0 | 83:    0
-84:    0 | 85:    0 | 86:    0 | 87:    0 | 88:    0 | 89:    0
-8a:    0 | 8b:    0 | 8c:    0 | 8d:    0 | 8e:    0 | 8f:    0
-90:    0 | 91:    0 | 92:    0 | 93:    0 | 94:    0 | 95:    0
-96:    0 | 97:    0 | 98:    0 | 99:    0 | 9a:    0 | 9b:    0
-9c:    0 | 9d:    0 | 9e:    0 | 9f:    0 | a0:    0 | a1:    0
-a2:    0 | a3:    0 | a4:    0 | a5:    0 | a6:    0 | a7:    0
-a8:    0 | a9:    0 | aa:    0 | ab:    0 | ac:    0 | ad:    0
-ae:    0 | af:    0 | b0:    0 | b1:    0 | b2:    0 | b3:    0
-b4:    0 | b5:    0 | b6:    0 | b7:    0 | b8:    0 | b9:    0
-ba:    0 | bb:    0 | bc:    0 | bd:    0 | be:    0 | bf:    0
-c0:    0 | c1:    0 | c2:    0 | c3:    0 | c4:    0 | c5:    0
-c6:    0 | c7:    0 | c8:    0 | c9:    0 | ca:    0 | cb:    0
-cc:    0 | cd:    0 | ce:    0 | cf:    0 | d0:    0 | d1:    0
-d2:    0 | d3:    0 | d4:    0 | d5:    0 | d6:    0 | d7:    0
-d8:    0 | d9:    0 | da:    0 | db:    0 | dc:    0 | dd:    0
-de:    0 | df:    0 | e0:    0 | e1:    0 | e2:    0 | e3:    0
-e4:    0 | e5:    0 | e6:    0 | e7:    0 | e8:    0 | e9:    0
-ea:    0 | eb:    0 | ec:    0 | ed:    0 | ee:    0 | ef:    0
-f0:    0 | f1:    0 | f2:    0 | f3:    0 | f4:    0 | f5:    0
-f6:    0 | f7:    0 | f8:    0 | f9:    0 | fa:    0 | fb:    0
-fc:    0 | fd:    0 | fe:    0 | ff:    0
-
->	End of dump
-
+In getOpCode(). IR: 0, Opcode: 0
 SYS > stp
