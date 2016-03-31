@@ -43,6 +43,17 @@ void dump()
 		cout << setw(2) << i << ": " << setw(4) << main_memory[i];
 		cout << dec;
 	}
+
+	cout << endl << endl << "User1 Page Table:" << endl;
+
+	U1.proc->regs.PTBR->print();
+
+	cout << endl << endl << "User2 Page Table:";
+
+	U2.proc->regs.PTBR->print();
+
+	cout << endl << endl;
+
 	cout << endl << endl << ">\tEnd of dump" << endl << endl;
 }
 
@@ -70,6 +81,7 @@ void loader()
 		currentPage = (currentWord == 3 ? currentPage + 1 : currentPage);
 		// If at the last word in the page, reset currentWord to 0
 		currentWord = (currentWord == 3 ? 0 : currentWord + 1);
+		currentDiskAddr++;
 	} while (currentInstr != 61440);
 
 	// For User 2, read from disk starting at location 100
@@ -86,6 +98,7 @@ void loader()
 		currentPage = (currentWord == 3 ? currentPage + 1 : currentPage);
 		// If at the last word in the page, reset currentWord to 0
 		currentWord = (currentWord == 3 ? 0 : currentWord + 1);
+		currentDiskAddr++;
 	} while (currentInstr != 61440);
 }
 
@@ -121,7 +134,8 @@ void scheduler()
 		// NOTE: If we return to this point in the loop, the dispatcher was not
 		// 			 called during last iteration, i.e. current user was not BLOCKED,
 		// 			 i.e. current user must be READY.
-		dispatcher(READY);
+		if (sysclock != 0)
+			dispatcher(READY);
 		switchTime = sysclock + 5;
 
 		while (sysclock < switchTime) {
@@ -188,7 +202,8 @@ void scheduler()
 							switchTime = sysclock + 5;
 						}
 					} else {
-						cout << "Invalid command for system" << endl;
+						loader();
+						cout << "The loader function was called" << endl;
 					}
 					break;
 				case 1: // "dmp"
@@ -277,7 +292,7 @@ void init()
 	SYS = User(sys);
 	// SYS does not need a page table; it has no pages
 
-	currentUser = U2;
+	currentUser = SYS;
 
 	// Initialize sysclock and switchTime
 	sysclock = 0;
