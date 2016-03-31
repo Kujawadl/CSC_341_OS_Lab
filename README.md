@@ -1,3 +1,7 @@
+---
+layout: index
+---
+
 # Operating System Lab
 
 ### by Aaron Baker, Andrew Ballard, and Dylan Jager-Kujawa
@@ -179,4 +183,4 @@ Furthermore, the operating system does prompt the user for input, even though th
 
 Silberschatz, A., & Galvin, P. B. (1998). Operating system concepts. Reading, MA: Addison Wesley Longman.
 
-Stack Overflow. (2013, July 21). Retrieved March 29, 2016, from http://stackoverflow.com/a/17777130 
+Stack Overflow. (2013, July 21). Retrieved March 29, 2016, from http://stackoverflow.com/a/17777130
