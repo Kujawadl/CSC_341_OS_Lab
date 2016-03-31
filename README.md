@@ -9,7 +9,7 @@
     - [Machine](#machine)
       - [Memory](#memory)
         - [Paging](#Paging)
-	      - [MMU](#mmu)
+        - [MMU](#mmu)
     - [OS](#os)
       - [UI](#ui)
       - [Data](#data)
