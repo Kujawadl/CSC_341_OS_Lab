@@ -12,6 +12,7 @@
 #include <string>
 #include <iostream>
 #include <iomanip>
+#include "utils.hpp"
 	using namespace std;
 
 // Debugging flags
