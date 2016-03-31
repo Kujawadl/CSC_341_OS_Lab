@@ -29,6 +29,11 @@ struct User {
   bool running;
   registers regs;
 };
+struct PTE {
+  int frame,  // Corresponding frame in RAM
+      disk,  // Location on "disk"
+      v_bit, m_bit;  // Value bit and Modified bit
+}
 
 extern queue<User> readyQueue;
 extern queue<User> blockedQueue;
