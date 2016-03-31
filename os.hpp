@@ -30,14 +30,22 @@ extern FrameTable framesLocked;
 
 // Define the user struct
 enum userID {sys, u1, u2};
-struct User {
+struct Process {
   userID id;
   bool running;
   registers regs;
+
+  Process(userID uid) : id(uid), running(false),
+    regs {0, 0, 0, 0, 61440, 0, 0} {}
+};
+struct User {
+  userID id;
+  Process* proc;
+
+  User(userID uid) : id(uid), proc(new Process(uid)) {}
 };
 
-extern queue<User> readyQueue;
-extern queue<User> blockedQueue;
+
 extern User currentUser;
 
 #define READY 1
@@ -55,6 +63,10 @@ void printQueue(string queueName, queue<User> &q,int num);
 
 // Print the contents of a queue
 void printQueue(queue<User> &q,int num);
+
+// Loads the two user programs from disk into main memory, paging them as
+// appropriate. Currently takes no args, returns no vals, everything hardcoded.
+void loader();
 
 // Responsible for swapping users in and out, and controlling
 // which users are blocked vs which are ready.

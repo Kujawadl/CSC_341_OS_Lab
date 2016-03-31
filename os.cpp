@@ -11,8 +11,6 @@
 FrameTable framesInUse;
 FrameTable framesLocked;
 
-queue<User> readyQueue = queue<User>();
-queue<User> blockedQueue = queue<User>();
 User currentUser;
 
 int sysclock;
@@ -51,21 +49,21 @@ void dump()
 }
 
 // Print the contents of a queue, with a header containing the queue name
-void printQueue(string queueName, queue<User> &q, int num)
+void printQueue(string queueName, queue<Process> &q, int num)
 {
 	cout << endl << "\t>>>>>>QUEUE: " << queueName << "<<<<<<" << endl;
 	printQueue(q, num);
 }
 
 // Print the contents of a queue
-void printQueue(queue<User> &q, int num)
+void printQueue(queue<Process> &q, int num)
 {
     if(!num)
     {
         cout << endl;
         return;
     }
-    User curr= q.front();
+    Process curr= q.front();
     q.pop();
 		registers regs = curr.regs;
     cout << "\tUSER " << curr.id << ": Dumping Registers..." << endl;
@@ -75,6 +73,26 @@ void printQueue(queue<User> &q, int num)
 			<< regs.CR << endl;
     q.push(curr);
     printQueue(q,--num);
+}
+
+// Loads the two user programs from disk into main memory, paging them as
+// appropriate. Currently takes no args, returns no vals, everything hardcoded.
+void loader()
+{
+	unsigned short int currentPage,
+										 currentWord,
+										 currentInstr,
+										 currentDiskAddr;
+	User *currentUser;
+
+	currentPage = 0;
+	currentWord = 0;
+	currentInstr = 0;
+	currentDiskAddr = 0;
+	currentUser = &U1;
+	do {
+
+	} while (currentInstr != 61440);
 }
 
 // Responsible for swapping users in and out, and controlling
@@ -269,15 +287,13 @@ void init()
 	};
 
 	// Initialize user registers; PTBR must be handled separately
-	User U1 = {u1, false, defaultRegisterValues};
-	U1.regs.PTBR = new PageTable(framesInUse);
-	User U2 = {u2, false, defaultRegisterValues};
-	U2.regs.PTBR = new PageTable(framesInUse);
-	User SYS = {sys, false, defaultRegisterValues};
-	SYS.regs.PTBR = new PageTable(framesInUse);
+	User U1 = User(u1);
+	U1.proc->regs.PTBR = new PageTable(framesInUse);
+	User U2 = User(u2);
+	U2.proc->regs.PTBR = new PageTable(framesInUse);
+	User SYS = User(sys);
+	SYS.proc->regs.PTBR = new PageTable(framesInUse);
 
-	readyQueue.push(U1);
-	readyQueue.push(U2);
 	currentUser = SYS;
 
 	// Initialize sysclock and switchTime
