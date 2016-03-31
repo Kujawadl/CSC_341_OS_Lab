@@ -60,9 +60,7 @@
 
           $("#out_txt_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/out.txt",
             function(response, status) {
-              if (status == "success") {
-                this.text(this.text().replace(/</g, "‹").replace(/>/g, "›"));
-              } else {
+              if (status != "success") {
                 errors += 1;
                 errorlist = "<li>out.txt</li> \n";
               }
@@ -71,9 +69,7 @@
 
           $("#machine_hpp_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/machine.hpp",
             function(response, status) {
-              if (status == "success") {
-                this.text(this.text().replace(/</g, "‹").replace(/>/g, "›"));
-              } else {
+              if (status != "success") {
                 errors += 1;
                 errorlist = "<li>machine.hpp</li> \n";
               }
@@ -82,9 +78,7 @@
 
           $("#machine_cpp_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/machine.cpp",
             function(response, status) {
-              if (status == "success") {
-                this.text(this.text().replace(/</g, "‹").replace(/>/g, "›"));
-              } else {
+              if (status != "success") {
                 errors += 1;
                 errorlist = "<li>machine.cpp</li> \n";
               }
@@ -93,9 +87,7 @@
 
           $("#os_hpp_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/os.hpp",
             function(response, status) {
-              if (status == "success") {
-                this.text(this.text().replace(/</g, "‹").replace(/>/g, "›"));
-              } else {
+              if (status != "success") {
                 errors += 1;
                 errorlist = "<li>os.hpp</li> \n";
               }
@@ -104,9 +96,7 @@
 
           $("#os_cpp_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/os.cpp",
             function(response, status) {
-              if (status == "success") {
-                this.text(this.text().replace(/</g, "‹").replace(/>/g, "›"));
-              } else {
+              if (status != "success") {
                 errors += 1;
                 errorlist = "<li>os.cpp</li> \n";
               }
@@ -115,9 +105,7 @@
 
           $("#utils_hpp_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/utils.hpp",
             function(response, status) {
-              if (status == "success") {
-                this.text(this.text().replace(/</g, "‹").replace(/>/g, "›"));
-              } else {
+              if (status != "success") {
                 errors += 1;
                 errorlist = "<li>utils.hpp</li> \n";
               }
@@ -126,9 +114,7 @@
 
           $("#utils_cpp_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/utils.cpp",
             function(response, status) {
-              if (status == "success") {
-                this.text(this.text().replace(/</g, "‹").replace(/>/g, "›"));
-              } else {
+              if (status != "success") {
                 errors += 1;
                 errorlist = "<li>utils.cpp</li> \n";
               }
@@ -137,9 +123,7 @@
 
           $("#makefile_code").load("https://raw.githubusercontent.com/Kujawadl/CSC_341_OS_Lab/master/makefile",
             function(response, status) {
-              if (status == "success") {
-                this.text(this.text().replace(/</g, "‹").replace(/>/g, "›"));
-              } else {
+              if (status != "success") {
                 errors += 1;
                 errorlist = "<li>makefile</li> \n";
               }
@@ -180,7 +164,7 @@
           }
 
           // Attempt to highlight syntax once load is complete
-          //SyntaxHighlighter.all();
+          SyntaxHighlighter.all();
         });
       </script>
 
