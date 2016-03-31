@@ -182,7 +182,7 @@
           // Attempt to highlight syntax once load is complete
           SyntaxHighlighter.all();
 
-          $("pre").each(function() {
+          $("line").each(function() {
             this.text(this.text().replace(/&gt;/g, ">"));
           });
         });
