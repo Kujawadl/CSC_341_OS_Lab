@@ -11,6 +11,7 @@
 FrameTable framesInUse;
 FrameTable framesLocked;
 
+User U1, U2, SYS;
 User currentUser;
 
 int sysclock;
@@ -55,13 +56,36 @@ void loader()
 										 currentDiskAddr;
 	User *currentUser;
 
+	// For User 1, read from disk starting at location 0
 	currentPage = 0;
 	currentWord = 0;
 	currentInstr = 0;
 	currentDiskAddr = 0;
 	currentUser = &U1;
+	machine.PTBR = currentUser->proc->regs.PTBR;
 	do {
+		currentInstr = disk[currentDiskAddr];
+		main_memory[MMU((currentPage<<2) + currentWord)] = currentInstr;
+		// If at the last word in the page, increment currentPage
+		currentPage = (currentWord == 3 ? currentPage + 1 : currentPage);
+		// If at the last word in the page, reset currentWord to 0
+		currentWord = (currentWord == 3 ? 0 : currentWord + 1);
+	} while (currentInstr != 61440);
 
+	// For User 2, read from disk starting at location 100
+	currentPage = 0;
+	currentWord = 0;
+	currentInstr = 0;
+	currentDiskAddr = 100;
+	currentUser = &U2;
+	machine.PTBR = currentUser->proc->regs.PTBR;
+	do {
+		currentInstr = disk[currentDiskAddr];
+		main_memory[MMU((currentPage<<2) + currentWord)] = currentInstr;
+		// If at the last word in the page, increment currentPage
+		currentPage = (currentWord == 3 ? currentPage + 1 : currentPage);
+		// If at the last word in the page, reset currentWord to 0
+		currentWord = (currentWord == 3 ? 0 : currentWord + 1);
 	} while (currentInstr != 61440);
 }
 
@@ -257,12 +281,12 @@ void init()
 	);
 
 	// Initialize user registers; PTBR must be handled separately
-	User U1 = User(u1);
+	U1 = User(u1);
 	U1.proc->regs.PTBR = new PageTable(framesInUse);
-	User U2 = User(u2);
+	U2 = User(u2);
 	U2.proc->regs.PTBR = new PageTable(framesInUse);
-	User SYS = User(sys);
-	SYS.proc->regs.PTBR = new PageTable(framesInUse);
+	SYS = User(sys);
+	// SYS does not need a page table; it has no pages
 
 	currentUser = SYS;
 

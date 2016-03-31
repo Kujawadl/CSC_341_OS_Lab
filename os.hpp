@@ -63,7 +63,7 @@ struct User {
   User(userID uid) : id(uid), proc(new Process(uid)) {}
 };
 
-
+extern User U1, U2, SYS;
 extern User currentUser;
 
 #define READY 1
