@@ -167,7 +167,7 @@
           SyntaxHighlighter.all();
 
           $("code").each(function() {
-            this.text(this.text().replace(/<\/[^\n]+>/g, ""));
+            $(this).text($(this).text().replace(/<\/[^\n]+>/g, ""));
           });
         });
       </script>
