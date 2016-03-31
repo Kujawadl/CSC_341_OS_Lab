@@ -45,7 +45,7 @@ struct Users {
   userID id;
   queue<Process>& ready;
   queue<Process>& blocked;
-
+//
   queue<Process> readyQueues[3];
   queue<Process> blockedQueues[3];
 
