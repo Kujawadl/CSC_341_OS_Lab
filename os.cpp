@@ -121,7 +121,7 @@ void scheduler()
 		// 			 called during last iteration, i.e. current user was not BLOCKED,
 		// 			 i.e. current user must be READY.
 		dispatcher(READY);
-		switchTime = sysclock + 3;
+		switchTime = sysclock + 5;
 
 		while (sysclock < switchTime) {
 			bool running = currentUser.running;
@@ -182,9 +182,9 @@ void scheduler()
 							//}
 						// If memory is locked, dispatch to blockedQueue, load next user
 						// Reset switchtime (i.e. reset the loop) so next user gets
-						// 3 ticks.
+						// 5 ticks.
 						} else {
-							switchTime = sysclock + 3;
+							switchTime = sysclock + 5;
 						}
 					} else {
 						cout << "Invalid command for system" << endl;
@@ -276,6 +276,24 @@ void init()
 		framesInUse[i] = false;
 	}
 
+	// Initialize disk
+	int i = 0;
+	disk[i++] = 2058;
+	disk[i++] = 4102;
+	disk[i++] = 2309;
+	disk[i++] = 16640;
+	disk[i++] = 4103;
+	disk[i++] = 61440;
+	for (i = i; i < 100; i++) {disk[i] = 0;}
+	disk[i++] = 2073;
+	disk[i++] = 4102;
+	disk[i++] = 2309;
+	disk[i++] = 20736;
+	disk[i++] = 4103;
+	disk[i++] = 61440;
+	for (i = i; i < 512; i++) {disk [i] = 0;}
+
+	// Initialize default register values
 	registers defaultRegisterValues =
 	{				// Registers:
 		0,			// R1
@@ -295,18 +313,13 @@ void init()
 	User SYS = {sys, false, defaultRegisterValues};
 	SYS.regs.PTBR = new PageTable(framesInUse);
 
-	// Read in the program for u1 and u2
-	readFile();
-	U1.regs.PC = 0;
-	U2.regs.PC = 100;
-
 	readyQueue.push(U1);
 	readyQueue.push(U2);
 	currentUser = SYS;
 
 	// Initialize sysclock and switchTime
 	sysclock = 0;
-	switchTime = sysclock + 3;
+	switchTime = sysclock + 5;
 }
 
 // Main function (starts the OS)
