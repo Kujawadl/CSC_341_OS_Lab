@@ -17,6 +17,7 @@
 #include <string>
 #include <cctype>
 #include "machine.hpp"
+#include "utils.hpp"
   using namespace std;
 
 #ifndef OS
