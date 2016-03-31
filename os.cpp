@@ -15,7 +15,7 @@ bool semaphore = unlocked;
 
 int sysclock;
 int switchTime;
-userID currentUser;
+Users currentUser;
 Process processTable[64];
 
 // Dump contents of main memory and all registers and semaphore status
@@ -125,29 +125,26 @@ void semsignal()
 void dispatcher(int action)
 {
 	string titleFiller = "####################################################";
-	// Save user state
-	currentProcess.regs = machine;
-	if (action == READY) {
-		// Return user to readyQueue
-		readyQueue.push(currentProcess);
-	} else {
-		blockedQueue.push(currentProcess);
-		cout << endl << titleFiller;
-		cout << endl << "USER "  << currentProcess.id << " WAS DENIED ACCESS TO "\
-		<< "MEMORY AND PUT INTO" << endl << "THE BLOCKED QUEUE UNTIL ANOTHER " \
-		<< "PROCESS FINISHES";
-		cout << endl << titleFiller << endl << endl;
-	}
+
+	// if (action == READY) {
+	// 	// Return user to readyQueue
+	// 	readyQueue.push(currentProcess);
+	// } else {
+	// 	blockedQueue.push(currentProcess);
+	// 	cout << endl << titleFiller;
+	// 	cout << endl << "USER "  << currentProcess.id << " WAS DENIED ACCESS TO "\
+	// 	<< "MEMORY AND PUT INTO" << endl << "THE BLOCKED QUEUE UNTIL ANOTHER " \
+	// 	<< "PROCESS FINISHES";
+	// 	cout << endl << titleFiller << endl << endl;
+	// }
 	// Load next user
-	currentProcess = readyQueue.front();
-	readyQueue.pop();
-	// Load user state
-	machine = currentProcess.regs;
+	// currentProcess = readyQueue.front();
+	// readyQueue.pop();
 
 	// Output information about user switch
 
 	cout << endl << titleFiller << endl;
-	cout << "############### Switching to user " << currentProcess.id \
+	cout << "############### Switching to user " << currentUser \
 	<< " ################" << endl;
 	cout << titleFiller << endl << endl;
 }
@@ -165,20 +162,9 @@ void scheduler()
 		// NOTE: If we return to this point in the loop, the dispatcher was not
 		// 			 called during last iteration, i.e. current user was not BLOCKED,
 		// 			 i.e. current user must be READY.
-		// dispatcher(READY);
+		dispatcher(READY);
 		switchTime = sysclock + 5;
 
-		switch (currentUser) {
-			case 0:
-			currentProcess = processTable[0];
-			break;
-			case 1:
-			currentProcess = processTable[1];
-			break;
-			case 2:
-			currentProcess = processTable[2];
-			break;
-		}
 		while (sysclock < switchTime) {
 			int status = currentProcess.status;
 			// bool running = currentProcess.running;
@@ -200,32 +186,31 @@ void scheduler()
 					if (currentUser != sys) {
 
 						// ### NEED TO UPDATE FOR PAGES ###
-
-						//
-						// machine.IR = main_memory[machine.PC];
-						// // If memory is free, run as usual.
+						machine.IR = main_memory[machine.PC];
+						// If memory is free, run as usual.
 						// if (semwait() == false) {
-						// 	cout << endl << titleFiller;
-						// 	cout << endl << "USER " << currentProcess.id << " REQUESTED MEM " \
-						// 	<< "ACCESS AND ACCESS WAS GRANTED." << endl << "USER MAY " \
-						// 	<< "EXECUTE INSTRUCTIONS.";
-						// 	cout << endl << titleFiller << endl << endl;
-						// 	currentProcess.running = true;
-						// 	interpreter();
-						// 	// If last instruction executed was HLT
-						// 	if (machine.IR == 61440) {
-						// 		// Signal semaphore is unlocked
-						// 		semsignal();
-						// 		currentProcess.running = false;
-						// 		// Exit loop (current user is done)
-						// 		switchTime = sysclock;
-						// 	}
-						// 	// If memory is locked, dispatch to blockedQueue, load next user
-						// 	// Reset switchtime (i.e. reset the loop) so next user gets
-						// 	// 5 ticks.
+							// cout << endl << titleFiller;
+							// cout << endl << "USER " << currentProcess.id << " REQUESTED MEM " \
+							// << "ACCESS AND ACCESS WAS GRANTED." << endl << "USER MAY " \
+							// << "EXECUTE INSTRUCTIONS.";
+							// cout << endl << titleFiller << endl << endl;
+							// currentProcess.running = true;
+							interpreter();
+							// If last instruction executed was HLT
+							if (machine.IR == 61440) {
+								// Signal semaphore is unlocked
+								// semsignal();
+								// currentProcess.running = false;
+								// Exit loop (current user is done)
+								switchTime = sysclock;
+							}
+							// If memory is locked, dispatch to blockedQueue, load next user
+							// Reset switchtime (i.e. reset the loop) so next user gets
+							// 5 ticks.
 						// } else {
 						// 	switchTime = sysclock + 5;
 						// }
+
 					} else {
 						// ### NEED TO CALL LOADER NOW ###
 
@@ -303,7 +288,7 @@ void scheduler()
 			// 	cout << "SYS > ";
 			// }
 		}
-		currentUser = nextUser(currentUser);
+		currentUser++;
 	}
 }
 
@@ -382,12 +367,14 @@ void init()
 	Process U2 = {u2, NONE, defaultRegisterValues};
 	Process SYS = {sys, NONE, defaultRegisterValues};
 
-	processTable[0] = SYS;
-	processTable[1] = U1;
-	processTable[2] = U2;
+	// processTable[0] = SYS;
+	// processTable[1] = U1;
+	// processTable[2] = U2;
 
 	// Sys is first in the round robin system.
-	currentUser	= sys;
+	currentProcess = SYS;
+	currentUser.ready.push(U1);
+	currentUser.ready.push(U2);
 	// Read in the program for u1 and u2
 	readFile();
 
