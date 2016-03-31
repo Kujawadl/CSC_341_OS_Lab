@@ -83,6 +83,8 @@ We will now briefly talk about how components of the OS have changed during this
 #### UI
 User interface changes have not been incredibly significant since it's implementation in lab 1. The dump command has been vastly expanded to include information on page tables and the frames that are located in main memory. Otherwise, you can fully expect the same UI that was found in the previous iteration of our simulated console OS.
 
+Additionally, the running user processes has been changed. "Run" will now only utilize the rest of the user ticks, if a process is 6 ticks long, and they use only 4, then they would need to type "Run" a second time to finish off the 2 last ticks once they receive the CPU's time again. This allows the user to execute any additional commands they might want to utilize.
+
 #### Memory
 In terms of the implementation, memory is exactly the same in Lab 2 as in Lab 1. The primary difference is that there is a global variable, semaphore, which, when locked, redirects all new requests to access memory to the blocked queue, to be recalled to the ready queue once the semaphore is unlocked.
 
