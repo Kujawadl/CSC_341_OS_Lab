@@ -24,19 +24,29 @@ void dump()
 	User temp;
 	cout << endl << ">>>>>>DUMPING REGISTERS<<<<<<" << endl;
 
+	cout << "\n\tDumping Registers USER 1:" << endl;
+	cout << "\trA: " << U1.proc->regs.rA << ", r1: " << U1.proc->regs.r1 << ", r2: " \
+		<< U1.proc->regs.r2 << ", r3: " << U1.proc->regs.r3 << endl;
+	cout << "\tIR: " << U1.proc->regs.IR << ", PC: " << U1.proc->regs.PC << ", CR: " << U1.proc->regs.CR << endl;
+
+	cout << "\n\tDumping Registers USER 2:" << endl;
+	cout << "\trA: " << U1.proc->regs.rA << ", r1: " << U1.proc->regs.r1 << ", r2: " \
+		<< U1.proc->regs.r2 << ", r3: " << U1.proc->regs.r3 << endl;
+	cout << "\tIR: " << U1.proc->regs.IR << ", PC: " << U1.proc->regs.PC << ", CR: " << U1.proc->regs.CR << endl;
+
 	// Dump memory
 	cout << endl << ">>>>>>DUMPING MEMORY<<<<<<" << endl;
 	// Print table header
 	cout << "_____________________________________" \
 		<< "__________________________" << endl;
-	cout << "ad: valu | ad: valu | ad: valu | ad: " \
-		<< "valu | ad: valu | ad: valu" << endl;
+	cout << "FRAME # | ad: valu | ad: valu | ad: " \
+		<< "valu | ad: valu " << endl;
 	cout << "_____________________________________" \
 		<< "__________________________" << endl;
 	// Print table contents
 	for (int i = 0; i < 256; i++) {
-		if (i % 6 == 0)
-		cout << endl;
+		if (i % 4 == 0)
+			cout << endl  << setw(5) << (i / 4) << "   | ";
 		else
 		cout << " | ";
 		cout << hex;
@@ -136,7 +146,7 @@ void scheduler()
 		// 			 i.e. current user must be READY.
 		if (sysclock != 0)
 			dispatcher(READY);
-		switchTime = sysclock + 5;
+		switchTime = sysclock + 4;
 
 		while (sysclock < switchTime) {
 			bool running = currentUser.proc->running;
@@ -194,13 +204,7 @@ void scheduler()
 								currentUser.proc->running = false;
 								// Exit loop (current user is done)
 								switchTime = sysclock;
-							//}
-						// If memory is locked, dispatch to blockedQueue, load next user
-						// Reset switchtime (i.e. reset the loop) so next user gets
-						// 5 ticks.
-						} else {
-							switchTime = sysclock + 5;
-						}
+							}
 					} else {
 						loader();
 						cout << "The loader function was called" << endl;
