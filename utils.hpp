@@ -10,8 +10,11 @@
 #define UTILS
 
 #include <iostream> // cout
-#include <iomanip>  // setw(), left, right
-#include <random>   // random number generators
+#include <iomanip>  // setw, left, right
+#include <cstdlib>  // srand, rand
+#include <ctime>    // time
+#include <iterator> // begin, end
+#include <string>   // to_string
 
 #define MMU_DEBUG
 

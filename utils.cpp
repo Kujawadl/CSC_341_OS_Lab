@@ -61,20 +61,16 @@ int& PageTable::operator[] (const int index)
       throw std::out_of_range("No more available frames!");
     }
 
-    // Random number generator setup
-    std::default_random_engine rng;
-    rng.seed(std::random_device()());
-    std::uniform_int_distribution<std::default_random_engine::result_type>
-      rand0_63(0, 63);
-    // End RNG setup
+    // Seed random number generator
+    srand(time(NULL));
 
     // Find the next available frame number
-    int i = rand0_63(rng);
+    int i = rand() % 64;
     while (_framesInUse[i] == true) {
       #ifdef MMU_DEBUG
       std::cout << "\tFrame #" << i << " is in use..." << std::endl;
       #endif
-      i = rand0_63(rng);
+      i = rand() % 64;
     }
     #ifdef MMU_DEBUG
     std::cout << "Frame #" << i << " is available!" << std::endl;
