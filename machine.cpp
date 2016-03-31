@@ -11,12 +11,33 @@
 // Initialize machine registers
 registers machine = {0, 0, 0, 0, 0, 0, 0};
 
+// Declare main memory and disk
 unsigned short int main_memory[256];
+unsigned short int disk[512];
+
+// Memory Management Unit
+// Takes a logical address and converts it to a physical address
+// by looking up frame numbers in the table store in PTBR
+// Throws out_of_range exception if PTBR is null
+unsigned short int MMU(unsigned short int logicalAddress) {
+	if (!machine.PTBR) { // If PTBR pointer is null, throw an exception
+		throw std::out_of_range("Page table base register is not initialized!");
+	}
+	unsigned short int page = (logicalAddress&252)>>2; // Returns 0-63
+	unsigned short int offset = logicalAddress & 4; // Returns 0-3
+
+	// Dereferenced PTBR pointer = PageTable object
+	// operator[] either returns a fram number (if one is allocated to the page)
+	// or allocates an empty frame to the page, then returns that frame number
+	unsigned short int frame = (*machine.PTBR)[page];
+	return ((frame<<2) + offset); // Bitshift frame# to the frame offset position.
+																// Offset remains the same
+}
 
 // Uses value in IR to determine course of action
 // Returns false if errors
 bool interpreter() {
-	machine.IR = main_memory[machine.PC];
+	machine.IR = main_memory[MMU(machine.PC)];
 	machine.PC++; // Increment Program Counter
 	unsigned short int op = getOpcode(machine.IR);
 	switch (op) {
@@ -94,7 +115,7 @@ bool LOD() {
 	unsigned short int operand = getOperand(machine.IR);
 	unsigned short int *reg = getRegister();
 
-	*reg = (addr == DIRECT ? main_memory[operand] : operand);
+	*reg = (addr == DIRECT ? main_memory[MMU(operand)] : operand);
 
 	#ifdef DEBUG
 	printDebug("LOD");
@@ -104,8 +125,9 @@ bool LOD() {
 
 // Stores a value from a register to a memory location
 bool STO() {
+	unsigned short int operand = getOperand(machine.IR);
 	unsigned short int *reg = getRegister();
-	main_memory[getOperand(machine.IR)] = *reg;
+	main_memory[MMU(operand)] = *reg;
 
 	#ifdef DEBUG
 	printDebug("STO");
@@ -119,8 +141,8 @@ bool ADD() {
 	unsigned short int operand = getOperand(machine.IR);
 	unsigned short int addr = getAddrMode(machine.IR);
 	int over = (int)machine.rA;
-	machine.rA += (addr == DIRECT ? main_memory[operand] : operand);
-	over += (int)(addr == DIRECT ? main_memory[operand] : operand);
+	machine.rA += (addr == DIRECT ? main_memory[MMU(operand)] : operand);
+	over += (int)(addr == DIRECT ? main_memory[MMU(operand)] : operand);
 
 	#ifdef DEBUG
 	printDebug("ADD");
@@ -145,8 +167,8 @@ bool SUB() {
 	unsigned short int operand = getOperand(machine.IR);
 	int over = (int)machine.rA;
 
-	machine.rA -= (addr == DIRECT ? main_memory[operand] : operand);
-	over -= (int)(addr == DIRECT ? main_memory[operand] : operand);
+	machine.rA -= (addr == DIRECT ? main_memory[MMU(operand)] : operand);
+	over -= (int)(addr == DIRECT ? main_memory[MMU(operand)] : operand);
 
 	#ifdef DEBUG
 	printDebug("SUB");
@@ -172,8 +194,8 @@ bool ADR() {
 	unsigned short int operand = getOperand(machine.IR);
 	int over = (int)*reg;
 
-	*reg += (addr == DIRECT ? main_memory[operand] : operand);
-	over += (int)(addr == DIRECT ? main_memory[operand] : operand);
+	*reg += (addr == DIRECT ? main_memory[MMU(operand)] : operand);
+	over += (int)(addr == DIRECT ? main_memory[MMU(operand)] : operand);
 
 	#ifdef DEBUG
 	printDebug("ADR");
@@ -199,8 +221,8 @@ bool SUR() {
 	unsigned short int operand = getOperand(machine.IR);
 	int over = (int)*reg;
 
-	*reg -= (addr == DIRECT ? main_memory[operand] : operand);
-	over -= (int)(addr == DIRECT ? main_memory[operand] : operand);
+	*reg -= (addr == DIRECT ? main_memory[MMU(operand)] : operand);
+	over -= (int)(addr == DIRECT ? main_memory[MMU(operand)] : operand);
 
 	#ifdef DEBUG
 	printDebug("SUR");
@@ -222,7 +244,7 @@ bool SUR() {
 // register, and the address of a value provided in the arguments
 bool AND() {
 	unsigned short int *reg = getRegister();
-	unsigned short int operand =  main_memory[getOperand(machine.IR)];
+	unsigned short int operand =  main_memory[MMU(getOperand(machine.IR))];
 	unsigned short int result = (*reg & operand);
 
 	*reg = result; // set the new result into the register specified
@@ -239,7 +261,7 @@ bool AND() {
 // register, and the address of a value provided in the arguments
 bool IOR() {
 	unsigned short int *reg = getRegister();
-	unsigned short int operand =  main_memory[getOperand(machine.IR)];
+	unsigned short int operand =  main_memory[MMU(getOperand(machine.IR))];
 	unsigned short int result = (*reg | operand);
 
 	*reg = result; // set the new result into the register specified
@@ -278,7 +300,7 @@ bool JMP() {
 	unsigned short int addr = getAddrMode(machine.IR);
 	unsigned short int jmpTo;
 	if (addr == DIRECT) {
-		jmpTo = main_memory[getOperand(machine.IR)];
+		jmpTo = main_memory[MMU(getOperand(machine.IR))];
 		// Check high-order bits
 		if ((jmpTo & 65280) != 0)
 		return false;
@@ -340,7 +362,7 @@ bool CMP() {
 	unsigned short int left_operand, right_operand;
 
 	left_operand = *reg;
-	right_operand = (addr == DIRECT ? main_memory[operand] : operand);
+	right_operand = (addr == DIRECT ? main_memory[MMU(operand)] : operand);
 
 	if (left_operand < right_operand) {
 		machine.CR = LST;

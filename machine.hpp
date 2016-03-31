@@ -21,7 +21,6 @@
 #undef DEBUG_VERBOSE
 //undef DEBUG
 
-
 // If DEBUG_VERBOSE, then DEBUG
 #ifdef DEBUG_VERBOSE
 	#ifndef DEBUG
@@ -53,13 +52,20 @@
 typedef struct {
 	unsigned short int r1, r2, r3, rA, IR, PC:8;
 	unsigned short int CR:3;
+	PageTable* PTBR;
 } registers;
 
-// Declare and initialize machine registers
+// Declare machine registers
 extern registers machine;
 
-// Declare main memory
+// Declare main memory and disk
 extern unsigned short int main_memory[256];
+extern unsigned short int disk[512];
+
+// Memory Management Unit
+// Takes a logical address and converts it to a physical address
+// by looking up frame numbers in the table store in PTBR
+unsigned short int MMU(unsigned short int logicalAddress);
 
 // Uses value in IR to determine course of action
 // Returns false if errors
