@@ -63,15 +63,9 @@ void dispatcher(int action);
 // Round-robin scheduler, 3 ticks per user
 void scheduler();
 
-// Read program into main memory
-void readFile();
-
 // Convert a string command (run, dmp, etc) into an int that can be used
 // in a switch case statement.
 int cmdToInt(string);
-
-// Case-insensitive string comparison
-bool my_strcasecmp(string str1, string str2);
 
 // Initialize all values required by the OS
 void init();

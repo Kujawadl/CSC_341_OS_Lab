@@ -18,6 +18,9 @@
 // 64 4-word frames = 256 words of memory
 #define NUM_FRAMES 64
 
+// Case-insensitive string comparison
+bool my_strcasecmp(std::string str1, std::string str2);
+
 // Bit array containing information about the frames in memory
 typedef bool FrameTable[NUM_FRAMES];
 

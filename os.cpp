@@ -228,22 +228,6 @@ int cmdToInt(string cmd)
 	else return -1;
 }
 
-// Case-insensitive string comparison
-bool my_strcasecmp(string str1, string str2)
-{
-	int length1 = str1.length();
-	for (int i = 0; i < length1; i++) {
-		char &c = str1.at(i);
-		c = tolower(c);
-	}
-	int length2 = str2.length();
-	for (int i = 0; i < length2; i++) {
-		char &c = str2.at(i);
-		c = tolower(c);
-	}
-	return ((str1 == str2) ? true : false);
-}
-
 // Initializes all values required by the OS
 void init()
 {
