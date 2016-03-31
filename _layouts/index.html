@@ -166,12 +166,6 @@
           // Attempt to highlight syntax once load is complete
           SyntaxHighlighter.all();
         });
-
-        $(window).load(function() {
-          $("code").each(function() {
-            $(this).text($(this).text().replace(/<\/[^\n]+>/g, ""));
-          });
-        });
       </script>
 
       <p><a name="out_txt"></a></p>
@@ -212,5 +206,13 @@
       <p><a name="listing_makefile"></a></p>
       <h3><a id="makefile" class="anchor" href="#makefile" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>makefile</h3>
       <pre id="makefile_code" class="syntaxhighlighter brush: c; toolbar: false; tab-size: 2; ruler: false"></pre>
-    </div></body>
+    </div>
+    <script>    
+      $(window).load(function() {
+        $("code").each(function() {
+          $(this).text($(this).text().replace(/<\/[^\n]+>/g, ""));
+        });
+      });
+    </script>
+  </body>
 </html>
