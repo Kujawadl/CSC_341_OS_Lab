@@ -1,5 +1,5 @@
 all: os.o machine.o
-	g++ -std=c++98 -ggdb .machine.o .os.o -o os
+	g++ -std=c++98 -ggdb .utils.o .machine.o .os.o -o os
 
 os.o: os.hpp os.cpp machine.o utils.o
 	g++ -std=c++98 -ggdb -c os.cpp -o .os.o
