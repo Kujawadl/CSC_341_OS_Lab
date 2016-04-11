@@ -12,10 +12,11 @@ FrameTable framesInUse;
 FrameTable framesLocked;
 
 User U1, U2, SYS;
-User currentUser;
 
-int sysclock;
-int switchTime;
+queue<Process*> RQ1;
+queue<Process*> RQ2;
+queue<Process*> SQ1;
+queue<Process*> SQ2;
 
 // Dump contents of main memory and all registers
 void dump()
@@ -30,9 +31,9 @@ void dump()
 	cout << "\tIR: " << U1.proc->regs.IR << ", PC: " << U1.proc->regs.PC << ", CR: " << U1.proc->regs.CR << endl;
 
 	cout << "\n\tDumping Registers USER 2:" << endl;
-	cout << "\trA: " << U1.proc->regs.rA << ", r1: " << U1.proc->regs.r1 << ", r2: " \
-		<< U1.proc->regs.r2 << ", r3: " << U1.proc->regs.r3 << endl;
-	cout << "\tIR: " << U1.proc->regs.IR << ", PC: " << U1.proc->regs.PC << ", CR: " << U1.proc->regs.CR << endl;
+	cout << "\trA: " << U2.proc->regs.rA << ", r1: " << U2.proc->regs.r1 << ", r2: " \
+		<< U2.proc->regs.r2 << ", r3: " << U2.proc->regs.r3 << endl;
+	cout << "\tIR: " << U2.proc->regs.IR << ", PC: " << U2.proc->regs.PC << ", CR: " << U2.proc->regs.CR << endl;
 
 	// Dump memory
 	cout << endl << ">>>>>>DUMPING MEMORY<<<<<<" << endl;
@@ -112,111 +113,231 @@ void loader()
 	} while (currentInstr != 61440);
 }
 
-// Responsible for swapping users in and out, and controlling
-// which users are blocked vs which are ready.
-void dispatcher(int action)
-{
-	string titleFiller = "####################################################";
-	// Save user state
-	currentUser.proc->regs = machine;
-	switch (currentUser.id++) {
-		case sys: currentUser = U1; break;
-    case u1: currentUser = U2; break;
-    case u2: currentUser = SYS; break;
-	}
-		machine = currentUser.proc->regs;
-		// Output information about user switch
-
-		cout << endl << titleFiller << endl;
-		cout << "############### Switching to user " << currentUser.id \
-		<< " ################" << endl;
-		cout << titleFiller << endl << endl;
-}
-
-// Round-robin scheduler, 3 ticks per user
-void scheduler()
-{
-	string titleFiller = "######################################" \
-	 "##############";
-	// Scheduler code
+void scheduler() {
 	while (true) {
-		// Load next user and assign its max time (5 ticks)
-		// NOTE: If we return to this point in the loop, the dispatcher was not
-		// 			 called during last iteration, i.e. current user was not BLOCKED,
-		// 			 i.e. current user must be READY.
-		if (sysclock != 0)
-			dispatcher(READY);
-		switchTime = sysclock + 4;
+		Process* currentProcess;
+		int priority = 0;
+		cout << endl << endl << endl << "Timer Interupt Signaled!" << endl << endl << endl;
+		cout << endl << "RQ1:";
+		for (int i = 0; i < RQ1.size(); i++) {
+			cout << RQ1.front()->id;
+			RQ1.push(RQ1.front());
+			RQ1.pop();
+			if (i < RQ1.size() -1) cout << "->";
+		}
+		cout << endl << "RQ2:";
+		for (int i = 0; i < RQ2.size(); i++) {
+			cout << RQ2.front()->id;
+			RQ2.push(RQ2.front());
+			RQ2.pop();
+			if (i < RQ2.size() -1) cout << "->";
+		}
+		cout << endl << "SQ1:";
+		for (int i = 0; i < SQ1.size(); i++) {
+			cout << SQ1.front()->id;
+			SQ1.push(SQ1.front());
+			SQ1.pop();
+			if (i < SQ1.size() -1) cout << "->";
+		}
+		cout << endl << "SQ2:";
+		for (int i = 0; i < SQ2.size(); i++) {
+			cout << SQ2.front()->id;
+			SQ2.push(SQ2.front());
+			SQ2.pop();
+			if (i < SQ2.size() -1) cout << "->";
+		}
+		cout << endl << endl << endl;
 
-		while (sysclock < switchTime) {
-			bool running = currentUser.proc->running;
-			bool instrLoaded = !(getOpcode(machine.IR) == 15);
-			sysclock++;
-			// If current user is not running, prompt for a command
-			if (currentUser.id != sys && !running) {
-				cout << "USER" << (currentUser.id == u1 ? 1 : 2) << " > ";
-			} else if (currentUser.id != sys && running) {
-				interpreter();
-				// If last instruction executed was HLT
-				if (machine.IR == 61440) {
-					currentUser.proc->running = false;
-					// Exit loop (current user is done)
-					switchTime = sysclock;
-				}
+		// Search the queues for the next process
+		if (!RQ1.empty()) {
+			currentProcess = RQ1.front();
+			RQ1.pop();
+			priority = 1;
+		} else if (!RQ2.empty()) {
+			currentProcess = RQ2.front();
+			RQ2.pop();
+			priority = 2;
+		// If no next process, set RQs to SQs
+		} else {
+			while (!SQ1.empty()) {
+				RQ1.push(SQ1.front());
+				SQ1.pop();
+			}
+			while (!SQ2.empty()) {
+				RQ2.push(SQ2.front());
+				SQ2.pop();
+			}
+			SQ1 = queue<Process*>();
+			SQ2 = queue<Process*>();
+
+			cout << endl << endl << endl << "Moving SQ to RQ!" << endl << endl << endl;
+			cout << endl << "RQ1:";
+			for (int i = 0; i < RQ1.size(); i++) {
+				cout << RQ1.front()->id;
+				RQ1.push(RQ1.front());
+				RQ1.pop();
+				if (i < RQ1.size() -1) cout << "->";
+			}
+			cout << endl << "RQ2:";
+			for (int i = 0; i < RQ2.size(); i++) {
+				cout << RQ2.front()->id;
+				RQ2.push(RQ2.front());
+				RQ2.pop();
+				if (i < RQ2.size() -1) cout << "->";
+			}
+			cout << endl << "SQ1:";
+			for (int i = 0; i < SQ1.size(); i++) {
+				cout << SQ1.front()->id;
+				SQ1.push(SQ1.front());
+				SQ1.pop();
+				if (i < SQ1.size() -1) cout << "->";
+			}
+			cout << endl << "SQ2:";
+			for (int i = 0; i < SQ2.size(); i++) {
+				cout << SQ2.front()->id;
+				SQ2.push(SQ2.front());
+				SQ2.pop();
+				if (i < SQ2.size() -1) cout << "->";
+			}
+			cout << endl << endl << endl;
+		}
+
+
+		if (priority != 0) {
+			cout << "Priority = " << priority << endl;
+			// Run the process
+			if (currentProcess->id == sys) {
+				// User interface is a special case
+				userinterface();
+				SQ1.push(currentProcess);
 			} else {
-				cout << "SYS > ";
-			}
-
-		// If necessary, take input from command line
-		if (!running || currentUser.id == sys) {
-			string input;
-			getline(cin, input);
-			switch (cmdToInt(input)) {
-				case 0: // "run"
-					if (currentUser.id != sys) {
-						machine.IR = main_memory[machine.PC];
-						currentUser.proc->running = true;
-						interpreter();
-						// If last instruction executed was HLT
-						if (machine.IR == 61440) {
-							currentUser.proc->running = false;
-							// Exit loop (current user is done)
-							switchTime = sysclock;
-						}
-					} else {
-						loader();
-						cout << "The loader function was called" << endl;
-					}
-					break;
-				case 1: // "dmp"
-					if (currentUser.id == sys) {
-						dump();
-					} else {
-						cout << "Invalid command for users" << endl;
-					}
-					break;
-				case 2: // "nop"
-					// Exit loop (current user is done)
-					switchTime = sysclock;
-					break;
-				case 3: // "stp"
-					if (currentUser.id == sys) {
-						exit(EXIT_SUCCESS);
-					} else {
-						cout << "Invalid command for users" << endl;
-					}
-					break;
-				default:
-					cout << "Invalid command: " << input << endl;
-					break;
+				int starttime = sysclock;
+				// Load state, run, save state
+				machine = currentProcess->regs;
+				bool success = interpreter();
+				// If process encountered an error or halted, set running to false
+				if (!success || machine.IR == 61440) {
+					currentProcess->running = false;
 				}
-			}
-
-			// If user's time is up, set running to false
-			if (sysclock >= switchTime) {
-				currentUser.proc->running = false;
+				currentProcess->regs = machine;
+				currentProcess->time += sysclock - starttime;
+				// Return process to the shadow queue
+				if (priority == 1) {
+					SQ1.push(currentProcess);
+				} else if (priority == 2) {
+					SQ2.push(currentProcess);
+				}
 			}
 		}
+	}
+}
+
+void userinterface() {
+	string cmd;
+	int timer_interrupt = 0;
+
+	while (timer_interrupt < QUANTUM) {
+		cout << "SYS > ";
+		cin >> cmd;
+		sysclock++;
+
+		switch (cmdToInt(cmd)) {
+			case 0: // "run"
+				loader();
+				cout << "The loader function was called" << endl;
+				break;
+			case 1: // "dmp"
+				dump();
+				break;
+			case 2: // "nop"
+				timer_interrupt = QUANTUM;
+				break;
+			case 3: // "stp"
+				// If user programs did not cleanly terminate, exit failure
+				if (!U1.proc->running && !U2.proc->running) {
+					exit(EXIT_SUCCESS);
+				} else {
+					exit(EXIT_FAILURE);
+				}
+				break;
+			case 4: // "time"
+				cout << "System clock is at "<< sysclock << " ticks" << endl;
+				break;
+			default:
+				cout << "Invalid command: " << cmd << endl;
+				break;
+		}
+		timer_interrupt++;
+	}
+	timer_interrupt = 0;
+
+	while(timer_interrupt < QUANTUM) {
+		cout << "USER1 > ";
+		cin >> cmd;
+		sysclock++;
+
+		switch(cmdToInt(cmd)) {
+			case 0: // "run"
+				if (U1.proc->running) {
+					cout << "User 1 already has a running process!" << endl;
+				} else {
+					cout << "Adding P1 to RQ2" << endl;
+					RQ2.push(U1.proc);
+					U1.proc->running = true;
+				}
+				break;
+			case 1: // "dmp"
+				cout << "Invalid user command!" << endl;
+				break;
+			case 2: // "nop"
+				timer_interrupt = QUANTUM;
+				break;
+			case 3: // "stp"
+				cout << "Invalid user command!" << endl;
+				break;
+			case 4: // "time"
+				cout << "User1 Process has run for " << U1.proc->time << " ticks" << endl;
+				break;
+			default:
+				cout << "Invalid command: " << cmd << endl;
+				break;
+		}
+		timer_interrupt++;
+	}
+	timer_interrupt = 0;
+
+	while(timer_interrupt < QUANTUM) {
+		cout << "USER2 > ";
+		cin >> cmd;
+		sysclock++;
+
+		switch(cmdToInt(cmd)) {
+			case 0: // "run"
+				if (U2.proc->running) {
+					cout << "User 2 already has a running process!" << endl;
+				} else {
+					cout << "Adding P2 to RQ2" << endl;
+					RQ2.push(U2.proc);
+					U2.proc->running = true;
+				}
+				break;
+			case 1: // "dmp"
+				cout << "Invalid user command!" << endl;
+				break;
+			case 2: // "nop"
+				timer_interrupt = QUANTUM;
+				break;
+			case 3: // "stp"
+				cout << "Invalid user command!" << endl;
+				break;
+			case 4: // "time"
+				cout << "User2 Process has run for " << U2.proc->time << " ticks" << endl;
+				break;
+			default:
+				cout << "Invalid command: " << cmd << endl;
+				break;
+		}
+		timer_interrupt++;
 	}
 }
 
@@ -228,6 +349,7 @@ int cmdToInt(string cmd)
 	else if (my_strcasecmp(cmd, "dmp")) return 1;
 	else if (my_strcasecmp(cmd, "nop")) return 2;
 	else if (my_strcasecmp(cmd, "stp")) return 3;
+	else if (my_strcasecmp(cmd, "time")) return 4;
 	else return -1;
 }
 
@@ -279,11 +401,15 @@ void init()
 	SYS = User(sys);
 	// SYS does not need a page table; it has no pages
 
-	currentUser = SYS;
+	RQ1 = queue<Process*>();
+	RQ2 = queue<Process*>();
+	SQ1 = queue<Process*>();
+	SQ2 = queue<Process*>();
 
-	// Initialize sysclock and switchTime
+	RQ1.push(SYS.proc);
+
+	// Initialize sysclock
 	sysclock = 0;
-	switchTime = sysclock + 5;
 }
 
 // Main function (starts the OS)

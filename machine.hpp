@@ -47,6 +47,8 @@
 #define DIRECT 0
 #define IMMEDIATE 1
 
+#define QUANTUM 3
+
 // Define machine registers type
 // Machine register type also has a condition code register
 struct registers{
@@ -57,6 +59,9 @@ struct registers{
 	registers(int pR1, int pR2, int pR3, int pRA, int pIR, int pPC, int pCR) :
 		r1(pR1), r2(pR2), r3(pR3), rA(pRA), IR(pIR), PC(pPC), CR(pCR), PTBR(NULL) {}
 };
+
+extern int sysclock;
+extern int timer_interrupt;
 
 // Declare machine registers
 extern registers machine;

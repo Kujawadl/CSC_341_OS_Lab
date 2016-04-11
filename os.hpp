@@ -30,29 +30,30 @@ extern FrameTable framesLocked;
 
 // Define the user struct
 enum userID {sys, u1, u2};
-userID& operator++ (userID& curr) {
-  switch (curr) {
-    case sys: curr = u1; break;
-    case u1: curr = u2; break;
-    case u2: curr = sys; break;
-  }
-  return curr;
-}
-userID operator++ (userID& curr, int) {
-  userID orig = curr;
-  switch (curr) {
-    case sys: curr = u1; break;
-    case u1: curr = u2; break;
-    case u2: curr = sys; break;
-  }
-  return orig;
-}
+// userID& operator++ (userID& curr) {
+//   switch (curr) {
+//     case sys: curr = u1; break;
+//     case u1: curr = u2; break;
+//     case u2: curr = sys; break;
+//   }
+//   return curr;
+// }
+// userID operator++ (userID& curr, int) {
+//   userID orig = curr;
+//   switch (curr) {
+//     case sys: curr = u1; break;
+//     case u1: curr = u2; break;
+//     case u2: curr = sys; break;
+//   }
+//   return orig;
+// }
 struct Process {
   userID id;
+  int time;
   bool running;
   registers regs;
 
-  Process(userID uid) : id(uid), running(false),
+  Process(userID uid) : id(uid), time(0), running(false),
     regs(0, 0, 0, 0, 61440, 0, 0) {}
 };
 struct User {
@@ -69,10 +70,6 @@ extern User currentUser;
 #define READY 1
 #define BLOCKED 0
 
-// Variables used by the scheduler
-extern int sysclock;
-extern int switchTime;
-
 // Dump contents of main memory and all registers
 void dump();
 
@@ -86,12 +83,11 @@ void printQueue(queue<User> &q,int num);
 // appropriate. Currently takes no args, returns no vals, everything hardcoded.
 void loader();
 
-// Responsible for swapping users in and out, and controlling
-// which users are blocked vs which are ready.
-void dispatcher(int action);
-
 // Round-robin scheduler, 3 ticks per user
 void scheduler();
+
+// The user interface, prompting for input
+void userinterface();
 
 // Convert a string command (run, dmp, etc) into an int that can be used
 // in a switch case statement.

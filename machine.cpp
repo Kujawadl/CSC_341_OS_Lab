@@ -8,6 +8,9 @@
 
 #include "machine.hpp"
 
+int sysclock;					// Keep track of absolute time
+int timer_interrupt;	// Send interrupt every QUANTUM ticks
+
 // Initialize machine registers
 registers machine = registers(0, 0, 0, 0, 0, 0, 0);
 
@@ -49,28 +52,36 @@ unsigned short int MMU(unsigned short int logicalAddress) {
 // Uses value in IR to determine course of action
 // Returns false if errors
 bool interpreter() {
-	machine.IR = main_memory[MMU(machine.PC)];
-	machine.PC++; // Increment Program Counter
-	unsigned short int op = getOpcode(machine.IR);
-	switch (op) {
-		case 0:  return LOD(); break;
-		case 1:  return STO(); break;
-		case 2:  return ADD(); break;
-		case 3:  return SUB(); break;
-		case 4:  return ADR(); break;
-		case 5:  return SUR(); break;
-		case 6:  return AND(); break;
-		case 7:  return IOR(); break;
-		case 8:  return NOT(); break;
-		case 9:  return JMP(); break;
-		case 10: return JEQ(); break;
-		case 11: return JGT(); break;
-		case 12: return JLT(); break;
-		case 13: return CMP(); break;
-		case 14: return CLR(); break;
-		case 15: return HLT(); break;
-		default: return false; break;
+	bool success = true;
+	//While no error flag and no timer interrupt
+	while (success && timer_interrupt < QUANTUM) {
+		machine.IR = main_memory[MMU(machine.PC)];
+		machine.PC++; // Increment Program Counter
+		unsigned short int op = getOpcode(machine.IR);
+		switch (op) {
+			case 0:  success = LOD(); break;
+			case 1:  success = STO(); break;
+			case 2:  success = ADD(); break;
+			case 3:  success = SUB(); break;
+			case 4:  success = ADR(); break;
+			case 5:  success = SUR(); break;
+			case 6:  success = AND(); break;
+			case 7:  success = IOR(); break;
+			case 8:  success = NOT(); break;
+			case 9:  success = JMP(); break;
+			case 10: success = JEQ(); break;
+			case 11: success = JGT(); break;
+			case 12: success = JLT(); break;
+			case 13: success = CMP(); break;
+			case 14: success = CLR(); break;
+			case 15: return HLT(); break; //Quit early on HLT
+			default: success = false; break;
+		}
+		sysclock++;
+		timer_interrupt++;
 	}
+	timer_interrupt = 0;
+	return success;
 }
 
 // Retrieves the opcode
