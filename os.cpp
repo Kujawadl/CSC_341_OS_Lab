@@ -22,50 +22,62 @@ queue<Process*> SQ2;
 void dump()
 {
 	// Dump Registers
-	User temp;
-	cout << endl << ">>>>>>DUMPING REGISTERS<<<<<<" << endl;
+	cout << textbox("Dumping Process States:");
 
-	cout << "\n\tDumping Registers USER 1:" << endl;
-	cout << "\trA: " << U1.proc->regs.rA << ", r1: " << U1.proc->regs.r1 << ", r2: " \
-		<< U1.proc->regs.r2 << ", r3: " << U1.proc->regs.r3 << endl;
-	cout << "\tIR: " << U1.proc->regs.IR << ", PC: " << U1.proc->regs.PC << ", CR: " << U1.proc->regs.CR << endl;
+	cout << "Dumping Registers for PID = 1:" << endl;
+	cout << "\trA: " << U1.proc->regs.rA \
+			 << ", r1: " << U1.proc->regs.r1 \
+			 << ", r2: " << U1.proc->regs.r2 \
+			 << ", r3: " << U1.proc->regs.r3 << endl;
+	cout << "\tIR: " << U1.proc->regs.IR
+			 << ", PC: " << U1.proc->regs.PC \
+			 << ", CR: " << U1.proc->regs.CR << endl;
 
-	cout << "\n\tDumping Registers USER 2:" << endl;
-	cout << "\trA: " << U2.proc->regs.rA << ", r1: " << U2.proc->regs.r1 << ", r2: " \
-		<< U2.proc->regs.r2 << ", r3: " << U2.proc->regs.r3 << endl;
-	cout << "\tIR: " << U2.proc->regs.IR << ", PC: " << U2.proc->regs.PC << ", CR: " << U2.proc->regs.CR << endl;
+	cout << "Dumping Registers for PID = 2:" << endl;
+	cout << "\trA: " << U2.proc->regs.rA \
+			 << ", r1: " << U2.proc->regs.r1 \
+			 << ", r2: " << U2.proc->regs.r2 \
+			 << ", r3: " << U2.proc->regs.r3 << endl;
+	cout << "\tIR: " << U2.proc->regs.IR \
+			 << ", PC: " << U2.proc->regs.PC \
+			 << ", CR: " << U2.proc->regs.CR << endl;
 
 	// Dump memory
-	cout << endl << ">>>>>>DUMPING MEMORY<<<<<<" << endl;
+	cout << textbox("Dumping memory:");
 	// Print table header
-	cout << "_____________________________________" \
-		<< "__________________________" << endl;
-	cout << "FRAME # | ad: valu | ad: valu | ad: " \
-		<< "valu | ad: valu " << endl;
-	cout << "_____________________________________" \
-		<< "__________________________" << endl;
+	cout << setfill('0');
+	cout << "*"; for (int i = 0; i < 78; i++) cout << "-"; cout << "*" << endl;
+	cout << "| Frame Table ||| ";
+		for (int i = 0; i < 22; i++) cout << " "; cout << "Memory contents";
+		for (int i = 0; i < 23; i++) cout << " "; cout << " |" << endl;
+	cout << "*"; for (int i = 0; i < 78; i++) cout << "-"; cout << "*" << endl;
+	cout << "| Fr# | InUse |";
+		for (int i = 0; i < 4; i++) cout << "|| Addr: Value  ";
+		cout << "|" << endl;
+	cout << "*"; for (int i = 0; i < 78; i++) cout << "-"; cout << "*" << endl;
+
 	// Print table contents
-	for (int i = 0; i < 256; i++) {
-		if (i % 4 == 0)
-			cout << endl  << setw(5) << (i / 4) << "   | ";
-		else
-		cout << " | ";
-		cout << hex;
-		cout << setw(2) << i << ": " << setw(4) << main_memory[i];
-		cout << dec;
+	for (int i = 0; i < 64; i++) {
+		cout << "|  " << setw(2) << i << " |   "
+				 << (framesInUse[i] ? "Y" : " ") << "   ";
+		cout << "|" << hex;
+		for (int j = 0; j < 4; j++) {
+			cout << "|| 0x" << setw(2) << i + j
+					 << ": 0x" << setw(4) << main_memory[i+j]
+					 << " ";
+		}
+		cout << "|" << dec << endl;
 	}
+	cout << "*"; for (int i = 0; i < 78; i++) cout << "-"; cout << "*" << endl;
+	cout << setfill(' ');
 
-	cout << endl << endl << "User1 Page Table:" << endl;
-
-	U1.proc->regs.PTBR->print();
-
-	cout << endl << endl << "User2 Page Table:";
-
-	U2.proc->regs.PTBR->print();
-
-	cout << endl << endl;
-
-	cout << endl << endl << ">\tEnd of dump" << endl << endl;
+	// cout << endl << endl << "User1 Page Table:" << endl;
+	//
+	// U1.proc->regs.PTBR->print();
+	//
+	// cout << endl << endl << "User2 Page Table:";
+	//
+	// U2.proc->regs.PTBR->print();
 }
 
 // Loads the two user programs from disk into main memory, paging them as
@@ -117,36 +129,6 @@ void scheduler() {
 	while (true) {
 		Process* currentProcess;
 		int priority = 0;
-		cout << endl << endl << endl << "Timer Interupt Signaled!" << endl << endl << endl;
-		cout << endl << "RQ1:";
-		for (int i = 0; i < RQ1.size(); i++) {
-			cout << RQ1.front()->id;
-			RQ1.push(RQ1.front());
-			RQ1.pop();
-			if (i < RQ1.size() -1) cout << "->";
-		}
-		cout << endl << "RQ2:";
-		for (int i = 0; i < RQ2.size(); i++) {
-			cout << RQ2.front()->id;
-			RQ2.push(RQ2.front());
-			RQ2.pop();
-			if (i < RQ2.size() -1) cout << "->";
-		}
-		cout << endl << "SQ1:";
-		for (int i = 0; i < SQ1.size(); i++) {
-			cout << SQ1.front()->id;
-			SQ1.push(SQ1.front());
-			SQ1.pop();
-			if (i < SQ1.size() -1) cout << "->";
-		}
-		cout << endl << "SQ2:";
-		for (int i = 0; i < SQ2.size(); i++) {
-			cout << SQ2.front()->id;
-			SQ2.push(SQ2.front());
-			SQ2.pop();
-			if (i < SQ2.size() -1) cout << "->";
-		}
-		cout << endl << endl << endl;
 
 		// Search the queues for the next process
 		if (!RQ1.empty()) {
@@ -167,44 +149,9 @@ void scheduler() {
 				RQ2.push(SQ2.front());
 				SQ2.pop();
 			}
-			SQ1 = queue<Process*>();
-			SQ2 = queue<Process*>();
-
-			cout << endl << endl << endl << "Moving SQ to RQ!" << endl << endl << endl;
-			cout << endl << "RQ1:";
-			for (int i = 0; i < RQ1.size(); i++) {
-				cout << RQ1.front()->id;
-				RQ1.push(RQ1.front());
-				RQ1.pop();
-				if (i < RQ1.size() -1) cout << "->";
-			}
-			cout << endl << "RQ2:";
-			for (int i = 0; i < RQ2.size(); i++) {
-				cout << RQ2.front()->id;
-				RQ2.push(RQ2.front());
-				RQ2.pop();
-				if (i < RQ2.size() -1) cout << "->";
-			}
-			cout << endl << "SQ1:";
-			for (int i = 0; i < SQ1.size(); i++) {
-				cout << SQ1.front()->id;
-				SQ1.push(SQ1.front());
-				SQ1.pop();
-				if (i < SQ1.size() -1) cout << "->";
-			}
-			cout << endl << "SQ2:";
-			for (int i = 0; i < SQ2.size(); i++) {
-				cout << SQ2.front()->id;
-				SQ2.push(SQ2.front());
-				SQ2.pop();
-				if (i < SQ2.size() -1) cout << "->";
-			}
-			cout << endl << endl << endl;
 		}
 
-
 		if (priority != 0) {
-			cout << "Priority = " << priority << endl;
 			// Run the process
 			if (currentProcess->id == sys) {
 				// User interface is a special case
@@ -222,9 +169,9 @@ void scheduler() {
 				currentProcess->regs = machine;
 				currentProcess->time += sysclock - starttime;
 				// Return process to the shadow queue
-				if (priority == 1) {
+				if (priority == 1 && success) {
 					SQ1.push(currentProcess);
-				} else if (priority == 2) {
+				} else if (priority == 2 && success) {
 					SQ2.push(currentProcess);
 				}
 			}
@@ -281,7 +228,9 @@ void userinterface() {
 				if (U1.proc->running) {
 					cout << "User 1 already has a running process!" << endl;
 				} else {
+					#ifdef DEBUG
 					cout << "Adding P1 to RQ2" << endl;
+					#endif
 					RQ2.push(U1.proc);
 					U1.proc->running = true;
 				}
@@ -316,7 +265,9 @@ void userinterface() {
 				if (U2.proc->running) {
 					cout << "User 2 already has a running process!" << endl;
 				} else {
+					#ifdef DEBUG
 					cout << "Adding P2 to RQ2" << endl;
+					#endif
 					RQ2.push(U2.proc);
 					U2.proc->running = true;
 				}

@@ -44,4 +44,8 @@ class PageTable
     void print();
 };
 
+std::string horizontalrule();
+std::string textboxline(std::string);
+std::string textbox(std::string);
+
 #endif

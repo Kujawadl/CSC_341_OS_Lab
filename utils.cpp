@@ -53,7 +53,7 @@ int& PageTable::operator[] (const int index)
   }
   // If page table contains no frame for specified page
   if (_pageTable[index] < 0) {
-    #ifdef MMU_DEBUG
+    #ifdef DEBUG_VERBOSE
     std::cout << "Page #" << index << " has no associated frame." << std::endl;
     std::cout << "Searching for next available frame:" << std::endl;
     #endif
@@ -77,18 +77,18 @@ int& PageTable::operator[] (const int index)
     // Find the next available frame number
     int i = rand() % 64;
     while (_framesInUse[i] == true) {
-      #ifdef MMU_DEBUG
+      #ifdef DEBUG_VERBOSE
       std::cout << "\tFrame #" << i << " is in use..." << std::endl;
       #endif
       i = rand() % 64;
     }
-    #ifdef MMU_DEBUG
+    #ifdef DEBUG_VERBOSE
     std::cout << "Frame #" << i << " is available!" << std::endl;
     #endif
     _framesInUse[i] = true; // Set FrameTable entry to indicate frame is in use
     _pageTable[index] = i; // Set PageTable entry to refer to the frame in question
   }
-  #ifdef MMU_DEBUG
+  #ifdef DEBUG_VERBOSE
   std::cout << "Page #" << index << " was referenced and has Frame #"
             << _pageTable[index] << std::endl;
   #endif
@@ -128,4 +128,58 @@ void PageTable::print()
               << std::endl;
   }
   std::cout << rowdiv << std::endl;
+}
+
+std::string horizontalrule() {
+	std::string out = "";
+	for (int i = 0; i < 80; i++) {
+		out += "#";
+	}
+	out += "\n";
+
+	return out;
+}
+
+std::string textboxline(std::string text) {
+	// Trim trailing and leading spaces
+	text = text.erase(text.find_last_not_of(" \t\n\r") + 1);
+	text = text.erase(0, text.find_first_not_of(" \t\n\r"));
+
+	// Generate box
+	std::string out = "";
+	if (text.length() < 76) {
+		int numSpacers = 76 - text.length();
+		int leftSpacers = (numSpacers / 2);
+		int rightSpacers = leftSpacers  + (numSpacers % 2);
+
+		out += "# ";
+		for (int i = 0; i < leftSpacers; i++) {
+			out += " ";
+		}
+		out += text;
+		for (int i = 0; i < rightSpacers; i++) {
+			out += " ";
+		}
+		out += " #\n";
+	} else {
+		int i = (text.length() / 2) - 1;
+		while (text.at(i) != '-' && text.at(i) != ' ') {
+			i++;
+		}
+		i++;
+		out += textboxline(text.substr(0, i));
+		out += textboxline(text.substr(i, text.length() + 1 - i));
+	}
+
+	return out;
+}
+
+std::string textbox(std::string text) {
+	std::string out = "\n";
+	out += horizontalrule();
+	out += textboxline(text);
+	out += horizontalrule();
+	out += "\n";
+
+	return out;
 }
