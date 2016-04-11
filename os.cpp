@@ -32,6 +32,8 @@ void dump()
 	cout << "\tIR: " << U1.proc->regs.IR
 			 << ", PC: " << U1.proc->regs.PC \
 			 << ", CR: " << U1.proc->regs.CR << endl;
+	cout << "\tRunning: " << alphabool << U1.proc->running
+			 << ", Time: " << U1.proc->time << " ticks" << endl;
 
 	cout << "Dumping Registers for PID = 2:" << endl;
 	cout << "\trA: " << U2.proc->regs.rA \
@@ -41,6 +43,8 @@ void dump()
 	cout << "\tIR: " << U2.proc->regs.IR \
 			 << ", PC: " << U2.proc->regs.PC \
 			 << ", CR: " << U2.proc->regs.CR << endl;
+	cout << "\tRunning: " << alphabool << U2.proc->running
+			 << ", Time: " << U2.proc->time << " ticks" << endl;
 
 	// Dump memory
 	cout << textbox("Dumping memory:");
@@ -165,6 +169,7 @@ void scheduler() {
 				// If process encountered an error or halted, set running to false
 				if (!success || machine.IR == 61440) {
 					currentProcess->running = false;
+					currentProcess->time = 0;
 				}
 				currentProcess->regs = machine;
 				currentProcess->time += sysclock - starttime;
