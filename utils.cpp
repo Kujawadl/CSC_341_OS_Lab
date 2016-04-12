@@ -9,7 +9,7 @@
 #include "utils.hpp"
 
 // Case-insensitive string comparison
-bool my_strcasecmp(std::string str1, std::string str2)
+bool my_strcasecmp(string str1, string str2)
 {
 	int length1 = str1.length();
 
@@ -45,17 +45,17 @@ int& PageTable::operator[] (const int index)
 {
   // If index out of bounds, throw an exception
   if (index > 63 || index < 0) {
-    std::stringstream ss;
+    stringstream ss;
     ss << index;
-    std::string strIndex = ss.str();
-    throw std::out_of_range("PageTable index " + strIndex +
+    string strIndex = ss.str();
+    throw out_of_range("PageTable index " + strIndex +
                             " is invalid! Index must be 0-63!\n");
   }
   // If page table contains no frame for specified page
   if (_pageTable[index] < 0) {
     #ifdef DEBUG_VERBOSE
-    std::cout << "Page #" << index << " has no associated frame." << std::endl;
-    std::cout << "Searching for next available frame:" << std::endl;
+    cout << "Page #" << index << " has no associated frame." << endl;
+    cout << "Searching for next available frame:" << endl;
     #endif
 
     // If no more available frames to allocate, throw an exception
@@ -66,9 +66,9 @@ int& PageTable::operator[] (const int index)
         return static_cast<int*>(static_cast<void*>(arr));}
       static int* end(FrameTable& arr) {return begin(arr) + NUM_FRAMES;}
     };
-    if (std::find(ary::begin(_pageTable), ary::end(_pageTable), false)
+    if (find(ary::begin(_pageTable), ary::end(_pageTable), false)
         == ary::end(_framesInUse)) {
-      throw std::out_of_range("No more available frames!");
+      throw out_of_range("No more available frames!");
     }
 
     // Seed random number generator
@@ -78,19 +78,19 @@ int& PageTable::operator[] (const int index)
     int i = rand() % 64;
     while (_framesInUse[i] == true) {
       #ifdef DEBUG_VERBOSE
-      std::cout << "\tFrame #" << i << " is in use..." << std::endl;
+      cout << "\tFrame #" << i << " is in use..." << endl;
       #endif
       i = rand() % 64;
     }
     #ifdef DEBUG_VERBOSE
-    std::cout << "Frame #" << i << " is available!" << std::endl;
+    cout << "Frame #" << i << " is available!" << endl;
     #endif
     _framesInUse[i] = true; // Set FrameTable entry to indicate frame is in use
     _pageTable[index] = i; // Set PageTable entry to refer to the frame in question
   }
   #ifdef DEBUG_VERBOSE
-  std::cout << "Page #" << index << " was referenced and has Frame #"
-            << _pageTable[index] << std::endl;
+  cout << "Page #" << index << " was referenced and has Frame #"
+            << _pageTable[index] << endl;
   #endif
   return _pageTable[index];
 }
@@ -99,39 +99,48 @@ int& PageTable::operator[] (const int index)
 void PageTable::print()
 {
   // Divider between row categories (e.g.: b/w headers and data)
-  std::string rowdiv = " *------------------------------------------* \n";
+  string rowdiv = "*" + padding(78, '-') + "*\n";
   // Table headers
-  std::cout << std::endl << rowdiv +
-              " |   Page Table    ||    FrameInUse Table   | \n" +
-              rowdiv +
-              " | Page#  | Frame# || Frame# | FrameInUse?  | \n" +
-              rowdiv;
+  cout << rowdiv
+			 << "|" << padding(34) << Page Table << padding(34) << "|"
+			 << rowdiv << endl;
+	//Column titles		 
+
   for (int i = 0; i < NUM_FRAMES; i++) {
-    std::stringstream ss;
+    stringstream ss;
     ss << _pageTable[i];
-    std::string strFrame = ss.str();
-    std::cout << " | "
+    string strFrame = ss.str();
+    cout << " | "
               // Output page number
-              << std::setw(6) << std::right << i
+              << setw(6) << right << i
                 << " | "
               // Output associated frame, if any
-              << std::setw(6) << std::left
+              << setw(6) << left
                 << (_pageTable[i] < 0 ? "-" : strFrame)
                 << " || "
               // Output frame number
-              << std::setw(6) << std::right << i
+              << setw(6) << right << i
                 << " | "
               // Output whether frame is in use or free
-              << std::setw(12) << std::left
+              << setw(12) << left
                 << (_framesInUse[i] ? "In use" : "Free")
                 << " | "
-              << std::endl;
+              << endl;
   }
-  std::cout << rowdiv << std::endl;
+  cout << rowdiv << endl;
 }
 
-std::string horizontalrule() {
-	std::string out = "";
+string padding(int n) { return padding(n, ' '); }
+string padding(int n, char c) {
+	string out = "";
+	for (int i = 0; i < n; i++) {
+		out += c;
+	}
+	return out;
+}
+
+string horizontalrule() {
+	string out = "";
 	for (int i = 0; i < 80; i++) {
 		out += "#";
 	}
@@ -140,13 +149,13 @@ std::string horizontalrule() {
 	return out;
 }
 
-std::string textboxline(std::string text) {
+string textboxline(string text) {
 	// Trim trailing and leading spaces
 	text = text.erase(text.find_last_not_of(" \t\n\r") + 1);
 	text = text.erase(0, text.find_first_not_of(" \t\n\r"));
 
 	// Generate box
-	std::string out = "";
+	string out = "";
 	if (text.length() < 76) {
 		int numSpacers = 76 - text.length();
 		int leftSpacers = (numSpacers / 2);
@@ -174,8 +183,8 @@ std::string textboxline(std::string text) {
 	return out;
 }
 
-std::string textbox(std::string text) {
-	std::string out = "\n";
+string textbox(string text) {
+	string out = "\n";
 	out += horizontalrule();
 	out += textboxline(text);
 	out += horizontalrule();

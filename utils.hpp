@@ -16,6 +16,7 @@
 #include <iterator> // begin, end
 #include <sstream>  // stringstream
 #include <stdexcept>// out_of_range
+  using namespace std;
 
 #define MMU_DEBUG
 
@@ -23,7 +24,7 @@
 #define NUM_FRAMES 64
 
 // Case-insensitive string comparison
-bool my_strcasecmp(std::string str1, std::string str2);
+bool my_strcasecmp(string str1, string str2);
 
 // Bit array containing information about the frames in memory
 typedef bool FrameTable[NUM_FRAMES];
@@ -44,8 +45,10 @@ class PageTable
     void print();
 };
 
-std::string horizontalrule();
-std::string textboxline(std::string);
-std::string textbox(std::string);
+string padding(int);
+string padding(int, char);
+string horizontalrule();
+string textboxline(string);
+string textbox(string);
 
 #endif
