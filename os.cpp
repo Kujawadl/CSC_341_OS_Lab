@@ -31,7 +31,7 @@ void dump()
 	cout << "RQ1: " << qtos(RQ1) << endl;
 	cout << "RQ2: " << qtos(RQ2) << endl;
 	cout << "SQ1: " << qtos(SQ1) << endl;
-	cout << "SQ2: " << qtos(SQ1) << endl;
+	cout << "SQ2: " << qtos(SQ2) << endl;
 
 	// Dump Registers
 	cout << textbox("Dumping Process States:");
@@ -145,6 +145,7 @@ void scheduler() {
 	while (true) {
 		currentProcess = NULL;
 
+
 		// Elevate priority of priority-2 proc's with 0 time so far
 		for (int i = 0; i < RQ2.size(); i++) {
 			if (RQ2.front()->time == 0) {
@@ -154,7 +155,14 @@ void scheduler() {
 			}
 			RQ2.pop();
 		}
-
+		// Just a quick print of the queue for Verification
+		#ifdef DEBUG_VERBOSE
+		  cout << textbox("Dumping scheduler queues");
+		  cout << "RQ1: " << qtos(RQ1) << endl;
+		  cout << "RQ2: " << qtos(RQ2) << endl;
+		  cout << "SQ1: " << qtos(SQ1) << endl;
+		  cout << "SQ2: " << qtos(SQ2) << endl;
+		#endif
 		// Search the queues for the next process
 		if (!RQ1.empty()) {
 			currentProcess = RQ1.front();
@@ -414,12 +422,12 @@ string qtos(queue<Process*> q) {
 	int size = q.size(); // q.size decreases as queue is traversed; need a static size
 	string out = "";
 	for (int i = 0; i < size; i++) {
-		out += (q.front->id == 0 ? "ui" : itos(q.front()->id));
+		out += (q.front()->id == 0 ? "ui" : itos(q.front()->id));
 		// If not last element, add arrow
 		if (i < size) {
 			out += " -> ";
 		}
-		
+
 		backup.push(q.front());
 		q.pop();
 	}
