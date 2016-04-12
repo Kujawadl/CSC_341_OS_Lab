@@ -6,16 +6,11 @@
  * Spring 2016
  */
 
-#include <string>
-#include <queue>
-#include <iostream>
-#include <iomanip>
-#include <cstdlib>
-#include <cstring>
-#include <sstream>
-#include <fstream>
-#include <string>
-#include <cctype>
+#include <string>   // string
+#include <queue>    // queue
+#include <iostream> // cout, cerr
+#include <iomanip>  // boolalpha, setw, setfill, hex, dec, endl
+#include <sstream>  // sstream
 #include "machine.hpp"
 #include "utils.hpp"
   using namespace std;
@@ -30,23 +25,7 @@ extern FrameTable framesLocked;
 
 // Define the user struct
 enum userID {sys, u1, u2};
-// userID& operator++ (userID& curr) {
-//   switch (curr) {
-//     case sys: curr = u1; break;
-//     case u1: curr = u2; break;
-//     case u2: curr = sys; break;
-//   }
-//   return curr;
-// }
-// userID operator++ (userID& curr, int) {
-//   userID orig = curr;
-//   switch (curr) {
-//     case sys: curr = u1; break;
-//     case u1: curr = u2; break;
-//     case u2: curr = sys; break;
-//   }
-//   return orig;
-// }
+
 struct Process {
   userID id;
   int time;

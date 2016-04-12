@@ -9,12 +9,18 @@
 #ifndef MACHINE
 #define MACHINE
 
-#include <string>
-#include <iostream>
-#include <iomanip>
-#include <unistd.h>
+#include <string>		// string
+#include <iostream> // cout, cerr
+#include <iomanip>	// boolalpha, setw, setfill, dec, hex, endl
+#include <unistd.h> // usleep
 #include "utils.hpp"
 	using namespace std;
+
+#define normal "\033[0m"
+#define red "\033[31m"
+#define green "\033[32m"
+#define blue "\033[34m"
+
 
 // Debugging flags
 #define DEBUG

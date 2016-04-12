@@ -157,11 +157,13 @@ void scheduler() {
 		}
 		// Just a quick print of the queue for Verification
 		#ifdef DEBUG_VERBOSE
-		  cout << textbox("Dumping scheduler queues");
-		  cout << "RQ1: " << qtos(RQ1) << endl;
-		  cout << "RQ2: " << qtos(RQ2) << endl;
-		  cout << "SQ1: " << qtos(SQ1) << endl;
-		  cout << "SQ2: " << qtos(SQ2) << endl;
+		cout << blue;
+		cout << textbox("Dumping scheduler queues");
+		cout << "RQ1: " << qtos(RQ1) << endl;
+		cout << "RQ2: " << qtos(RQ2) << endl;
+		cout << "SQ1: " << qtos(SQ1) << endl;
+		cout << "SQ2: " << qtos(SQ2) << endl;
+		cout << normal;
 		#endif
 		// Search the queues for the next process
 		if (!RQ1.empty()) {
@@ -202,6 +204,12 @@ void scheduler() {
 				if (!success || machine.IR == 61440) {
 					currentProcess->running = false;
 					currentProcess->time = 0;
+
+					if (!success) {
+						cerr << red;
+						cerr << "\nError condition signaled! Killing process...\n";
+						cerr << normal;
+					}
 				}
 				// Return process to the shadow queue
 				// If normal user process, return to S2
@@ -243,7 +251,9 @@ void userinterface() {
 					cout << "Exited cleanly. Goodbye." << endl;
 					exit(EXIT_SUCCESS);
 				} else {
-					cout << "Force terminated; processes were still running." << endl;
+					cerr << red;
+					cerr << "Force terminated; processes were still running." << endl;
+					cerr << normal;
 					exit(EXIT_FAILURE);
 				}
 				break;
@@ -407,8 +417,11 @@ void init()
 int main(int argc, char** argv)
 {
 	// Print OS startup header
+	cout << green;
 	cout << titlebox("CSC 341 OS Lab" + padding(80) + \
 		"Aaron Baker, Andrew Ballard, and Dylan Jager-Kujawa");
+	cout << normal;
+
 	// Initialization
 	init();
 	// Start scheduler

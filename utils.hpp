@@ -9,11 +9,10 @@
 #ifndef UTILS
 #define UTILS
 
-#include <iostream> // cout
-#include <iomanip>  // setw, left, right
+#include <iostream> // cout, cerr
+#include <iomanip>  // setw, setfill, left, right, dec, endl
 #include <cstdlib>  // srand, rand
 #include <ctime>    // time
-#include <iterator> // begin, end
 #include <sstream>  // stringstream
 #include <stdexcept>// out_of_range
   using namespace std;
@@ -40,6 +39,7 @@ class PageTable
     // Unique to this PageTable; contains the actual page-frame mappings
     int _pageTable[NUM_FRAMES];
 
+    // Iterators not fully supported in C++98; this assists with std::find()
     struct ary {
       static int* begin(int (&arr)[64]) {return arr;}
       static int* end(int (&arr)[64]) {return begin(arr) + NUM_FRAMES;}
@@ -55,11 +55,20 @@ class PageTable
     void print();
 };
 
+// Return a string consisting of n of the specified character (default: space)
 string padding(int);
 string padding(int, char);
+
+// Return a horizontal rule of # characters (std console width = 80chars)
 string horizontalrule();
+
+// Divide the string into 80 character lines with textbox borders left and right
 string textboxline(string);
+
+// Return a textbox of width = 80chars, wrapped with # symbols
 string textbox(string);
+
+// Return a thicker textbox (i.e.: extra horizontalrule above and below)
 string titlebox(string);
 
 #endif

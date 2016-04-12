@@ -9,8 +9,7 @@
 #include "utils.hpp"
 
 // Case-insensitive string comparison
-bool my_strcasecmp(string str1, string str2)
-{
+bool my_strcasecmp(string str1, string str2) {
 	int length1 = str1.length();
 
 	for (int i = 0; i < length1; i++) {
@@ -33,8 +32,7 @@ string itos(int i) {
 }
 
 // Constructor; takes a FrameTable by reference
-PageTable::PageTable(FrameTable& F) : _framesInUse(F)
-{
+PageTable::PageTable(FrameTable& F) : _framesInUse(F) {
   // Initialize page table with -1 (i.e. no associated frame)
   for (int i = 0; i < NUM_FRAMES; i++) {
     _pageTable[i] = -1;
@@ -48,8 +46,7 @@ PageTable::PageTable(FrameTable& F) : _framesInUse(F)
   frame, assign said free frame to the specified page number entry,
   and set the FrameTable entry to indicate the frame is now allocated.
 */
-int& PageTable::operator[] (const int index)
-{
+int& PageTable::operator[] (const int index) {
   // If index out of bounds, throw an exception
   if (index > 63 || index < 0) {
     stringstream ss;
@@ -61,8 +58,8 @@ int& PageTable::operator[] (const int index)
   // If page table contains no frame for specified page
   if (_pageTable[index] < 0) {
     #ifdef DEBUG_VERBOSE
-    cerr << "Page #" << index << " has no associated frame." << endl;
-    cerr << "Searching for next available frame:" << endl;
+    cout << "Page #" << index << " has no associated frame." << endl;
+    cout << "Searching for next available frame:" << endl;
     #endif
 
     // If no more available frames to allocate, throw an exception
@@ -78,26 +75,25 @@ int& PageTable::operator[] (const int index)
     int i = rand() % 64;
     while (_framesInUse[i] == true) {
       #ifdef DEBUG_VERBOSE
-      cerr << "\tFrame #" << i << " is in use..." << endl;
+      cout << "\tFrame #" << i << " is in use..." << endl;
       #endif
       i = rand() % 64;
     }
     #ifdef DEBUG_VERBOSE
-    cerr << "Frame #" << i << " is available!" << endl;
+    cout << "Frame #" << i << " is available!" << endl;
     #endif
     _framesInUse[i] = true; // Set FrameTable entry to indicate frame is in use
     _pageTable[index] = i; // Set PageTable entry to refer to the frame in question
   }
   #ifdef DEBUG_VERBOSE
-  cerr << "Page #" << index << " was referenced and has Frame #"
+  cout << "Page #" << index << " was referenced and has Frame #"
             << _pageTable[index] << endl;
   #endif
   return _pageTable[index];
 }
 
 // Creates a string representation of the page table
-string PageTable::toString()
-{
+string PageTable::toString() {
 	string out = "";
 	// Header
 	out += "*" + padding(14, '-') + "*\n";
@@ -117,10 +113,12 @@ string PageTable::toString()
 	return out;
 }
 
+// Print the string representation of the page table
 void PageTable::print() {
 	cout << PageTable::toString();
 }
 
+// Return a string consisting of n of the specified character (default: space)
 string padding(int n) { return padding(n, ' '); }
 string padding(int n, char c) {
 	string out = "";
@@ -130,6 +128,7 @@ string padding(int n, char c) {
 	return out;
 }
 
+// Return a horizontal rule of # characters (std console width = 80chars)
 string horizontalrule() {
 	string out = "";
 	for (int i = 0; i < 80; i++) {
@@ -140,6 +139,7 @@ string horizontalrule() {
 	return out;
 }
 
+// Divide the string into 80 character lines with textbox borders left and right
 string textboxline(string text) {
 	// Trim trailing and leading spaces
 	text = text.erase(text.find_last_not_of(" \t\n\r") + 1);
@@ -174,16 +174,17 @@ string textboxline(string text) {
 	return out;
 }
 
+// Return a textbox of width = 80chars, wrapped with # symbols
 string textbox(string text) {
 	string out = "\n";
 	out += horizontalrule();
 	out += textboxline(text);
 	out += horizontalrule();
 	out += "\n";
-
 	return out;
 }
 
+// Return a thicker textbox (i.e.: extra horizontalrule above and below).
 string titlebox(string text) {
 	string out = "\n";
 	out += horizontalrule();

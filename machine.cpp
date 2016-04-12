@@ -55,7 +55,6 @@ bool interpreter() {
 	bool success = true;
 	//While no error flag and no timer interrupt
 	while (success && timer_interrupt < QUANTUM) {
-		usleep(1500000); // Sleep 1.5 seconds to clearly demonstrate quantum
 		machine.IR = main_memory[MMU(machine.PC)];
 		machine.PC++; // Increment Program Counter
 		unsigned short int op = getOpcode(machine.IR);
@@ -75,9 +74,10 @@ bool interpreter() {
 			case 12: success = JLT(); break;
 			case 13: success = CMP(); break;
 			case 14: success = CLR(); break;
-			case 15: return HLT(); break; //Quit early on HLT
+			case 15:    return HLT(); break; //Quit early on HLT
 			default: success = false; break;
 		}
+		usleep(1000000); // Sleep 1 second to allow easier instruction tracing
 		sysclock++;
 		timer_interrupt++;
 	}
@@ -91,7 +91,7 @@ unsigned short int getOpcode(unsigned short int num) {
 	unsigned short int ret = (num & 61440)>>12;
 
 	#ifdef DEBUG_VERBOSE
-	cerr << "In getOpCode(). IR: " << machine.IR << ", Opcode: " << ret << endl;
+	cout << "In getOpCode(). IR: " << machine.IR << ", Opcode: " << ret << endl;
 	#endif
 
 	return ret;
@@ -103,7 +103,7 @@ unsigned short int getAddrMode(unsigned short int num) {
 	unsigned short int ret = (num & 2048)>>11;
 
 	#ifdef DEBUG_VERBOSE
-	cerr << "In getAddrMode(). IR: " << machine.IR << ", Addr: " << ret << endl;
+	cout << "In getAddrMode(). IR: " << machine.IR << ", Addr: " << ret << endl;
 	#endif
 
 	return ret;
@@ -115,7 +115,7 @@ unsigned short int getRegCode(unsigned short int num) {
 	unsigned short int ret = (num & 1792)>>8;
 
 	#ifdef DEBUG_VERBOSE
-	cerr << "In getRegCode(). IR: " << machine.IR << ", Regcode: " << ret << endl;
+	cout << "In getRegCode(). IR: " << machine.IR << ", Regcode: " << ret << endl;
 	#endif
 
 	return ret;
@@ -127,7 +127,7 @@ unsigned short int getOperand(unsigned short int num) {
 	unsigned short int ret = (num & 255);
 
 	#ifdef DEBUG_VERBOSE
-	cerr << "In getOperand(). IR: " << machine.IR << ", Operand: " << ret << endl;
+	cout << "In getOperand(). IR: " << machine.IR << ", Operand: " << ret << endl;
 	#endif
 
 	return ret;
@@ -178,7 +178,9 @@ bool ADD() {
 		return true;
 	} else {
 		#ifdef DEBUG
-		cout << "!! OVERFLOW IN ADD()" << endl;
+		cerr << red;
+		cerr << "!! OVERFLOW IN ADD()" << endl;
+		cerr << normal;
 		#endif
 		return false;
 	}
@@ -204,7 +206,9 @@ bool SUB() {
 		return true;
 	} else {
 		#ifdef DEBUG
-		cout << "!! OVERFLOW IN SUB()" << endl;
+		cerr << red;
+		cerr << "!! OVERFLOW IN SUB()" << endl;
+		cerr << normal;
 		#endif
 		return false;
 	}
@@ -231,7 +235,9 @@ bool ADR() {
 		return true;
 	} else {
 		#ifdef DEBUG
+		cerr << red;
 		cerr << "!! OVERFLOW IN ADR()" << endl;
+		cerr << normal;
 		#endif
 		return false;
 	}
@@ -258,7 +264,9 @@ bool SUR() {
 		return true;
 	} else {
 		#ifdef DEBUG
-		cout << "!! OVERFLOW IN SUR()" << endl;
+		cerr << red;
+		cerr << "!! OVERFLOW IN SUR()" << endl;
+		cerr << normal;
 		#endif
 		return false;
 	}
@@ -447,7 +455,7 @@ unsigned short int* getRegister() {
 	unsigned short int regCode = getRegCode(machine.IR); // Returns 0-3
 
 	#ifdef DEBUG_VERBOSE
-	cerr << "In getRegister(). IR: " << machine.IR << \
+	cout << "In getRegister(). IR: " << machine.IR << \
 		", Regcode: %d" << regCode << endl;
 	#endif
 
@@ -473,14 +481,14 @@ void printDebug(string op) {
 	unsigned short int IR = machine.IR; // TODO: Convert this to hex or binary
 	unsigned short int PC = machine.PC;
 	unsigned short int CR = machine.CR;
-	cerr << "Instruction with opcode " << op << " finished executing." << endl;
-	cerr << "\t0x" << oldPC << ": " << op << " " << addr \
+	cout << "Instruction with opcode " << op << " finished executing." << endl;
+	cout << "\t0x" << oldPC << ": " << op << " " << addr \
 		<< " r" << reg << " " << operand << endl;
 	#ifdef DEBUG_VERBOSE
-	cerr << "\tDumping Registers:" << endl;
-	cerr << "\trA: " << rA << ", r1: " << r1 << ", r2: " \
+	cout << "\tDumping Registers:" << endl;
+	cout << "\trA: " << rA << ", r1: " << r1 << ", r2: " \
 		<< r2 << ", r3: " << r3 << endl;
-	cerr << "\tIR: " << IR << ", PC: " << PC << ", CR: " << CR << endl;
+	cout << "\tIR: " << IR << ", PC: " << PC << ", CR: " << CR << endl;
 	#endif
 }
 #endif
