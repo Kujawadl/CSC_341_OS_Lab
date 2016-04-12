@@ -16,7 +16,6 @@
 #include <fstream>
 #include <string>
 #include <cctype>
-#include <unistd.h>
 #include "machine.hpp"
 #include "utils.hpp"
   using namespace std;
@@ -66,7 +65,8 @@ struct User {
 };
 
 extern User U1, U2, SYS;
-extern User currentUser;
+
+extern Process* currentProcess;
 
 #define READY 1
 #define BLOCKED 0

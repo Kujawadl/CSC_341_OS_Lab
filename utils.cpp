@@ -66,14 +66,7 @@ int& PageTable::operator[] (const int index)
     #endif
 
     // If no more available frames to allocate, throw an exception
-    struct ary {
-      static int* begin(int (&arr)[64]) {return arr;}
-      static int* end(int (&arr)[64]) {return begin(arr) + NUM_FRAMES;}
-      static int* begin(FrameTable& arr) {
-        return static_cast<int*>(static_cast<void*>(arr));}
-      static int* end(FrameTable& arr) {return begin(arr) + NUM_FRAMES;}
-    };
-    if (find(ary::begin(_pageTable), ary::end(_pageTable), false)
+    if (find(ary::begin(_framesInUse), ary::end(_framesInUse), false)
         == ary::end(_framesInUse)) {
       throw out_of_range("No more available frames!");
     }
@@ -105,8 +98,8 @@ int& PageTable::operator[] (const int index)
 // Creates a string representation of the page table
 string PageTable::toString()
 {
-  // Header
-  string out = "";
+	string out = "";
+	// Header
 	out += "*" + padding(14, '-') + "*\n";
 	out += "| Page | Frame |\n";
 	out += "*" + padding(14, '-') + "*\n";

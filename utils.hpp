@@ -40,6 +40,14 @@ class PageTable
     // Unique to this PageTable; contains the actual page-frame mappings
     int _pageTable[NUM_FRAMES];
 
+    struct ary {
+      static int* begin(int (&arr)[64]) {return arr;}
+      static int* end(int (&arr)[64]) {return begin(arr) + NUM_FRAMES;}
+      static int* begin(FrameTable& arr) {
+        return static_cast<int*>(static_cast<void*>(arr));}
+      static int* end(FrameTable& arr) {return begin(arr) + NUM_FRAMES;}
+    };
+
   public:
     PageTable(FrameTable&);
     int& operator[] (const int);

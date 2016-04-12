@@ -12,6 +12,7 @@
 #include <string>
 #include <iostream>
 #include <iomanip>
+#include <unistd.h>
 #include "utils.hpp"
 	using namespace std;
 

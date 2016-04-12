@@ -13,6 +13,8 @@ FrameTable framesLocked;
 
 User U1, U2, SYS;
 
+Process* currentProcess;
+
 queue<Process*> RQ1;
 queue<Process*> RQ2;
 queue<Process*> SQ1;
@@ -23,6 +25,9 @@ void dump()
 {
 	cout << textbox("Dumping scheduler queues");
 
+	cout << "Current process: "
+			 << (currentProcess->id == 0 ? "UI" : itos(currentProcess->id))
+			 << endl << endl;
 	cout << "RQ1: " << qtos(RQ1) << endl;
 	cout << "RQ2: " << qtos(RQ2) << endl;
 	cout << "SQ1: " << qtos(SQ1) << endl;
@@ -40,7 +45,7 @@ void dump()
 			 << ", PC: " << U1.proc->regs.PC \
 			 << ", CR: " << U1.proc->regs.CR << endl;
 	cout << "\tRunning: " << boolalpha << U1.proc->running
-			 << ", Time: " << U1.proc->time << " ticks" << endl;
+			 << ", Time: " << U1.proc->time << " ticks" << endl << endl;
 
 	cout << "Dumping Registers for PID = 2:" << endl;
 	cout << "\trA: " << U2.proc->regs.rA \
@@ -138,7 +143,6 @@ void loader()
 
 void scheduler() {
 	while (true) {
-		Process* currentProcess;
 		int priority = 0;
 
 		// Search the queues for the next process
@@ -188,7 +192,6 @@ void scheduler() {
 				} else if (priority == 2 && success && currentProcess->running) {
 					SQ2.push(currentProcess);
 				}
-				usleep(2000000);
 			}
 		}
 	}
@@ -216,9 +219,12 @@ void userinterface() {
 				break;
 			case 3: // "stp"
 				// If user programs did not cleanly terminate, exit failure
+				dump();
 				if (!U1.proc->running && !U2.proc->running) {
+					cout << "Exited cleanly. Goodbye." << endl;
 					exit(EXIT_SUCCESS);
 				} else {
+					cout << "Force terminated; processes were still running." << endl;
 					exit(EXIT_FAILURE);
 				}
 				break;
@@ -382,7 +388,8 @@ void init()
 int main(int argc, char** argv)
 {
 	// Print OS startup header
-	cout << titlebox("CSC 341 OS Lab");
+	cout << titlebox("CSC 341 OS Lab" + padding(80) + \
+		"Aaron Baker, Andrew Ballard, and Dylan Jager-Kujawa");
 	// Initialization
 	init();
 	// Start scheduler
