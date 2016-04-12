@@ -16,6 +16,7 @@
 #include <fstream>
 #include <string>
 #include <cctype>
+#include <unistd.h>
 #include "machine.hpp"
 #include "utils.hpp"
   using namespace std;

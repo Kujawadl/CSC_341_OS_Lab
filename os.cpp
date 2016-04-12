@@ -32,7 +32,7 @@ void dump()
 	cout << "\tIR: " << U1.proc->regs.IR
 			 << ", PC: " << U1.proc->regs.PC \
 			 << ", CR: " << U1.proc->regs.CR << endl;
-	cout << "\tRunning: " << alphabool << U1.proc->running
+	cout << "\tRunning: " << boolalpha << U1.proc->running
 			 << ", Time: " << U1.proc->time << " ticks" << endl;
 
 	cout << "Dumping Registers for PID = 2:" << endl;
@@ -43,7 +43,7 @@ void dump()
 	cout << "\tIR: " << U2.proc->regs.IR \
 			 << ", PC: " << U2.proc->regs.PC \
 			 << ", CR: " << U2.proc->regs.CR << endl;
-	cout << "\tRunning: " << alphabool << U2.proc->running
+	cout << "\tRunning: " << boolalpha << U2.proc->running
 			 << ", Time: " << U2.proc->time << " ticks" << endl;
 
 	// Dump memory
@@ -162,6 +162,8 @@ void scheduler() {
 				userinterface();
 				SQ1.push(currentProcess);
 			} else {
+				cout << "\n#\nRUNNING PROCESS ASSOCIATED WITH USER: "<< \
+				currentProcess->id << "\n#"<< endl;
 				int starttime = sysclock;
 				// Load state, run, save state
 				machine = currentProcess->regs;
@@ -179,6 +181,7 @@ void scheduler() {
 				} else if (priority == 2 && success) {
 					SQ2.push(currentProcess);
 				}
+				usleep(2000000);
 			}
 		}
 	}
