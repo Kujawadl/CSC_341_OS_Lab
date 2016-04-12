@@ -107,26 +107,19 @@ string PageTable::toString()
 {
   // Header
   string out = "";
-	out += "*" + padding(78, '-') + "*\n";
-  out += "|" + padding(34) + "Page Table" + padding(34) + "|\n";
-	out += "*" + padding(78, '-') + "*\n";
-	for (int i = 0; i < 4; i++) {
-		out += "|  P: F  |";
-	}
-	out += "\n*" + padding(78, '-') + "*\n";
+	out += "*" + padding(14, '-') + "*\n";
+	out += "| Page | Frame |\n";
+	out += "*" + padding(14, '-') + "*\n";
 
 	// Data
-	for (int i = 0; i < NUM_FRAMES/8; i++) {
+	for (int i = 0; i < NUM_FRAMES; i++) {
 		stringstream ss;
 		ss << dec << setfill('0');
-		for (int j = 0; j < 8; j++) {
-			ss << "| " << setw(2) << (i*8)+j << ": "
-				 << setw(2) << _pageTable[(i*8)+j] << " |";
-		}
-		ss << endl;
-		out += ss.str();
+		int frame = _pageTable[i];
+		ss << "|  " << setw(2) << i << "  |  " << setw(2) << frame << "   |\n";
+		out += (frame > 0 ? ss.str() : "");
 	}
-	out += "*" + padding(78, '-') + "*\n";
+	out += "*" + padding(14, '-') + "*\n";
 
 	return out;
 }

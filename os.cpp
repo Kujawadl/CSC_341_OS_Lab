@@ -75,11 +75,11 @@ void dump()
 	cout << "*"; for (int i = 0; i < 78; i++) cout << "-"; cout << "*" << endl;
 	cout << setfill(' ');
 
-	cout << "User1 Page Table:" << endl;
+	cout << endl << "User1 Page Table:" << endl;
 
 	U1.proc->regs.PTBR->print();
 
-	cout << "User2 Page Table:" << endl;
+	cout << endl << "User2 Page Table:" << endl;
 
 	U2.proc->regs.PTBR->print();
 }
