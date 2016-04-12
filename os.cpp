@@ -411,20 +411,24 @@ int main(int argc, char** argv)
 // Convert process queue to string
 string qtos(queue<Process*> q) {
 	queue<Process*> backup = queue<Process*>();
+	int size = q.size(); // q.size decreases as queue is traversed; need a static size
 	string out = "";
-	int i = 0;
-	for (queue<Process*> dump = q; !dump.empty(); dump.pop()) {
-		switch (dump.front()->id) {
-			case sys: out += "ui";break;
-			case u1: out += "1";break;
-			case u2: out += "2";break;
-		}
-		if (i < q.size()-1) {
+	for (int i = 0; i < size; i++) {
+		out += (q.front->id == 0 ? "ui" : itos(q.front()->id));
+		// If not last element, add arrow
+		if (i < size) {
 			out += " -> ";
-			i++;
 		}
+		
+		backup.push(q.front());
+		q.pop();
 	}
 	out += "\n";
+
+	while (!backup.empty()) {
+		q.push(backup.front());
+		backup.pop();
+	}
 
 	return out;
 }
