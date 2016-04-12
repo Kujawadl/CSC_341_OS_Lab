@@ -100,4 +100,7 @@ void init();
 // Main function (starts the OS)
 int main(int argc, char** argv);
 
+// Convert process queue to string
+string qtos(queue<Process>);
+
 #endif

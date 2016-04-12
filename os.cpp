@@ -382,3 +382,24 @@ int main(int argc, char** argv)
 	scheduler();
 	return 0;
 }
+
+// Convert process queue to string
+string qtos(queue<Process*> q) {
+	queue<Process*> backup = queue<Process*>();
+	string out = "";
+
+	for (int i = 0; i < q.size(); i++) {
+		out += q.next()->id;
+		backup.push(q.next());
+		q.pop();
+		if (i < q.size()-1) {
+			out += "->";
+		}
+	}
+	out += "\n";
+
+	while (!backup.empty()) {
+		q.push(backup.next());
+		backup.pop();
+	}
+}
