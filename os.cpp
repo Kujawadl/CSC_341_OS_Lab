@@ -412,21 +412,19 @@ int main(int argc, char** argv)
 string qtos(queue<Process*> q) {
 	queue<Process*> backup = queue<Process*>();
 	string out = "";
-
-	for (int i = 0; i < q.size(); i++) {
-		out += q.front()->id;
-		backup.push(q.front());
-		q.pop();
+	int i = 0;
+	for (queue<Process*> dump = q; !dump.empty(); dump.pop()) {
+		switch (dump.front()->id) {
+			case sys: out += "ui";break;
+			case u1: out += "1";break;
+			case u2: out += "2";break;
+		}
 		if (i < q.size()-1) {
-			out += "->";
+			out += " -> ";
+			i++;
 		}
 	}
 	out += "\n";
-
-	while (!backup.empty()) {
-		q.push(backup.front());
-		backup.pop();
-	}
 
 	return out;
 }

@@ -55,7 +55,6 @@ bool interpreter() {
 	bool success = true;
 	//While no error flag and no timer interrupt
 	while (success && timer_interrupt < QUANTUM) {
-		usleep(1500000); // Sleep for 1.5 seconds before each instruction
 		machine.IR = main_memory[MMU(machine.PC)];
 		machine.PC++; // Increment Program Counter
 		unsigned short int op = getOpcode(machine.IR);
