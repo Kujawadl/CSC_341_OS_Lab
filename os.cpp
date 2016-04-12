@@ -145,14 +145,7 @@ void scheduler() {
 	while (true) {
 		currentProcess = NULL;
 
-		// Just a quick print of the queue for Verification
-		#ifdef DEBUG_VERBOSE
-		  cout << textbox("Dumping scheduler queues");
-		  cout << "RQ1: " << qtos(RQ1) << endl;
-		  cout << "RQ2: " << qtos(RQ2) << endl;
-		  cout << "SQ1: " << qtos(SQ1) << endl;
-		  cout << "SQ2: " << qtos(SQ2) << endl;
-		#endif
+
 		// Elevate priority of priority-2 proc's with 0 time so far
 		for (int i = 0; i < RQ2.size(); i++) {
 			if (RQ2.front()->time == 0) {
@@ -162,7 +155,14 @@ void scheduler() {
 			}
 			RQ2.pop();
 		}
-
+		// Just a quick print of the queue for Verification
+		#ifdef DEBUG_VERBOSE
+		  cout << textbox("Dumping scheduler queues");
+		  cout << "RQ1: " << qtos(RQ1) << endl;
+		  cout << "RQ2: " << qtos(RQ2) << endl;
+		  cout << "SQ1: " << qtos(SQ1) << endl;
+		  cout << "SQ2: " << qtos(SQ2) << endl;
+		#endif
 		// Search the queues for the next process
 		if (!RQ1.empty()) {
 			currentProcess = RQ1.front();

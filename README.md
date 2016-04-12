@@ -155,34 +155,94 @@ In the future, we will keep the complexity of the design in mind as we make our 
 
 ## Verification
 
-It is very clear from the Sys user's `run` command and it's corresponding output that the MMU is working as expected. For each given page, it looks up an entry, and if it finds none, it searches for an available frame to allocate to that page. After that, the page can be read in from disk, as you can clearly see from the `Attempting to translate logical address _ (p#_ w#_)` statements, which are closely followed by `Found physical address _ (f#_ w#_)`.
+The implementation of the scheduler in this lab was done through the use of 4 queues, 2 ready queues and 2 shadow queues. The “processes” that are in the lower number queue get priority (while still in round robin fashion). To verify that these queues are working as specified in the project outline we will examine two outputs of our program, **one with a Verbose Debug turned ON and the other with Verbose Debug turned off, WHICH IS HOW IT WILL BE SUBMITTED**. Both outputs will be added to the appendices, but I will be pulling only the relevant parts of output as to which is necessary to prove correctness. This is due to the immense amount of debug information supplied in verbose output. If you need to see the exact output, with or without verbose debug turned on, it is available in the appendices.
 
-On line 36 of out.txt we can see that the OS finds frames that are in use, and continues its search until it finds one that is available.
-
-After the programs are loaded into memory, the system enters `nop` and context switches to user 1. User 1 `run`s. We can see from the interpreter's output that the appropriate instructions are being fetched from memory (the execution trace exactly matches the short int values hard-coded into the disk for each process).
-
-User 1 gets 4 ticks (5, including the `run` command), after which it is preempted for user 2. User 2 also `run`s. Again, user 2's interpreter output shows instructions identical to those hard-coded into the disk for said user, and the OS preempts the user after their 5 total clock ticks.
-
-We can then use the `dmp` output from user to see the contents of each from of memory, and pair it up with the pages from the users' page tables. You can see that user 1's virtual address space consists of frames 39 and 18. The contents of those frames (in decimal) are:
-
+When the program is first ran, the UI is added to the ready queue for higher priority in the initialization process. Here is the status of the queues before the scheduler is called:
 ```
-2058
-4102
-2309
-16640
-4103
-61440
-10
-0
+RQ1: ui ->
+RQ2:
+SQ1:
+SQ2:
 ```
+As you can see UI is the only process in the ready queue. We then immeadiately do a dump once the ui is called so that you can see it is no longer in the ready queue but is in fact running:
+```
+SYS > dmp
+#######################################################################
+#                   Dumping scheduler queues                          #
+#######################################################################
+Current process: UI
+RQ1:
+RQ2:
+SQ1:
+SQ2:
+```
+Next we NOP on user 1's turn of the UI so that his process is not added to the queue yet. This is so that we can show the priority elevation is working properly later. Then on User 2's turn of UI we type run to add his process to the queue for the scheduler to handle. This is initially added to RQ2, but since the scheduler does an initial scan to determine if any processes in RQ2 need to promoted it is put into RQ1, thus the next state of the queues is as follows:
+```
+RQ1: 2 ->
+RQ2:
+SQ1: ui ->
+SQ2:
+```
+After execution of Process 2 we demote it back to the lower priority as it no longer qualifies for high priority as it has now had processor time. This is shown with in the following state of the queues:
+```
+RQ1:
+RQ2:
+SQ1: ui ->
+SQ2: 2 ->
+```
+As you can see there are no more processes in either of the ready queues, thus we move the processes in the shadow queues back into the ready queues, and UI is called again:
+```
+##########################################################################
+#                           Dumping scheduler queues                     #
+##########################################################################
+RQ1: ui ->
+RQ2: 2 ->
+SQ1:
+SQ2:
+##########################################################################
+#                               Switching to UI                          #
+##########################################################################
+SYS > nop
+USER1 > run
+Adding P1 to RQ2
+USER1 > nop
+USER2 > nop
+```
+As you can see above this time USER 1 types run to add his process to the ready queue, once again it is initially added to the RQ2, but the scheduler will do a initial scan and find that it needs to be promoted to higher priority, thus the next queue output will be the following:
+```
+RQ1: 1 ->
+RQ2: 2 ->
+SQ1: ui ->
+SQ2:
+```
+The UI is moved to shadow queue after it is finished, and even though process 2 was scheduled first, process 1 will get priority and run before it due to the fact that it has not had and processor time yet. After execution Process 1 has had processor time, and no longer qualifies for priority so it is put into SQ2:
+```
+RQ1:
+RQ2: 2 ->
+SQ1: ui ->
+SQ2: 1 ->
+```
+Process 2 finishes it's process with it's next execution and is then removed for the queues:
+```
+RQ1:
+RQ2:
+SQ1: ui ->
+SQ2: 1 ->
+```
+Then once again the shadow queues are moved back Into the ready queues and the UI is called. This time I type STP on the System and end execution. The final dump of the queues is as follows:
+```
+SYS > stp
+########################################################################
+#                           Dumping scheduler queues                   #
+########################################################################
+Current process: UI
+RQ1:
+RQ2: 1 ->
+SQ1:
+SQ2:
+```
+As you can see, even though the simulated OS is closing, process one is still in the ready queue as it did not finish execution.
 
-The first 6 values exactly match the executable loaded from disk. The next value is the 10 that is stored in memory address 7 by the `4103 (STO R0 7)` instruction (R0 is set to 10 in the first line of the program). The last word is not touched in execution, and therefore remains at its initialized value of 0. From this we can infer that the processes run correctly within their new virtual address spaces.
-
-Finally, looking at the frame table and page tables, we can verify that "In use" frame has a corresponding entry in one of the page tables. There are no frames incorrectly marked "In use," and there are no frames incorrectly marked "Free."
-
-Thus all aspects of the virtual memory system work as expected.
-
-Furthermore, the operating system does prompt the user for input, even though they have a program running. After typing `run`, execution continues where it left off, as we can see starting at line 478.
 
 ## References
 
