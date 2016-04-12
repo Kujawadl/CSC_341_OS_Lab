@@ -18,13 +18,14 @@
 #include <stdexcept>// out_of_range
   using namespace std;
 
-#define MMU_DEBUG
-
 // 64 4-word frames = 256 words of memory
 #define NUM_FRAMES 64
 
 // Case-insensitive string comparison
 bool my_strcasecmp(string str1, string str2);
+
+// Convert int to string
+string itos(int);
 
 // Bit array containing information about the frames in memory
 typedef bool FrameTable[NUM_FRAMES];
@@ -42,6 +43,7 @@ class PageTable
   public:
     PageTable(FrameTable&);
     int& operator[] (const int);
+    string toString();
     void print();
 };
 
@@ -50,5 +52,6 @@ string padding(int, char);
 string horizontalrule();
 string textboxline(string);
 string textbox(string);
+string titlebox(string);
 
 #endif

@@ -66,8 +66,8 @@ void dump()
 				 << (framesInUse[i] ? "Y" : " ") << "   ";
 		cout << "|" << hex;
 		for (int j = 0; j < 4; j++) {
-			cout << "|| 0x" << setw(2) << i + j
-					 << ": 0x" << setw(4) << main_memory[i+j]
+			cout << "|| 0x" << setw(2) << (i*4)+j
+					 << ": 0x" << setw(4) << main_memory[(i*4)+j]
 					 << " ";
 		}
 		cout << "|" << dec << endl;
@@ -75,13 +75,13 @@ void dump()
 	cout << "*"; for (int i = 0; i < 78; i++) cout << "-"; cout << "*" << endl;
 	cout << setfill(' ');
 
-	// cout << endl << endl << "User1 Page Table:" << endl;
-	//
-	// U1.proc->regs.PTBR->print();
-	//
-	// cout << endl << endl << "User2 Page Table:";
-	//
-	// U2.proc->regs.PTBR->print();
+	cout << "User1 Page Table:" << endl;
+
+	U1.proc->regs.PTBR->print();
+
+	cout << "User2 Page Table:" << endl;
+
+	U2.proc->regs.PTBR->print();
 }
 
 // Loads the two user programs from disk into main memory, paging them as
@@ -158,12 +158,12 @@ void scheduler() {
 		if (priority != 0) {
 			// Run the process
 			if (currentProcess->id == sys) {
+				cout << textbox("Switching to UI");
 				// User interface is a special case
 				userinterface();
 				SQ1.push(currentProcess);
 			} else {
-				cout << "\n#\nRUNNING PROCESS ASSOCIATED WITH USER: "<< \
-				currentProcess->id << "\n#"<< endl;
+				cout << textbox("Switching to Process " + itos(currentProcess->id));
 				int starttime = sysclock;
 				// Load state, run, save state
 				machine = currentProcess->regs;
@@ -375,11 +375,7 @@ void init()
 int main(int argc, char** argv)
 {
 	// Print OS startup header
-	string titleFiller = "####################################################";
-	string titleText = "################ CSC 341 OS Lab ####################";
-	cout << endl << titleFiller << endl \
-		<< titleText << endl \
-		<< titleFiller << endl << endl;
+	cout << titlebox("CSC 341 OS Lab");
 	// Initialization
 	init();
 	// Start scheduler

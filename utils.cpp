@@ -25,6 +25,13 @@ bool my_strcasecmp(string str1, string str2)
 	return ((str1 == str2) ? true : false);
 }
 
+// Convert int to string
+string itos(int i) {
+	stringstream ss;
+	ss << i;
+	return ss.str();
+}
+
 // Constructor; takes a FrameTable by reference
 PageTable::PageTable(FrameTable& F) : _framesInUse(F)
 {
@@ -54,8 +61,8 @@ int& PageTable::operator[] (const int index)
   // If page table contains no frame for specified page
   if (_pageTable[index] < 0) {
     #ifdef DEBUG_VERBOSE
-    cout << "Page #" << index << " has no associated frame." << endl;
-    cout << "Searching for next available frame:" << endl;
+    cerr << "Page #" << index << " has no associated frame." << endl;
+    cerr << "Searching for next available frame:" << endl;
     #endif
 
     // If no more available frames to allocate, throw an exception
@@ -78,56 +85,54 @@ int& PageTable::operator[] (const int index)
     int i = rand() % 64;
     while (_framesInUse[i] == true) {
       #ifdef DEBUG_VERBOSE
-      cout << "\tFrame #" << i << " is in use..." << endl;
+      cerr << "\tFrame #" << i << " is in use..." << endl;
       #endif
       i = rand() % 64;
     }
     #ifdef DEBUG_VERBOSE
-    cout << "Frame #" << i << " is available!" << endl;
+    cerr << "Frame #" << i << " is available!" << endl;
     #endif
     _framesInUse[i] = true; // Set FrameTable entry to indicate frame is in use
     _pageTable[index] = i; // Set PageTable entry to refer to the frame in question
   }
   #ifdef DEBUG_VERBOSE
-  cout << "Page #" << index << " was referenced and has Frame #"
+  cerr << "Page #" << index << " was referenced and has Frame #"
             << _pageTable[index] << endl;
   #endif
   return _pageTable[index];
 }
 
-// Prints the page table (one per process) and frame table (static for OS)
-void PageTable::print()
+// Creates a string representation of the page table
+string PageTable::toString()
 {
-  // Divider between row categories (e.g.: b/w headers and data)
-  string rowdiv = "*" + padding(78, '-') + "*\n";
-  // Table headers
-  cout << rowdiv
-			 << "|" << padding(34) << Page Table << padding(34) << "|"
-			 << rowdiv << endl;
-	//Column titles		 
+  // Header
+  string out = "";
+	out += "*" + padding(78, '-') + "*\n";
+  out += "|" + padding(34) + "Page Table" + padding(34) + "|\n";
+	out += "*" + padding(78, '-') + "*\n";
+	for (int i = 0; i < 4; i++) {
+		out += "|  P: F  |";
+	}
+	out += "\n*" + padding(78, '-') + "*\n";
 
-  for (int i = 0; i < NUM_FRAMES; i++) {
-    stringstream ss;
-    ss << _pageTable[i];
-    string strFrame = ss.str();
-    cout << " | "
-              // Output page number
-              << setw(6) << right << i
-                << " | "
-              // Output associated frame, if any
-              << setw(6) << left
-                << (_pageTable[i] < 0 ? "-" : strFrame)
-                << " || "
-              // Output frame number
-              << setw(6) << right << i
-                << " | "
-              // Output whether frame is in use or free
-              << setw(12) << left
-                << (_framesInUse[i] ? "In use" : "Free")
-                << " | "
-              << endl;
-  }
-  cout << rowdiv << endl;
+	// Data
+	for (int i = 0; i < NUM_FRAMES/8; i++) {
+		stringstream ss;
+		ss << dec << setfill('0');
+		for (int j = 0; j < 8; j++) {
+			ss << "| " << setw(2) << (i*8)+j << ": "
+				 << setw(2) << _pageTable[(i*8)+j] << " |";
+		}
+		ss << endl;
+		out += ss.str();
+	}
+	out += "*" + padding(78, '-') + "*\n";
+
+	return out;
+}
+
+void PageTable::print() {
+	cout << PageTable::toString();
 }
 
 string padding(int n) { return padding(n, ' '); }
@@ -190,5 +195,16 @@ string textbox(string text) {
 	out += horizontalrule();
 	out += "\n";
 
+	return out;
+}
+
+string titlebox(string text) {
+	string out = "\n";
+	out += horizontalrule();
+	out += horizontalrule();
+	out += textboxline(text);
+	out += horizontalrule();
+	out += horizontalrule();
+	out += "\n";
 	return out;
 }

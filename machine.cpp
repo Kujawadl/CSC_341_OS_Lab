@@ -30,7 +30,7 @@ unsigned short int MMU(unsigned short int logicalAddress) {
 	unsigned short int page = (logicalAddress&252)>>2; // Returns 0-63
 	unsigned short int offset = logicalAddress & 3; // Returns 0-3
 
-	#ifdef MMU_DEBUG
+	#ifdef DEBUG_VERBOSE
 	cout << "Attempting to translate logical address " << logicalAddress
 			 << " (p#" << page << " w#" << offset << ")" << endl;
 	#endif
@@ -40,7 +40,7 @@ unsigned short int MMU(unsigned short int logicalAddress) {
 	// or allocates an empty frame to the page, then returns that frame number
 	unsigned short int frame = (*machine.PTBR)[page];
 
-	#ifdef MMU_DEBUG
+	#ifdef DEBUG_VERBOSE
 	cout << "Found physical address " << (frame<<2) + offset << " (f#" << frame
 			 << " w#" << offset << ")" << endl;
 	#endif
@@ -475,17 +475,11 @@ void printDebug(string op) {
 	cerr << "Instruction with opcode " << op << " finished executing." << endl;
 	cerr << "\t0x" << oldPC << ": " << op << " " << addr \
 		<< " r" << reg << " " << operand << endl;
+	#ifdef DEBUG_VERBOSE
 	cerr << "\tDumping Registers:" << endl;
 	cerr << "\trA: " << rA << ", r1: " << r1 << ", r2: " \
 		<< r2 << ", r3: " << r3 << endl;
 	cerr << "\tIR: " << IR << ", PC: " << PC << ", CR: " << CR << endl;
+	#endif
 }
-#endif
-
-// Undefine debug flags if necessary
-#ifdef DEBUG_VERBOSE
-#undef DEBUG_VERBOSE
-#endif
-#ifdef DEBUG
-#undef DEBUG
 #endif
