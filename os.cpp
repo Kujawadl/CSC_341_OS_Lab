@@ -21,6 +21,13 @@ queue<Process*> SQ2;
 // Dump contents of main memory and all registers
 void dump()
 {
+	cout << textbox("Dumping scheduler queues");
+
+	cout << "RQ1: " << qtos(RQ1) << endl;
+	cout << "RQ2: " << qtos(RQ2) << endl;
+	cout << "SQ1: " << qtos(SQ1) << endl;
+	cout << "SQ2: " << qtos(SQ1) << endl;
+
 	// Dump Registers
 	cout << textbox("Dumping Process States:");
 
@@ -389,8 +396,8 @@ string qtos(queue<Process*> q) {
 	string out = "";
 
 	for (int i = 0; i < q.size(); i++) {
-		out += q.next()->id;
-		backup.push(q.next());
+		out += q.front()->id;
+		backup.push(q.front());
 		q.pop();
 		if (i < q.size()-1) {
 			out += "->";
@@ -399,7 +406,9 @@ string qtos(queue<Process*> q) {
 	out += "\n";
 
 	while (!backup.empty()) {
-		q.push(backup.next());
+		q.push(backup.front());
 		backup.pop();
 	}
+
+	return out;
 }

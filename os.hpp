@@ -101,6 +101,6 @@ void init();
 int main(int argc, char** argv);
 
 // Convert process queue to string
-string qtos(queue<Process>);
+string qtos(queue<Process*>);
 
 #endif
