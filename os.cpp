@@ -176,9 +176,9 @@ void scheduler() {
 				currentProcess->regs = machine;
 				currentProcess->time += sysclock - starttime;
 				// Return process to the shadow queue
-				if (priority == 1 && success) {
+				if (priority == 1 && success && currentProcess->running) {
 					SQ1.push(currentProcess);
-				} else if (priority == 2 && success) {
+				} else if (priority == 2 && success && currentProcess->running) {
 					SQ2.push(currentProcess);
 				}
 				usleep(2000000);
