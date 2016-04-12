@@ -6,6 +6,7 @@
 
 # Table of Contents
   - [Project overview](#project-overview)
+    - [Requirements](#requirements)
     - [Machine](#machine)
       - [Memory](#memory)
         - [Paging](#Paging)
@@ -31,6 +32,14 @@
 ## Project Overview
 This project overview has been to explore, understand, and implement basic operating system concepts and components. The portion of this third lab involved the implementation of virtual memory, specifically paging. This required a significant overhaul of some of the components developed for previous labs.
 
+### Requirements
+The following is a list of requirements of the changes necessary for the update to the simulated operating system that was specified in the project handout.
+
+ - **OS Design** - Changes will include the introduction of a simple priority scheme for the scheduler.
+ - **UI** - The UI should still collect request in RR as usual, but the requests should schedule according to the priorities given below rather than being executed immediately. If the O/S has a command it should be scheduled at priority 1. If a nop is encountered on the O/S UI "turn", the priority 1 queue should be checked for user "elevated" requests. If the priority 1 queue is empty, the priority 2 queue should control the next operations. If a request doesn't finish, then it should be placed in a shadow queue at the same priority and the next request processed. Once the original queues are empty, the shadow queues should be copied to the original queues and UI should be called to collect the next set of requests. **Add a "User" time command to display the current time.**
+ - **Scheduler** - Two priority levels, 1 and 2, with the lower number being the higher priority level. Round robin scheduling is done within each priority level. The initialization routine should be modified to include queue data structures for priority levels. O/S commands should be scheduled and handled.
+ - **Organization** - Modify the UI routine to collect the requests and place them in the appropriate queues. The UI routine should then call the scheduler to process the requests as indicated by priority. The scheduler should process the request as indicated subject to the time quantum and if completed remove the request from the queue, otherwise place it on the shadow queue. If a request has had zero execution time so far, it should be elevated to the priority 1 queue. The scheduler routine should create manipulate a data structure that includes the user, the priority, and the time spent in execution so far.
+
 ### Machine
 Here is an updated version of the specifications of our operating system:
  - 16-bit words
@@ -46,7 +55,7 @@ Furthermore, the following is a list of the instructions that can be executed on
 
 | <u>Instruction</u> | <u>Opcode</u> | <u>Mnemonic</u> |
 |--------------------|---------------|-----------------|
-|Load                |0000           |LOD              |        
+|Load                |0000           |LOD              |
 |Store               |0001           |STO              |
 |Add                 |0010           |ADD              |
 |Subtract            |0011           |SUB              |
@@ -179,4 +188,4 @@ Furthermore, the operating system does prompt the user for input, even though th
 
 Silberschatz, A., & Galvin, P. B. (1998). Operating system concepts. Reading, MA: Addison Wesley Longman.
 
-Stack Overflow. (2013, July 21). Retrieved March 29, 2016, from http://stackoverflow.com/a/17777130 
+Stack Overflow. (2013, July 21). Retrieved March 29, 2016, from http://stackoverflow.com/a/17777130
