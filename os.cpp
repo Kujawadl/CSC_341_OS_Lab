@@ -143,17 +143,25 @@ void loader()
 
 void scheduler() {
 	while (true) {
-		int priority = 0;
+		currentProcess = NULL;
+
+		// Elevate priority of priority-2 proc's with 0 time so far
+		for (int i = 0; i < RQ2.size(); i++) {
+			if (RQ2.front()->time == 0) {
+				RQ1.push(RQ2.front());
+			} else {
+				RQ2.push(RQ2.front());
+			}
+			RQ2.pop();
+		}
 
 		// Search the queues for the next process
 		if (!RQ1.empty()) {
 			currentProcess = RQ1.front();
 			RQ1.pop();
-			priority = 1;
 		} else if (!RQ2.empty()) {
 			currentProcess = RQ2.front();
 			RQ2.pop();
-			priority = 2;
 		// If no next process, set RQs to SQs
 		} else {
 			while (!SQ1.empty()) {
@@ -166,7 +174,7 @@ void scheduler() {
 			}
 		}
 
-		if (priority != 0) {
+		if (currentProcess) {
 			// Run the process
 			if (currentProcess->id == sys) {
 				cout << textbox("Switching to UI");
@@ -179,18 +187,21 @@ void scheduler() {
 				// Load state, run, save state
 				machine = currentProcess->regs;
 				bool success = interpreter();
+				// Save state and new proc run time
+				currentProcess->regs = machine;
+				currentProcess->time += sysclock - starttime;
 				// If process encountered an error or halted, set running to false
 				if (!success || machine.IR == 61440) {
 					currentProcess->running = false;
 					currentProcess->time = 0;
 				}
-				currentProcess->regs = machine;
-				currentProcess->time += sysclock - starttime;
 				// Return process to the shadow queue
-				if (priority == 1 && success && currentProcess->running) {
-					SQ1.push(currentProcess);
-				} else if (priority == 2 && success && currentProcess->running) {
+				// If normal user process, return to S2
+				if (currentProcess->id !=sys  && success && currentProcess->running) {
 					SQ2.push(currentProcess);
+				// If other process, return to S1
+				} else if (success && currentProcess->running) {
+					SQ1.push(currentProcess);
 				}
 			}
 		}
