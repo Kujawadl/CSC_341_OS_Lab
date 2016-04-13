@@ -1,3 +1,4 @@
+
 # Operating System Lab
 
 ### by Aaron Baker, Andrew Ballard, and Dylan Jager-Kujawa
@@ -158,13 +159,16 @@ In the future, we will keep the complexity of the design in mind as we make our 
 The implementation of the scheduler in this lab was done through the use of 4 queues, 2 ready queues and 2 shadow queues. The “processes” that are in the lower number queue get priority (while still in round robin fashion). To verify that these queues are working as specified in the project outline we will examine two outputs of our program, **one with a Verbose Debug turned ON and the other with Verbose Debug turned off, WHICH IS HOW IT WILL BE SUBMITTED**. Both outputs will be added to the appendices, but I will be pulling only the relevant parts of output as to which is necessary to prove correctness. This is due to the immense amount of debug information supplied in verbose output. If you need to see the exact output, with or without verbose debug turned on, it is available in the appendices.
 
 When the program is first ran, the UI is added to the ready queue for higher priority in the initialization process. Here is the status of the queues before the scheduler is called:
+
 ```
 RQ1: ui ->
 RQ2:
 SQ1:
 SQ2:
 ```
+
 As you can see UI is the only process in the ready queue. We then immeadiately do a dump once the ui is called so that you can see it is no longer in the ready queue but is in fact running:
+
 ```
 SYS > dmp
 #######################################################################
@@ -176,21 +180,27 @@ RQ2:
 SQ1:
 SQ2:
 ```
+
 Next we NOP on user 1's turn of the UI so that his process is not added to the queue yet. This is so that we can show the priority elevation is working properly later. Then on User 2's turn of UI we type run to add his process to the queue for the scheduler to handle. This is initially added to RQ2, but since the scheduler does an initial scan to determine if any processes in RQ2 need to promoted it is put into RQ1, thus the next state of the queues is as follows:
+
 ```
 RQ1: 2 ->
 RQ2:
 SQ1: ui ->
 SQ2:
 ```
+
 After execution of Process 2 we demote it back to the lower priority as it no longer qualifies for high priority as it has now had processor time. This is shown with in the following state of the queues:
+
 ```
 RQ1:
 RQ2:
 SQ1: ui ->
 SQ2: 2 ->
 ```
+
 As you can see there are no more processes in either of the ready queues, thus we move the processes in the shadow queues back into the ready queues, and UI is called again:
+
 ```
 ##########################################################################
 #                           Dumping scheduler queues                     #
@@ -208,28 +218,36 @@ Adding P1 to RQ2
 USER1 > nop
 USER2 > nop
 ```
+
 As you can see above this time USER 1 types run to add his process to the ready queue, once again it is initially added to the RQ2, but the scheduler will do a initial scan and find that it needs to be promoted to higher priority, thus the next queue output will be the following:
+
 ```
 RQ1: 1 ->
 RQ2: 2 ->
 SQ1: ui ->
 SQ2:
 ```
+
 The UI is moved to shadow queue after it is finished, and even though process 2 was scheduled first, process 1 will get priority and run before it due to the fact that it has not had and processor time yet. After execution Process 1 has had processor time, and no longer qualifies for priority so it is put into SQ2:
+
 ```
 RQ1:
 RQ2: 2 ->
 SQ1: ui ->
 SQ2: 1 ->
 ```
+
 Process 2 finishes it's process with it's next execution and is then removed for the queues:
+
 ```
 RQ1:
 RQ2:
 SQ1: ui ->
 SQ2: 1 ->
 ```
+
 Then once again the shadow queues are moved back Into the ready queues and the UI is called. This time I type STP on the System and end execution. The final dump of the queues is as follows:
+
 ```
 SYS > stp
 ########################################################################
@@ -241,6 +259,7 @@ RQ2: 1 ->
 SQ1:
 SQ2:
 ```
+
 As you can see, even though the simulated OS is closing, process one is still in the ready queue as it did not finish execution.
 
 
