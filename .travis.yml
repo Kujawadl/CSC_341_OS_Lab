@@ -12,4 +12,4 @@ before_install:
   - sudo chmod -R 600 ~/.ssh
 
 script:
-  - ssh -q -t csc341 "cd CSC_341_OS_Lab && git pull && make"
+  - ssh -v -t csc341 "cd CSC_341_OS_Lab && git pull && make"
