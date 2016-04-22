@@ -5,7 +5,7 @@ branches:
     - master
 
 before_install:
-  - echo -e "Host csc341\n\tHostname 144.96.234.242\n\tPort 22\n\tUser csc341109" > ~/.ssh/config
+  - echo -e "Host csc341\n\tStrictHostKeyChecking no\n\tHostname 144.96.234.242\n\tPort 22\n\tUser csc341109" > ~/.ssh/config
   - echo -e "$KEY" > ~/.ssh/id_rsa
 
 script:
