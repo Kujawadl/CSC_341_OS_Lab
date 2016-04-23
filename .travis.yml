@@ -8,8 +8,8 @@ branches:
 
 before_install:
   - echo -e "Host csc341\n\tStrictHostKeyChecking no\n\tHostname 144.96.234.242\n\tPort 22\n\tUser csc341109" > ~/.ssh/config
-  - echo -e "$RSA.pub" > ~/.ssh/id_rsa.pub
-  - echo -e "$DSA.pub" > ~/.ssh/id_dsa.pub
+  - echo -e "$RSAPUB" > ~/.ssh/id_rsa.pub
+  - echo -e "$DSAPUB" > ~/.ssh/id_dsa.pub
   - echo -e "$RSA" > ~/.ssh/id_rsa
   - echo -e "DSA" > ~/.ssh/id_dsa
   - sudo chmod 600 ~/.ssh/id*
