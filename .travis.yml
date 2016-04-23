@@ -14,4 +14,4 @@ before_install:
   - sudo chmod 600 ~/.ssh/id_dsa
 
 script:
-  - ssh -vvvv -t csc341 "cd CSC_341_OS_Lab && git pull && make"
+  - ssh -vvvv -t -i ~/.ssh/id_rsa csc341 "cd CSC_341_OS_Lab && git pull && make"
