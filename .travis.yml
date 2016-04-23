@@ -8,10 +8,9 @@ branches:
 
 before_install:
   - echo -e "Host csc341\n\tStrictHostKeyChecking no\n\tHostname 144.96.234.242\n\tPort 22\n\tUser csc341109" > ~/.ssh/config
+  - echo -e "$RSA.pub" > ~/.ssh/id_rsa.pub
   - echo -e "$RSA" > ~/.ssh/id_rsa
   - sudo chmod 600 ~/.ssh/id_rsa
-  - echo -e "$DSA" > ~/.ssh/id_dsa
-  - sudo chmod 600 ~/.ssh/id_dsa
 
 script:
   - ssh -vvvv -t -i ~/.ssh/id_dsa csc341 "cd CSC_341_OS_Lab && git pull && make"
