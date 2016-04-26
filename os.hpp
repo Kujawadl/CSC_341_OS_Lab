@@ -44,6 +44,20 @@ struct Process {
     regs(0, 0, 0, 0, 61440, 0, 0) {}
   Process(int id, User *uid, string name) : pid(id), pname(name), user(uid),
     running(false), regs(0, 0, 0, 0, 61440, 0, 0) {}
+  string toString() {
+    stringstream ss;
+    ss << "Dumping Registers for RUN process with PID : " << pid << endl;
+    ss << "\trA: " << regs.rA << ", r1: " << regs.r1 \
+    		 << ", r2: " << regs.r2 << ", r3: " << regs.r3 << endl;
+    ss << "\tIR: " << regs.IR << ", PC: " << regs.PC \
+    		 << ", CR: " << regs.CR << endl;
+    ss << "\tRunning: " << boolalpha << running << endl << endl;
+
+    ss << endl << "Page Table:" << endl;
+  	ss << regs.PTBR->toString() << endl << endl;
+
+    return ss.str();
+  }
 };
 
 extern User U1, U2, SYS;

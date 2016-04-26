@@ -27,80 +27,139 @@ void dump()
 	cout << textbox("Dumping scheduler queues");
 
 	cout << "Current process: "
-			 << (currentProcess->user->id == 0 ? "UI" : itos(currentProcess->user->id))
+			 << currentProcess->pname << " (PID " << currentProcess->pid << ")"
 			 << endl << endl;
 	cout << "RQ1: " << qtos(RQ1) << endl;
 	cout << "RQ2: " << qtos(RQ2) << endl;
 	cout << "SQ1: " << qtos(SQ1) << endl;
 	cout << "SQ2: " << qtos(SQ2) << endl;
 
-	// Dump Registers
-	cout << textbox("Dumping Process States:");
+	cout << textbox("Dumping user process states in order of anticipated execution");
+  for (int i = 0; i < int(RQ1.size()); i++) {
+    cout << RQ1.front()->toString();
+    Process *tmp = RQ1.front();
+    RQ1.pop();
+    RQ1.push(tmp);
+  }
+  for (int i = 0; i < int(RQ2.size()); i++) {
+    cout << RQ2.front()->toString();
+    Process *tmp = RQ2.front();
+    RQ2.pop();
+    RQ2.push(tmp);
+  }
+  for (int i = 0; i < int(SQ1.size()); i++) {
+    cout << SQ1.front()->toString();
+    Process *tmp = SQ1.front();
+    SQ1.pop();
+    SQ1.push(tmp);
+  }
+  for (int i = 0; i < int(SQ2.size()); i++) {
+    cout << SQ2.front()->toString();
+    Process *tmp = SQ2.front();
+    SQ2.pop();
+    SQ2.push(tmp);
+  }
+  if (RQ1.size() + RQ2.size() + SQ1.size() + SQ2.size() == 0) {
+    cout << "No user processes running at this time..." << endl;
+  }
 
-/*
-	cout << "Dumping Registers for PID = 1:" << endl;
-	cout << "\trA: " << U1.proc->regs.rA \
-			 << ", r1: " << U1.proc->regs.r1 \
-			 << ", r2: " << U1.proc->regs.r2 \
-			 << ", r3: " << U1.proc->regs.r3 << endl;
-	cout << "\tIR: " << U1.proc->regs.IR
-			 << ", PC: " << U1.proc->regs.PC \
-			 << ", CR: " << U1.proc->regs.CR << endl;
-	cout << "\tRunning: " << boolalpha << U1.proc->running
-			 << ", Time: " << U1.proc->time << " ticks" << endl << endl;
-
-	cout << "Dumping Registers for PID = 2:" << endl;
-	cout << "\trA: " << U2.proc->regs.rA \
-			 << ", r1: " << U2.proc->regs.r1 \
-			 << ", r2: " << U2.proc->regs.r2 \
-			 << ", r3: " << U2.proc->regs.r3 << endl;
-	cout << "\tIR: " << U2.proc->regs.IR \
-			 << ", PC: " << U2.proc->regs.PC \
-			 << ", CR: " << U2.proc->regs.CR << endl;
-	cout << "\tRunning: " << boolalpha << U2.proc->running
-			 << ", Time: " << U2.proc->time << " ticks" << endl;
-*/
 
 	// Dump memory
-	cout << textbox("Dumping memory:");
+	cout << textbox("Dumping memory" + padding(80) + "(only displaying allocated frames)");
 	// Print table header
 	cout << setfill('0');
-	cout << "*"; for (int i = 0; i < 78; i++) cout << "-"; cout << "*" << endl;
-	cout << "| Frame Table ||| ";
-		for (int i = 0; i < 22; i++) cout << " "; cout << "Memory contents";
-		for (int i = 0; i < 23; i++) cout << " "; cout << " |" << endl;
-	cout << "*"; for (int i = 0; i < 78; i++) cout << "-"; cout << "*" << endl;
-	cout << "| Fr# | InUse |";
-		for (int i = 0; i < 4; i++) cout << "|| Addr: Value  ";
-		cout << "|" << endl;
-	cout << "*"; for (int i = 0; i < 78; i++) cout << "-"; cout << "*" << endl;
+	cout << "*" << padding(78, '-') << "*" << endl;
+  cout << "|" << padding(32) << "Memory contents" << padding(31) << "|" << endl;
+	cout << "*" << padding(78, '-') << "*" << endl;
+	cout << "|   Frame  |"; for (int i = 0; i < 4; i++) cout << "|  Addr: Value  |";
+	cout << endl << "*" << padding(78, '-') << "*" << endl;
 
 	// Print table contents
 	for (int i = 0; i < 64; i++) {
-		cout << "|  " << setw(2) << i << " |   "
-				 << (framesInUse[i] ? "Y" : " ") << "   ";
-		cout << "|" << hex;
-		for (int j = 0; j < 4; j++) {
-			cout << "|| 0x" << setw(2) << (i*4)+j
-					 << ": 0x" << setw(4) << main_memory[(i*4)+j]
-					 << " ";
-		}
-		cout << "|" << dec << endl;
+    bool print = (framesInUse[i]);
+    if (print) {
+      cout << "|    " << setw(2) << i << "    |";
+      cout << hex;
+      for (int j = 0; j < 4; j++) {
+        cout << "|  0x" << setw(2) << (i*4)+j
+             << ": 0x" << setw(4) << main_memory[(i*4)+j] << " |";
+      }
+      cout << dec << endl;
+    } else if (i <= 0 || framesInUse[i-1]) {
+      cout << "|" << padding(38) << "..." << padding(37) << "|" << endl;
+    }
 	}
-	cout << "*"; for (int i = 0; i < 78; i++) cout << "-"; cout << "*" << endl;
+	cout << "*" << padding(78, '-') << "*" << endl;
 	cout << setfill(' ');
-
-	cout << endl << "User1 Page Table:" << endl;
-
-	//U1.proc->regs.PTBR->print();
-
-	cout << endl << "User2 Page Table:" << endl;
-
-	//U2.proc->regs.PTBR->print();
 }
 
 // Dump everything (to be called on STP)
-void fulldump() {}
+void fulldump() {
+  cout << textbox("Dumping scheduler queues");
+
+	cout << "Current process: "
+			 << currentProcess->pname << " (PID " << currentProcess->pid << ")"
+			 << endl << endl;
+	cout << "RQ1: " << qtos(RQ1) << endl;
+	cout << "RQ2: " << qtos(RQ2) << endl;
+	cout << "SQ1: " << qtos(SQ1) << endl;
+	cout << "SQ2: " << qtos(SQ2) << endl;
+
+	cout << textbox("Dumping user process states in order of anticipated execution");
+  for (int i = 0; i < int(RQ1.size()); i++) {
+    cout << RQ1.front()->toString();
+    Process *tmp = RQ1.front();
+    RQ1.pop();
+    RQ1.push(tmp);
+  }
+  for (int i = 0; i < int(RQ2.size()); i++) {
+    cout << RQ2.front()->toString();
+    Process *tmp = RQ2.front();
+    RQ2.pop();
+    RQ2.push(tmp);
+  }
+  for (int i = 0; i < int(SQ1.size()); i++) {
+    cout << SQ1.front()->toString();
+    Process *tmp = SQ1.front();
+    SQ1.pop();
+    SQ1.push(tmp);
+  }
+  for (int i = 0; i < int(SQ2.size()); i++) {
+    cout << SQ2.front()->toString();
+    Process *tmp = SQ2.front();
+    SQ2.pop();
+    SQ2.push(tmp);
+  }
+  if (RQ1.size() + RQ2.size() + SQ1.size() + SQ2.size() == 0) {
+    cout << "No user processes running at this time..." << endl;
+  }
+
+
+	// Dump memory
+	cout << textbox("Dumping memory" + padding(80) + "(displaying all frames)");
+	// Print table header
+	cout << setfill('0');
+	cout << "*" << padding(78, '-') << "*" << endl;
+  cout << "|" << padding(32) << "Memory contents" << padding(31) << "|" << endl;
+	cout << "*" << padding(78, '-') << "*" << endl;
+	cout << "|   Frame  |"; for (int i = 0; i < 4; i++) cout << "|  Addr: Value  |";
+	cout << endl << "*" << padding(78, '-') << "*" << endl;
+
+	// Print table contents
+	for (int i = 0; i < 64; i++) {
+    cout << "|    " << setw(2) << i << "    |";
+    cout << hex;
+    for (int j = 0; j < 4; j++) {
+      cout << "|  0x" << setw(2) << (i*4)+j
+           << ": 0x" << setw(4) << main_memory[(i*4)+j] << " |";
+    }
+    cout << dec << endl;
+	}
+	cout << "*" << padding(78, '-') << "*" << endl;
+	cout << setfill(' ');
+
+  //TODO: print contents of disk
+}
 
 // Loads the two user programs from disk into main memory, paging them as
 // appropriate. Currently takes no args, returns no vals, everything hardcoded.
@@ -334,9 +393,9 @@ void init()
 	SQ2 = queue<Process*>();
 
   nextPID = 0;
-  Process UI = Process(nextPID++, &SYS, "UI");
+  Process *UI = new Process(nextPID++, &SYS, "UI");
 
-	RQ1.push(&UI);
+	RQ1.push(UI);
 
 	// Initialize sysclock
 	sysclock = 0;
