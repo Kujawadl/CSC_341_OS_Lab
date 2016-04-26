@@ -474,6 +474,11 @@ void printDebug(string op) {
   unsigned short int code = getRegCode(machine.IR);
   char reg = (code == 0 ? 'A' : code + '0');
   unsigned short int operand = getOperand(machine.IR);
+  cout << "Instruction with opcode " << op << " finished executing." << endl;
+  cout << "\t0x" << oldPC << ": " << op << " " << addr \
+    << " r" << reg << " " << operand << endl;
+
+  #ifdef DEBUG_VERBOSE
   unsigned short int rA = machine.rA;
   unsigned short int r1 = machine.r1;
   unsigned short int r2 = machine.r2;
@@ -481,10 +486,6 @@ void printDebug(string op) {
   unsigned short int IR = machine.IR; // TODO: Convert this to hex or binary
   unsigned short int PC = machine.PC;
   unsigned short int CR = machine.CR;
-  cout << "Instruction with opcode " << op << " finished executing." << endl;
-  cout << "\t0x" << oldPC << ": " << op << " " << addr \
-    << " r" << reg << " " << operand << endl;
-  #ifdef DEBUG_VERBOSE
   cout << "\tDumping Registers:" << endl;
   cout << "\trA: " << rA << ", r1: " << r1 << ", r2: " \
     << r2 << ", r3: " << r3 << endl;

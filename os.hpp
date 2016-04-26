@@ -26,21 +26,24 @@ extern FrameTable framesLocked;
 // Define the user struct
 enum userID {sys, u1, u2};
 
-struct Process {
+struct User {
   userID id;
   int time;
+
+  User() {}
+  User(userID uid) : id(uid), time(0) {}
+};
+struct Process {
+  int pid;
+  string pname;
+  User *user;
   bool running;
   registers regs;
 
-  Process(userID uid) : id(uid), time(0), running(false),
+  Process(int id, User *uid) : pid(id), pname(""), user(uid), running(false),
     regs(0, 0, 0, 0, 61440, 0, 0) {}
-};
-struct User {
-  userID id;
-  Process* proc;
-
-  User() : proc(NULL) {}
-  User(userID uid) : id(uid), proc(new Process(uid)) {}
+  Process(int id, User *uid, string name) : pid(id), pname(name), user(uid),
+    running(false), regs(0, 0, 0, 0, 61440, 0, 0) {}
 };
 
 extern User U1, U2, SYS;
@@ -52,6 +55,9 @@ extern Process* currentProcess;
 
 // Dump contents of main memory and all registers
 void dump();
+
+// Dump everything (to be called on STP)
+void fulldump();
 
 // Print the contents of a queue, with a header containing the queue name
 void printQueue(string queueName, queue<User> &q,int num);
@@ -77,7 +83,7 @@ int cmdToInt(string);
 void init();
 
 // Main function (starts the OS)
-int main(int argc, char** argv);
+int main();
 
 // Convert process queue to string
 string qtos(queue<Process*>);

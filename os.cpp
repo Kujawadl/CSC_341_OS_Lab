@@ -14,6 +14,7 @@ FrameTable framesLocked;
 User U1, U2, SYS;
 
 Process* currentProcess;
+int nextPID;
 
 queue<Process*> RQ1;
 queue<Process*> RQ2;
@@ -26,7 +27,7 @@ void dump()
 	cout << textbox("Dumping scheduler queues");
 
 	cout << "Current process: "
-			 << (currentProcess->id == 0 ? "UI" : itos(currentProcess->id))
+			 << (currentProcess->user->id == 0 ? "UI" : itos(currentProcess->user->id))
 			 << endl << endl;
 	cout << "RQ1: " << qtos(RQ1) << endl;
 	cout << "RQ2: " << qtos(RQ2) << endl;
@@ -36,6 +37,7 @@ void dump()
 	// Dump Registers
 	cout << textbox("Dumping Process States:");
 
+/*
 	cout << "Dumping Registers for PID = 1:" << endl;
 	cout << "\trA: " << U1.proc->regs.rA \
 			 << ", r1: " << U1.proc->regs.r1 \
@@ -57,6 +59,7 @@ void dump()
 			 << ", CR: " << U2.proc->regs.CR << endl;
 	cout << "\tRunning: " << boolalpha << U2.proc->running
 			 << ", Time: " << U2.proc->time << " ticks" << endl;
+*/
 
 	// Dump memory
 	cout << textbox("Dumping memory:");
@@ -89,56 +92,38 @@ void dump()
 
 	cout << endl << "User1 Page Table:" << endl;
 
-	U1.proc->regs.PTBR->print();
+	//U1.proc->regs.PTBR->print();
 
 	cout << endl << "User2 Page Table:" << endl;
 
-	U2.proc->regs.PTBR->print();
+	//U2.proc->regs.PTBR->print();
 }
+
+// Dump everything (to be called on STP)
+void fulldump() {}
 
 // Loads the two user programs from disk into main memory, paging them as
 // appropriate. Currently takes no args, returns no vals, everything hardcoded.
-void loader()
+Process* loader(User &currentUser, short int diskAddr)
 {
-	unsigned short int currentPage,
-										 currentWord,
-										 currentInstr,
-										 currentDiskAddr;
-	User *currentUser;
+	unsigned short int currentPage = 0,
+										 currentWord = 0,
+										 currentInstr = 0;
 
-	// For User 1, read from disk starting at location 0
-	currentPage = 0;
-	currentWord = 0;
-	currentInstr = 0;
-	currentDiskAddr = 0;
-	currentUser = &U1;
-	machine.PTBR = currentUser->proc->regs.PTBR;
+  Process *newProcess = new Process(nextPID++, &currentUser);
+
+	machine.PTBR = newProcess->regs.PTBR;
 	do {
-		currentInstr = disk[currentDiskAddr];
+		currentInstr = disk[diskAddr];
 		main_memory[MMU((currentPage<<2) + currentWord)] = currentInstr;
 		// If at the last word in the page, increment currentPage
 		currentPage = (currentWord == 3 ? currentPage + 1 : currentPage);
 		// If at the last word in the page, reset currentWord to 0
 		currentWord = (currentWord == 3 ? 0 : currentWord + 1);
-		currentDiskAddr++;
+		diskAddr++;
 	} while (currentInstr != 61440);
 
-	// For User 2, read from disk starting at location 100
-	currentPage = 0;
-	currentWord = 0;
-	currentInstr = 0;
-	currentDiskAddr = 100;
-	currentUser = &U2;
-	machine.PTBR = currentUser->proc->regs.PTBR;
-	do {
-		currentInstr = disk[currentDiskAddr];
-		main_memory[MMU((currentPage<<2) + currentWord)] = currentInstr;
-		// If at the last word in the page, increment currentPage
-		currentPage = (currentWord == 3 ? currentPage + 1 : currentPage);
-		// If at the last word in the page, reset currentWord to 0
-		currentWord = (currentWord == 3 ? 0 : currentWord + 1);
-		currentDiskAddr++;
-	} while (currentInstr != 61440);
+  return newProcess;
 }
 
 void scheduler() {
@@ -147,8 +132,8 @@ void scheduler() {
 
 
 		// Elevate priority of priority-2 proc's with 0 time so far
-		for (int i = 0; i < RQ2.size(); i++) {
-			if (RQ2.front()->time == 0) {
+		for (int i = 0; i < int(RQ2.size()); i++) {
+			if (RQ2.front()->user->time == 0) {
 				RQ1.push(RQ2.front());
 			} else {
 				RQ2.push(RQ2.front());
@@ -186,24 +171,23 @@ void scheduler() {
 
 		if (currentProcess) {
 			// Run the process
-			if (currentProcess->id == sys) {
+			if (currentProcess->user->id == sys) {
 				cout << textbox("Switching to UI");
 				// User interface is a special case
 				userinterface();
 				SQ1.push(currentProcess);
 			} else {
-				cout << textbox("Switching to Process " + itos(currentProcess->id));
+				cout << textbox("Switching to Process " + itos(currentProcess->pid));
 				int starttime = sysclock;
 				// Load state, run, save state
 				machine = currentProcess->regs;
 				bool success = interpreter();
 				// Save state and new proc run time
 				currentProcess->regs = machine;
-				currentProcess->time += sysclock - starttime;
+				currentProcess->user->time += sysclock - starttime;
 				// If process encountered an error or halted, set running to false
 				if (!success || machine.IR == 61440) {
 					currentProcess->running = false;
-					currentProcess->time = 0;
 
 					if (!success) {
 						cerr << red;
@@ -213,7 +197,7 @@ void scheduler() {
 				}
 				// Return process to the shadow queue
 				// If normal user process, return to S2
-				if (currentProcess->id !=sys  && success && currentProcess->running) {
+				if (currentProcess->user->id !=sys  && success && currentProcess->running) {
 					SQ2.push(currentProcess);
 				// If other process, return to S1
 				} else if (success && currentProcess->running) {
@@ -226,119 +210,76 @@ void scheduler() {
 
 void userinterface() {
 	string cmd;
-	int timer_interrupt = 0;
 
-	while (timer_interrupt < QUANTUM) {
-		cout << "SYS > ";
+	for (int i = 0; i < 3; i++) {
+
+    // Prompt for input
+    switch (i) {
+      case 0: cout << "SYS > "; break;
+      case 1: cout << "U1 > "; break;
+      case 2: cout << "U2 > "; break;
+    }
 		cin >> cmd;
 		sysclock++;
 
+    // Process the input
 		switch (cmdToInt(cmd)) {
-			case 0: // "run"
-				loader();
-				cout << "The loader function was called" << endl;
+      //TODO: run should now be able to accept cmdline args specifying a program
+      case 0: // "run"
+        if (i == 0) {
+          cout << red << "Invalid system command!" << normal << endl;
+        } else if (i == 1) {
+          Process* newProcess = loader(U1, 0);
+          RQ2.push(newProcess);
+          cout << "Process with PID " << newProcess->pid << " added to RQ2\n";
+        } else if (i == 2) {
+          Process* newProcess = loader(U2, 100);
+          RQ2.push(newProcess);
+          cout << "Process with PID " << newProcess->pid << " added to RQ2\n";
+        }
 				break;
 			case 1: // "dmp"
-				dump();
+				if (i == 0) {
+          dump();
+        } else {
+          // If not system, dmp command is invalid
+          cout << red << "Invalid user command!" << normal << endl;
+        }
 				break;
 			case 2: // "nop"
-				timer_interrupt = QUANTUM;
+        // Do nothing
 				break;
 			case 3: // "stp"
-				// If user programs did not cleanly terminate, exit failure
-				dump();
-				if (!U1.proc->running && !U2.proc->running) {
-					cout << "Exited cleanly. Goodbye." << endl;
-					exit(EXIT_SUCCESS);
-				} else {
-					cerr << red;
-					cerr << "Force terminated; processes were still running." << endl;
-					cerr << normal;
-					exit(EXIT_FAILURE);
-				}
+        if (i == 0) {
+  				// If user programs did not cleanly terminate, exit failure
+  				fulldump();
+  				if (RQ1.empty() && RQ2.empty() && SQ1.empty() && SQ2.empty()) {
+  					cout << green <<  "Exited cleanly. Goodbye." << normal << endl;
+  					exit(EXIT_SUCCESS);
+  				} else {
+  					cerr << red;
+  					cerr << "Force terminated; processes were still running." << endl;
+  					cerr << normal;
+  					exit(EXIT_FAILURE);
+  				}
+        } else {
+          // If not system, stp command is invalid
+          cout << red << "Invalid user command!" << normal << endl;
+        }
 				break;
 			case 4: // "time"
-				cout << "System clock is at "<< sysclock << " ticks" << endl;
+        if (i == 0) {
+          cout << "System clock is at "<< sysclock << " ticks" << endl;
+        } else if (i == 1) {
+          cout << "U1 clock is at "<< U1.time << " ticks" << endl;
+        } else if (i == 2) {
+          cout << "U2 clock is at "<< U2.time << " ticks" << endl;
+        }
 				break;
 			default:
-				cout << "Invalid command: " << cmd << endl;
+				cout << red << "Invalid command: " << cmd << normal << endl;
 				break;
 		}
-		timer_interrupt++;
-	}
-	timer_interrupt = 0;
-
-	while(timer_interrupt < QUANTUM) {
-		cout << "USER1 > ";
-		cin >> cmd;
-		sysclock++;
-
-		switch(cmdToInt(cmd)) {
-			case 0: // "run"
-				if (U1.proc->running) {
-					cout << "User 1 already has a running process!" << endl;
-				} else {
-					#ifdef DEBUG
-					cout << "Adding P1 to RQ2" << endl;
-					#endif
-					RQ2.push(U1.proc);
-					U1.proc->running = true;
-				}
-				break;
-			case 1: // "dmp"
-				cout << "Invalid user command!" << endl;
-				break;
-			case 2: // "nop"
-				timer_interrupt = QUANTUM;
-				break;
-			case 3: // "stp"
-				cout << "Invalid user command!" << endl;
-				break;
-			case 4: // "time"
-				cout << "User1 Process has run for " << U1.proc->time << " ticks" << endl;
-				break;
-			default:
-				cout << "Invalid command: " << cmd << endl;
-				break;
-		}
-		timer_interrupt++;
-	}
-	timer_interrupt = 0;
-
-	while(timer_interrupt < QUANTUM) {
-		cout << "USER2 > ";
-		cin >> cmd;
-		sysclock++;
-
-		switch(cmdToInt(cmd)) {
-			case 0: // "run"
-				if (U2.proc->running) {
-					cout << "User 2 already has a running process!" << endl;
-				} else {
-					#ifdef DEBUG
-					cout << "Adding P2 to RQ2" << endl;
-					#endif
-					RQ2.push(U2.proc);
-					U2.proc->running = true;
-				}
-				break;
-			case 1: // "dmp"
-				cout << "Invalid user command!" << endl;
-				break;
-			case 2: // "nop"
-				timer_interrupt = QUANTUM;
-				break;
-			case 3: // "stp"
-				cout << "Invalid user command!" << endl;
-				break;
-			case 4: // "time"
-				cout << "User2 Process has run for " << U2.proc->time << " ticks" << endl;
-				break;
-			default:
-				cout << "Invalid command: " << cmd << endl;
-				break;
-		}
-		timer_interrupt++;
 	}
 }
 
@@ -382,39 +323,27 @@ void init()
 	disk[i++] = 61440;
 	for (i = i; i < 512; i++) {disk [i] = 0;}
 
-	// Initialize default register values
-	registers defaultRegisterValues = registers
-	(				// Registers:
-		0,			// R1
-		0,			// R2
-		0,			// R3
-		0,			// RA
-		61440,	// IR
-		0,			// PC
-		0				// CR
-	);
-
 	// Initialize user registers; PTBR must be handled separately
 	U1 = User(u1);
-	U1.proc->regs.PTBR = new PageTable(framesInUse);
 	U2 = User(u2);
-	U2.proc->regs.PTBR = new PageTable(framesInUse);
 	SYS = User(sys);
-	// SYS does not need a page table; it has no pages
 
 	RQ1 = queue<Process*>();
 	RQ2 = queue<Process*>();
 	SQ1 = queue<Process*>();
 	SQ2 = queue<Process*>();
 
-	RQ1.push(SYS.proc);
+  nextPID = 0;
+  Process UI = Process(nextPID++, &SYS, "UI");
+
+	RQ1.push(&UI);
 
 	// Initialize sysclock
 	sysclock = 0;
 }
 
 // Main function (starts the OS)
-int main(int argc, char** argv)
+int main()
 {
 	// Print OS startup header
 	cout << green;
@@ -435,7 +364,7 @@ string qtos(queue<Process*> q) {
 	int size = q.size(); // q.size decreases as queue is traversed; need a static size
 	string out = "";
 	for (int i = 0; i < size; i++) {
-		out += (q.front()->id == 0 ? "ui" : itos(q.front()->id));
+		out += (q.front()->user->id == 0 ? "ui" : itos(q.front()->user->id));
 		// If not last element, add arrow
 		if (i < size) {
 			out += " -> ";
