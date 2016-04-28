@@ -236,6 +236,8 @@ void scheduler() {
               systemStats = "";
               currentProcess->running = false;
             } else {
+              cout << "Gather statistics..." << endl;
+
               currentProcess->running = true;
               systemStats = textbox("System Statistics");
 
@@ -430,6 +432,14 @@ void userinterface() {
         } else {
           RQ2.push(newProcess);
           cout << "Time process (PID: " << newProcess->pid << ") added to RQ2\n";
+        }
+        break;
+      case 5: // "stats"
+        if (u == 0) {
+          newProcess = new Process(cmd, nextPID++, &SYS);
+          RQ1.push(newProcess);
+        } else {
+          cout << red << "Invalid user command!" << normal << endl;
         }
         break;
       default:
