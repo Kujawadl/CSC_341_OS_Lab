@@ -10,6 +10,8 @@
 #include <iomanip>  // setw, setfill, left, right, dec, endl
 #include <sstream>  // stringstream
 #include <vector>   // we need vectors
+#include <fstream>
+#include <string>
 #include "utils.hpp"
 using namespace std;
 
