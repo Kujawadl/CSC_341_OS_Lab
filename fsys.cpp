@@ -14,7 +14,7 @@ FSYS::FSYS() : fileTable(FAT()), buffer(FileBuffer()) {
 
 // Print method
 void FSYS::print() {
-  cout << this->toString() << endl;
+  // cout << this->toString() << endl;
   cout << textbox("Printing the FAT");
   string out;
   out = "*" + padding(28, '-') + "*\n";
@@ -27,6 +27,59 @@ void FSYS::print() {
   }
   out = "*" + padding(28, '-') + "*\n";
   printf("\n%s", out.c_str());
+}
+
+void FSYS::printDisk(int x) {
+  // x will refer to either a full disk dump or only occuipied space Dump
+  if (x == 0) {
+    cout << textbox("PRINTING THE DISK");
+    cout << setfill('0');
+    cout << "*" << padding(78, '-') << "*" << endl;
+    cout << "|" << padding(32) << "Disk contents" << padding(31) << "|" << endl;
+    cout << "*" << padding(78, '-') << "*" << endl;
+    cout << "|   Block  |"; for (int i = 0; i < 4; i++) cout << "|   Word Value  |";
+    cout << endl << "*" << padding(78, '-') << "*" << endl;
+    for (int i = 0; i < 64; i++) {
+        cout << "|    " << setw(2) << i << "    |";
+        cout << hex;
+        for (int j = 0; j < 4; j++) {
+          cout << "|  0x" << setw(2) << (i*4)+j
+               << ": 0x" << setw(4) << disk[(i*4)+j] << " |";
+        }
+        cout << dec << endl;
+        usleep(10000);
+    }
+    cout << "*" << padding(78, '-') << "*" << endl;
+  }
+  if (x == 1) {
+    cout << textbox("PRINTING THE DISK (IN USE ONLY)");
+    cout << setfill('0');
+    cout << "*" << padding(78, '-') << "*" << endl;
+    cout << "|" << padding(32) << "Disk contents" << padding(31) << "|" << endl;
+    cout << "*" << padding(78, '-') << "*" << endl;
+    cout << "|   Block  |"; for (int i = 0; i < 4; i++) cout << "|   Word Value  |";
+    cout << endl << "*" << padding(78, '-') << "*" << endl;
+    string output;
+    bool print;
+    for (int i = 0; i < 64; i++) {
+        print = false;
+        for (int j = 0; j < 4; j++) {
+          if (disk[(i*4)+j] != 0)
+            print = true;
+        }
+        if (print == true) {
+        cout << "|    " << setw(2) << i << "    |";
+        cout << hex;
+        for (int j = 0; j < 4; j++) {
+          cout << "|  0x" << setw(2) << (i*4)+j
+               << ": 0x" << setw(4) << disk[(i*4)+j] << " |";
+        }
+        cout << dec << endl;
+        usleep(10000);
+    }
+  }
+    cout << "*" << padding(78, '-') << "*" << endl;
+  }
 }
 
 // Represent the FAT table as a string
@@ -45,6 +98,7 @@ void FSYS::load() {
   for (int i = 0; (unsigned long)i < fileTable.size(); i++) {
     loadFile(fileTable[i]);
   }
+  printDisk(1);
 }
 
 void FSYS::loadFAT() {
@@ -80,6 +134,7 @@ void FSYS::loadFAT() {
   infile.close();
   usleep(1000000);
   print();
+
 }
 
 void FSYS::loadFile(FAT_Record record) {

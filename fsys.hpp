@@ -22,6 +22,7 @@ class FSYS {
 public:
   FSYS();
   void print();
+  void printDisk(int x);
   string toString();
   void save();
   void load();
