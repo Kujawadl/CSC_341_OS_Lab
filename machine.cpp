@@ -14,9 +14,9 @@ int timer_interrupt;  // Send interrupt every QUANTUM ticks
 // Initialize machine registers
 registers machine = registers(0, 0, 0, 0, 0, 0, 0);
 
-// Declare main memory and disk
+// Declare main memory
 unsigned short int main_memory[256];
-unsigned short int disk[512];
+
 
 // Memory Management Unit
 // Takes a logical address and converts it to a physical address
