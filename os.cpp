@@ -271,6 +271,7 @@ void scheduler() {
             // If not running, load from disk
             if (currentProcess->running == false) {
               currentProcess = loader((uid == 1 ? U1 : U2), pname);
+              currentProcess->running = true;
             }
 
             // Load state, run, save state
@@ -291,7 +292,7 @@ void scheduler() {
             }
             // Return process to the shadow queue
             // If normal user process, return to S2
-            if (uid !=sys  && success && currentProcess->running) {
+            if (success && currentProcess->running) {
               SQ2.push(currentProcess);
             // If other process, return to S1
             } else if (success && currentProcess->running) {
