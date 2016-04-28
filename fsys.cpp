@@ -9,12 +9,12 @@
 
 // Constructor
 FSYS::FSYS() : fileTable(FAT()), buffer(FileBuffer()) {
-
+  for (int i = 0; i < 512; i++)
+    disk[i] = 0;
 }
 
 // Print method
 void FSYS::print() {
-  // cout << this->toString() << endl;
   cout << textbox("Printing the FAT");
   string out;
   out = "*" + padding(28, '-') + "*\n";
@@ -82,6 +82,17 @@ void FSYS::printDisk(int x) {
   }
 }
 
+int FSYS::active() {
+  int count = 0;
+  for (int i = 0; i < 64; i++) {
+    for (int j = 0; j < 4; j++) {
+      if (disk[(i*4)+j] != 0)
+        count++;
+    }
+  }
+  return count;
+}
+
 // Represent the FAT table as a string
 string FSYS::toString() {
   return "";
@@ -90,8 +101,6 @@ string FSYS::toString() {
 
 // Load files from the physical disk into the virtual disk
 void FSYS::load() {
-  for (int i = 0; i < 512; i++)
-    disk[i] = 0;
   loadFAT();
   for (int i = 0; (unsigned long)i < fileTable.size(); i++) {
     loadFile(fileTable[i]);

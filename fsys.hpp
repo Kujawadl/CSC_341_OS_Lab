@@ -23,6 +23,7 @@ public:
   FSYS();
   void print();
   void printDisk(int x);
+  int active();
   string toString();
   void load();
   FileBuffer operator[](const string&);

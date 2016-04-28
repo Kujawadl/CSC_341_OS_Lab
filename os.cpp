@@ -8,6 +8,8 @@
 
 #include "os.hpp"
 
+string systemStats;
+
 FSYS fileSystem;
 
 FrameTable framesInUse;
@@ -229,7 +231,68 @@ void scheduler() {
             cout << "System clock is at "<< *sysclock << " ticks" << endl;
             break;
           case 5: //stats
-            //SQ1.push(currentProcess);
+            if (currentProcess->running) {
+              cout << systemStats;
+              systemStats = "";
+              currentProcess->running = false;
+            } else {
+              currentProcess->running = true;
+              systemStats = textbox("System Statistics");
+
+              bool u1_active = false, u2_active = false;
+              for (int i = 0; i < int(RQ1.size()); i++) {
+                if (RQ1.front()->user->id == 1) {
+                  u1_active = true;
+                } else if (RQ1.front()->user->id == 2) {
+                  u2_active = true;
+                }
+                Process *tmp = RQ1.front();
+                RQ1.pop();
+                RQ1.push(tmp);
+              }
+              for (int i = 0; i < int(RQ2.size()); i++) {
+                if (RQ2.front()->user->id == 1) {
+                  u1_active = true;
+                } else if (RQ2.front()->user->id == 2) {
+                  u2_active = true;
+                }
+                Process *tmp = RQ2.front();
+                RQ2.pop();
+                RQ2.push(tmp);
+              }
+              for (int i = 0; i < int(SQ1.size()); i++) {
+                if (SQ1.front()->user->id == 1) {
+                  u1_active = true;
+                } else if (SQ1.front()->user->id == 2) {
+                  u2_active = true;
+                }
+                Process *tmp = SQ1.front();
+                SQ1.pop();
+                SQ1.push(tmp);
+              }
+              for (int i = 0; i < int(SQ2.size()); i++) {
+                if (SQ2.front()->user->id == 1) {
+                  u1_active = true;
+                } else if (SQ2.front()->user->id == 2) {
+                  u2_active = true;
+                }
+                Process *tmp = SQ2.front();
+                SQ2.pop();
+                SQ2.push(tmp);
+              }
+
+              systemStats += "Active Users: " + itos(1 + (u1_active ? 1 : 0) + \
+                              (u2_active ? 1 : 0)) + "\n";
+
+              systemStats += "Active disk blocks: " + itos(fileSystem.active()) +"\n";
+
+              int count = 0;
+              for (int i = 0; i < NUM_FRAMES; i++) {
+                if (framesInUse[i]) count++;
+              }
+              systemStats += "Active Memory Frames: " + itos(count) + "\n";
+              SQ1.push(currentProcess);
+            }
             break;
           default:
             if (my_strcasecmp(pname.substr(0, pname.find_first_of(" \n")), "ui")) {
@@ -393,6 +456,8 @@ int cmdToInt(string cmd)
 // Initializes all values required by the OS
 void init()
 {
+  systemStats = "";
+
   fileSystem = FSYS();
   fileSystem.load();
 
@@ -424,7 +489,7 @@ void init()
 }
 
 // Main function (starts the OS)
-void main()
+int main()
 {
   // Print OS startup header
   cout << titlebox("CSC 341 OS Lab" + padding(80) + \
@@ -434,6 +499,7 @@ void main()
   init();
   // Start scheduler
   scheduler();
+  return 0;
 }
 
 // Convert process queue to string

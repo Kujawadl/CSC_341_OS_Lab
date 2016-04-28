@@ -19,6 +19,8 @@
 #ifndef OS
 #define OS
 
+extern string systemStats;
+
 extern FSYS fileSystem;
 
 extern FrameTable framesInUse;
@@ -47,7 +49,7 @@ struct Process {
     running(false), regs(registers(0, 0, 0, 0, 61440, 0, 0)) {}
   string toString() {
     stringstream ss;
-    ss << (uid == 0 ? "SYS" : ("U" + itos(uid))) << " \"" << pname
+    ss << (user->id == 0 ? "SYS" : ("U" + itos(user->id))) << " \"" << pname
        << "\" process with PID : " << pid << endl;
     ss << "\trA: " << regs.rA << ", r1: " << regs.r1 \
          << ", r2: " << regs.r2 << ", r3: " << regs.r3 << endl;
