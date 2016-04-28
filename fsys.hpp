@@ -12,7 +12,7 @@
  #include <vector>   // we need vectors
 
  // Lets go ahead and get that disk declared
- extern unsigned short int disk[512];
+
 
  class FSYS {
   public:
@@ -23,6 +23,7 @@
     bool load();
     //Look up Fucking String array overloarding and DO IT
   private:
+    unsigned short int disk[512];
     // Records will contain all pertinent information to find files
     //  in disk and will be dynamically added to the FAT.
     struct FAT_FUCKING_Record {

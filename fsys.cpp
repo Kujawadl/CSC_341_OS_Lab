@@ -6,9 +6,6 @@
  * Spring 2016
  */
 
-// Declare the Disk
-unsigned short int disk[512];
-
  // Constructor for FSYS
  FSYS::FSYS() {
    // Do stuff
