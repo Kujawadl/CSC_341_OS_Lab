@@ -12,6 +12,7 @@
 #include <vector>   // we need vectors
 #include <fstream>
 #include <string>
+#include <unistd.h> // usleep
 #include "utils.hpp"
 using namespace std;
 

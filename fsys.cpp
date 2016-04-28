@@ -15,6 +15,18 @@ FSYS::FSYS() : fileTable(FAT()), buffer(FileBuffer()) {
 // Print method
 void FSYS::print() {
   cout << this->toString() << endl;
+  cout << textbox("Printing the FAT");
+  string out;
+  out = "*" + padding(28, '-') + "*\n";
+  out += "| NAME\t\tPOS\tSIZE |\n";
+  out += "*" + padding(28, '-') + "*";
+  printf("\n%s", out.c_str());
+  for (int i = 0; (unsigned long)i < fileTable.size(); i++) {
+    FAT_Record temp = fileTable[i];
+    printf("\n| %10s %7d %6d |", temp.fileName.c_str(), temp.location, temp.size);
+  }
+  out = "*" + padding(28, '-') + "*\n";
+  printf("\n%s", out.c_str());
 }
 
 // Represent the FAT table as a string
@@ -36,6 +48,8 @@ void FSYS::load() {
 }
 
 void FSYS::loadFAT() {
+  string out;
+  cout << textbox("Intializing the FAT with the FAT data file");
   string filename = "FAT.dat";
   string line;
   ifstream infile;
@@ -46,17 +60,26 @@ void FSYS::loadFAT() {
       string name;
       if (!(iss >> name >> position >> size)) { break; } // error
       // printf("\n\t %s, %d, %d \n", name.c_str(), position, size);
-
       FAT_Record newRec;
       newRec.fileName = name;
       newRec.location = position;
       newRec.size = size;
-
-      cout << name << " " << position << " " << size << endl;
-
+      // cout << name << " " << position << " " << size << endl;
       fileTable.push_back(newRec);
+      usleep(1000000);
+      out = "*" + padding(26, '-') + "*\n";
+    	out += "| New File Addition to FAT |\n";
+      out += "| NAME          POS    SIZE|\n";
+    	out += "*" + padding(26, '-') + "*\n";
+      printf("\n%s", out.c_str());
+      printf("| %10s %6d %6d|", name.c_str(), position, size);
+      out = "*" + padding(26, '-') + "*\n";
+      printf("\n%s", out.c_str());
+
   }
   infile.close();
+  usleep(1000000);
+  print();
 }
 
 void FSYS::loadFile(FAT_Record record) {
