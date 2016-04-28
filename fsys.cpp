@@ -64,6 +64,7 @@ void FSYS::loadFile(FAT_Record record) {
   int i = 0;
   while (getline(infile, line)) {
     disk[record.location + i] = strtol(line.c_str(), &end, 2);
+    i++;
   }
   infile.close();
 }
