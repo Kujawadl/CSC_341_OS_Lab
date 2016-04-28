@@ -66,6 +66,9 @@ void dump()
   }
   cout << "*" << padding(78, '-') << "*" << endl;
   cout << setfill(' ');
+  // call the print disk method only in use.
+  fileSystem.printDisk(1);
+  // printf("\nBALLS");
 }
 
 // Dump everything (to be called only on STP)
