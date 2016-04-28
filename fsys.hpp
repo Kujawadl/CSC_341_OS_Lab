@@ -10,6 +10,7 @@
 #include <iomanip>  // setw, setfill, left, right, dec, endl
 #include <sstream>  // stringstream
 #include <vector>   // we need vectors
+#include "utils.hpp"
 using namespace std;
 
 typedef vector<unsigned short int> FileBuffer;
@@ -21,7 +22,7 @@ public:
   string toString();
   bool save();
   bool load();
-  FileBuffer* operator[](const string&);
+  FileBuffer operator[](const string&);
 private:
   unsigned short int disk[512];
   // Records will contain all pertinent information to find files
@@ -31,5 +32,7 @@ private:
     short int location, size;
   };
   typedef vector<FAT_Record> FAT;
+
+  FAT fileTable;
 
 };
