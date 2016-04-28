@@ -14,7 +14,72 @@ FSYS::FSYS() : fileTable(FAT()), buffer(FileBuffer()) {
 
 // Print method
 void FSYS::print() {
-  cout << this->toString() << endl;
+  // cout << this->toString() << endl;
+  cout << textbox("Printing the FAT");
+  string out;
+  out = "*" + padding(28, '-') + "*\n";
+  out += "| NAME\t\tPOS\tSIZE |\n";
+  out += "*" + padding(28, '-') + "*";
+  printf("\n%s", out.c_str());
+  for (int i = 0; (unsigned long)i < fileTable.size(); i++) {
+    FAT_Record temp = fileTable[i];
+    printf("\n| %10s %7d %6d |", temp.fileName.c_str(), temp.location, temp.size);
+  }
+  out = "*" + padding(28, '-') + "*\n";
+  printf("\n%s", out.c_str());
+}
+
+void FSYS::printDisk(int x) {
+  // x will refer to either a full disk dump or only occuipied space Dump
+  if (x == 0) {
+    cout << textbox("PRINTING THE DISK");
+    cout << setfill('0');
+    cout << "*" << padding(78, '-') << "*" << endl;
+    cout << "|" << padding(32) << "Disk contents" << padding(31) << "|" << endl;
+    cout << "*" << padding(78, '-') << "*" << endl;
+    cout << "|   Block  |"; for (int i = 0; i < 4; i++) cout << "|   Word Value  |";
+    cout << endl << "*" << padding(78, '-') << "*" << endl;
+    for (int i = 0; i < 64; i++) {
+        cout << "|    " << setw(2) << i << "    |";
+        cout << hex;
+        for (int j = 0; j < 4; j++) {
+          cout << "|  0x" << setw(2) << (i*4)+j
+               << ": 0x" << setw(4) << disk[(i*4)+j] << " |";
+        }
+        cout << dec << endl;
+        usleep(10000);
+    }
+    cout << "*" << padding(78, '-') << "*" << endl;
+  }
+  if (x == 1) {
+    cout << textbox("PRINTING THE DISK (IN USE ONLY)");
+    cout << setfill('0');
+    cout << "*" << padding(78, '-') << "*" << endl;
+    cout << "|" << padding(32) << "Disk contents" << padding(31) << "|" << endl;
+    cout << "*" << padding(78, '-') << "*" << endl;
+    cout << "|   Block  |"; for (int i = 0; i < 4; i++) cout << "|   Word Value  |";
+    cout << endl << "*" << padding(78, '-') << "*" << endl;
+    string output;
+    bool print;
+    for (int i = 0; i < 64; i++) {
+        print = false;
+        for (int j = 0; j < 4; j++) {
+          if (disk[(i*4)+j] != 0)
+            print = true;
+        }
+        if (print == true) {
+        cout << "|    " << setw(2) << i << "    |";
+        cout << hex;
+        for (int j = 0; j < 4; j++) {
+          cout << "|  0x" << setw(2) << (i*4)+j
+               << ": 0x" << setw(4) << disk[(i*4)+j] << " |";
+        }
+        cout << dec << endl;
+        usleep(10000);
+    }
+  }
+    cout << "*" << padding(78, '-') << "*" << endl;
+  }
 }
 
 // Represent the FAT table as a string
@@ -29,13 +94,18 @@ void FSYS::save() {
 
 // Load files from the physical disk into the virtual disk
 void FSYS::load() {
+  for (int i = 0; i < 512; i++)
+    disk[i] = 0;
   loadFAT();
   for (int i = 0; (unsigned long)i < fileTable.size(); i++) {
     loadFile(fileTable[i]);
   }
+  printDisk(1);
 }
 
 void FSYS::loadFAT() {
+  string out;
+  cout << textbox("Intializing the FAT with the FAT data file");
   string filename = "FAT.dat";
   string line;
   ifstream infile;
@@ -46,17 +116,27 @@ void FSYS::loadFAT() {
       string name;
       if (!(iss >> name >> position >> size)) { break; } // error
       // printf("\n\t %s, %d, %d \n", name.c_str(), position, size);
-
       FAT_Record newRec;
       newRec.fileName = name;
       newRec.location = position;
       newRec.size = size;
-
-      cout << name << " " << position << " " << size << endl;
-
+      // cout << name << " " << position << " " << size << endl;
       fileTable.push_back(newRec);
+      usleep(1000000);
+      out = "*" + padding(26, '-') + "*\n";
+    	out += "| New File Addition to FAT |\n";
+      out += "| NAME          POS    SIZE|\n";
+    	out += "*" + padding(26, '-') + "*\n";
+      printf("\n%s", out.c_str());
+      printf("| %10s %6d %6d|", name.c_str(), position, size);
+      out = "*" + padding(26, '-') + "*\n";
+      printf("\n%s", out.c_str());
+
   }
   infile.close();
+  usleep(1000000);
+  print();
+
 }
 
 void FSYS::loadFile(FAT_Record record) {

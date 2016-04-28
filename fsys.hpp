@@ -12,6 +12,7 @@
 #include <vector>   // we need vectors
 #include <fstream>
 #include <string>
+#include <unistd.h> // usleep
 #include "utils.hpp"
 using namespace std;
 
@@ -21,6 +22,7 @@ class FSYS {
 public:
   FSYS();
   void print();
+  void printDisk(int x);
   string toString();
   void save();
   void load();
