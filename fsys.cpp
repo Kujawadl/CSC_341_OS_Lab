@@ -5,7 +5,7 @@
  * CSC 341.001
  * Spring 2016
  */
-
+#include "fsys.hpp"
 
 // Constructor
 FSYS::FSYS() {
