@@ -12,8 +12,7 @@
 #include <vector>   // we need vectors
 using namespace std;
 
-// Lets go ahead and get that disk declared
-
+typedef vector<unsigned short int> FileBuffer;
 
 class FSYS {
 public:
@@ -22,7 +21,7 @@ public:
   string toString();
   bool save();
   bool load();
-  //Look up Fucking String array overloarding and DO IT
+  FileBuffer* operator[](const string&);
 private:
   unsigned short int disk[512];
   // Records will contain all pertinent information to find files
@@ -31,6 +30,6 @@ private:
     string fileName;
     short int location, size;
   };
-  typedef vector<FAT_Record> FAT ;
+  typedef vector<FAT_Record> FAT;
 
 };
