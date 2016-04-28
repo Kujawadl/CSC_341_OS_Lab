@@ -27,10 +27,10 @@ private:
   unsigned short int disk[512];
   // Records will contain all pertinent information to find files
   //  in disk and will be dynamically added to the FAT.
-  struct FAT_FUCKING_Record {
+  struct FAT_Record {
     string fileName;
     short int location, size;
   };
-  typedef vector<FAT_FUCKING_Record> FAT ;
+  typedef vector<FAT_Record> FAT ;
 
 };
