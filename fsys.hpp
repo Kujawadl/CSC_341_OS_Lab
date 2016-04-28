@@ -15,14 +15,7 @@
 #include "utils.hpp"
 using namespace std;
 
-struct FileBuffer {
-  vector<unsigned short int> *buffer;
-
-  FileBuffer() {buffer = new vector<unsigned short int>;}
-  int size() {return (*buffer).size();}
-  unsigned short int& operator[](int& i) {return (*buffer)[i];}
-  void push_back(unsigned short int i) {(*buffer).push_back(i);}
-};
+typedef vector<unsigned short int> FileBuffer;
 
 class FSYS {
 public:
@@ -33,7 +26,6 @@ public:
   bool load();
   FileBuffer operator[](const string&);
 private:
-  unsigned short int disk[512];
   // Records will contain all pertinent information to find files
   //  in disk and will be dynamically added to the FAT.
   struct FAT_Record {
@@ -42,6 +34,8 @@ private:
   };
   typedef vector<FAT_Record> FAT;
 
+  unsigned short int disk[512];
   FAT fileTable;
+  FileBuffer buffer;
 
 };

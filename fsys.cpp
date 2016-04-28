@@ -9,6 +9,7 @@
 
 // Constructor
 FSYS::FSYS() {
+  buffer = vector<unsigned short int>();
   fileTable = FAT();
   load();
 }
@@ -52,20 +53,22 @@ bool FSYS::load() {
 
 // Index the FAT using string keys (filenames)
 FileBuffer FSYS::operator[](const string& key) {
+  buffer.clear();
   FAT_Record record;
-  for (int i = 0; i < fileTable.size(); i++) {
+  bool fileExists = false;
+  for (int i = 0; (unsigned long)i < fileTable.size(); i++) {
     if (my_strcasecmp(key, fileTable[i].fileName)) {
       record = fileTable[i];
+      fileExists = true;
       break;
     }
   }
 
-  FileBuffer buffer;
-  for (int i = 0; i < record.size; i++) {
-    buffer.push_back(disk[record.location + i]);
+  if (fileExists) {
+    for (int i = 0; i < record.size; i++) {
+      buffer.push_back(disk[record.location + i]);
+    }
   }
-
-  cout << "FileBuffer size = " << buffer.buffer->size() << endl;
 
   return buffer;
 }

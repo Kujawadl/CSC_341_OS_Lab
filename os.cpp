@@ -169,8 +169,7 @@ void fulldump() {
 Process* loader(User &currentUser, string pname)
 {
   unsigned short int currentPage = 0,
-                     currentWord = 0,
-                     currentInstr = 0;
+                     currentWord = 0;
 
   Process *newProcess = new Process(pname, nextPID++, &currentUser);
   newProcess->regs.PTBR = new PageTable(framesInUse);
@@ -179,6 +178,17 @@ Process* loader(User &currentUser, string pname)
 
   string filename = pname.substr(pname.find_first_of(" "), pname.size() - pname.find_first_of(" "));
   FileBuffer buffer = fileSystem[filename];
+  if (buffer.size() < 1) throw out_of_range("No such filename: " + filename);
+
+  for (int i = 0; (unsigned long)i < buffer.size(); i++) {
+    main_memory[MMU((currentPage<<2) + currentWord)] = buffer[i];
+    if (currentWord == 3) {
+      currentPage++;
+      currentWord = 0;
+    } else {
+      currentWord++;
+    }
+  }
 
   return newProcess;
 }
@@ -320,18 +330,19 @@ void userinterface() {
         if (u == 0) {
           cout << red << "Invalid system command!" << normal << endl;
         } else {
-          string filename = cmd.substr(cmd.find_first_of(" "), cmd.size() - cmd.find_first_of(" "));
-          FileBuffer buffer = fileSystem[filename];
-          cout << "Buffer length: " << buffer.size() << endl;
-          while (buffer.size() < 1) {
-            cout << red << "No such filename!" << normal << endl;
-            getline(cin, cmd);
+          string filename;
+          FileBuffer buffer;
+          try {
             filename = cmd.substr(cmd.find_first_of(" "), cmd.size() - cmd.find_first_of(" "));
             buffer = fileSystem[filename];
+            if (buffer.size() < 1) throw out_of_range("");
+            newProcess = loader((u == 1 ? U1 : U2), cmd);
+            RQ2.push(newProcess);
+            cout << "Process with PID " << newProcess->pid << " added to RQ2\n";
+          } catch (out_of_range e) {
+            cout << red << textbox("No such filename!") << normal;
+            u--;
           }
-          newProcess = new Process(cmd, nextPID++, (u == 1 ? &U1 : &U2));
-          RQ2.push(newProcess);
-          cout << "Process with PID " << newProcess->pid << " added to RQ2\n";
         }
         break;
       case 1: // "dmp"
