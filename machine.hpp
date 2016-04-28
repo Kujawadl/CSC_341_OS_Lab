@@ -73,9 +73,8 @@ extern int timer_interrupt;
 // Declare machine registers
 extern registers machine;
 
-// Declare main memory and disk
+// Declare main memory
 extern unsigned short int main_memory[256];
-extern unsigned short int disk[512];
 
 // Memory Management Unit
 // Takes a logical address and converts it to a physical address
