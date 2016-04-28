@@ -30,7 +30,24 @@ bool FSYS::save() {
 
 // Load files from the physical disk into the virtual disk
 bool FSYS::load() {
+  // First we should open up the FAT.dat file and intialize the FAT_Record
+  string line;
+  ifstream infile("FAT.dat");
+  while (getline(infile, line))
+  {
+      istringstream iss(line);
+      short int position, size;
+      string name;
+      if (!(iss >> name >> position >> size)) { break; } // error
+      // printf("\n\t %s, %d, %d \n", name.c_str(), position, size);
 
+      FAT_Record newRec;
+      newRec.fileName = name;
+      newRec.location = position;
+      newRec.size = size;
+
+      fileTable.push_back(newRec);
+  }
 }
 
 // Index the FAT using string keys (filenames)
