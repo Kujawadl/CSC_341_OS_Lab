@@ -10,6 +10,7 @@
  #include <iomanip>  // setw, setfill, left, right, dec, endl
  #include <sstream>  // stringstream
  #include <vector>   // we need vectors
+  using namespace std;
 
  // Lets go ahead and get that disk declared
 
