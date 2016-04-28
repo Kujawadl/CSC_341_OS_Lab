@@ -26,21 +26,36 @@ extern FrameTable framesLocked;
 // Define the user struct
 enum userID {sys, u1, u2};
 
-struct Process {
+struct User {
   userID id;
   int time;
+
+  User() {}
+  User(userID uid) : id(uid), time(0) {}
+};
+struct Process {
+  int pid;
+  string pname;
+  User *user;
   bool running;
   registers regs;
 
-  Process(userID uid) : id(uid), time(0), running(false),
-    regs(0, 0, 0, 0, 61440, 0, 0) {}
-};
-struct User {
-  userID id;
-  Process* proc;
+  Process(string name, int id, User *uid) : pid(id), pname(name), user(uid),
+    running(false), regs(0, 0, 0, 0, 61440, 0, 0) {}
+  string toString() {
+    stringstream ss;
+    ss << "Dumping Registers for RUN process with PID : " << pid << endl;
+    ss << "\trA: " << regs.rA << ", r1: " << regs.r1 \
+    		 << ", r2: " << regs.r2 << ", r3: " << regs.r3 << endl;
+    ss << "\tIR: " << regs.IR << ", PC: " << regs.PC \
+    		 << ", CR: " << regs.CR << endl;
+    ss << "\tRunning: " << boolalpha << running << endl << endl;
 
-  User() : proc(NULL) {}
-  User(userID uid) : id(uid), proc(new Process(uid)) {}
+    ss << endl << "Page Table:" << endl;
+  	ss << regs.PTBR->toString() << endl << endl;
+
+    return ss.str();
+  }
 };
 
 extern User U1, U2, SYS;
@@ -52,6 +67,9 @@ extern Process* currentProcess;
 
 // Dump contents of main memory and all registers
 void dump();
+
+// Dump everything (to be called on STP)
+void fulldump();
 
 // Print the contents of a queue, with a header containing the queue name
 void printQueue(string queueName, queue<User> &q,int num);
@@ -77,7 +95,7 @@ int cmdToInt(string);
 void init();
 
 // Main function (starts the OS)
-int main(int argc, char** argv);
+int main();
 
 // Convert process queue to string
 string qtos(queue<Process*>);
