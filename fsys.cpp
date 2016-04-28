@@ -36,9 +36,10 @@ void FSYS::load() {
 }
 
 void FSYS::loadFAT() {
+  string filename = "FAT.dat";
   string line;
   ifstream infile;
-  infile.open("FAT.dat".c_str());
+  infile.open(filename.c_str());
   while (getline(infile, line)) {
       istringstream iss(line);
       short int position, size;
