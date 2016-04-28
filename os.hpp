@@ -12,6 +12,7 @@
 #include <iomanip>  // boolalpha, setw, setfill, hex, dec, endl
 #include <sstream>  // sstream
 #include "machine.hpp"
+#include "fsys.hpp"
 #include "utils.hpp"
   using namespace std;
 
