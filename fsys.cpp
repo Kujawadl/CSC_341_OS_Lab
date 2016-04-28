@@ -94,6 +94,8 @@ void FSYS::save() {
 
 // Load files from the physical disk into the virtual disk
 void FSYS::load() {
+  for (int i = 0; i < 512; i++)
+    disk[i] = 0;
   loadFAT();
   for (int i = 0; (unsigned long)i < fileTable.size(); i++) {
     loadFile(fileTable[i]);
