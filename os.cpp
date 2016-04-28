@@ -177,6 +177,9 @@ Process* loader(User &currentUser, string pname)
 
   machine.PTBR = newProcess->regs.PTBR;
 
+  string filename = pname.substr(pname.find_first_of(" "), pname.size() - pname.find_first_of(" "));
+  FileBuffer buffer = fileSystem[filename];
+
   return newProcess;
 }
 
@@ -305,7 +308,7 @@ void userinterface() {
       case 1: cout << "U1 > "; break;
       case 2: cout << "U2 > "; break;
     }
-    cin >> cmd;
+    getline(cin, cmd);
     (*sysclock)++;
 
     Process* newProcess;
@@ -317,6 +320,15 @@ void userinterface() {
         if (u == 0) {
           cout << red << "Invalid system command!" << normal << endl;
         } else {
+          string filename = cmd.substr(cmd.find_first_of(" "), cmd.size() - cmd.find_first_of(" "));
+          FileBuffer buffer = fileSystem[filename];
+          cout << "Buffer length: " << buffer.size() << endl;
+          while (buffer.size() < 1) {
+            cout << red << "No such filename!" << normal << endl;
+            getline(cin, cmd);
+            filename = cmd.substr(cmd.find_first_of(" "), cmd.size() - cmd.find_first_of(" "));
+            buffer = fileSystem[filename];
+          }
           newProcess = new Process(cmd, nextPID++, (u == 1 ? &U1 : &U2));
           RQ2.push(newProcess);
           cout << "Process with PID " << newProcess->pid << " added to RQ2\n";

@@ -34,7 +34,7 @@ bool FSYS::load() {
 }
 
 // Index the FAT using string keys (filenames)
-FileBuffer* FSYS::operator[](const string& key) {
+FileBuffer FSYS::operator[](const string& key) {
   FAT_Record record;
   for (int i = 0; i < fileTable.size(); i++) {
     if (my_strcasecmp(key, fileTable[i].fileName)) {
@@ -43,10 +43,12 @@ FileBuffer* FSYS::operator[](const string& key) {
     }
   }
 
-  FileBuffer* buffer = new FileBuffer();
+  FileBuffer buffer;
   for (int i = 0; i < record.size; i++) {
-    (*buffer).push_back(disk[record.location + i]);
+    buffer.push_back(disk[record.location + i]);
   }
+
+  cout << "FileBuffer size = " << buffer.buffer->size() << endl;
 
   return buffer;
 }

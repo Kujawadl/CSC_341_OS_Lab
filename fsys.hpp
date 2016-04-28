@@ -13,7 +13,14 @@
 #include "utils.hpp"
 using namespace std;
 
-typedef vector<unsigned short int> FileBuffer;
+struct FileBuffer {
+  vector<unsigned short int> *buffer;
+
+  FileBuffer() {buffer = new vector<unsigned short int>;}
+  int size() {return (*buffer).size();}
+  unsigned short int& operator[](int& i) {return (*buffer)[i];}
+  void push_back(unsigned short int i) {(*buffer).push_back(i);}
+};
 
 class FSYS {
 public:
@@ -22,7 +29,7 @@ public:
   string toString();
   bool save();
   bool load();
-  FileBuffer* operator[](const string&);
+  FileBuffer operator[](const string&);
 private:
   unsigned short int disk[512];
   // Records will contain all pertinent information to find files
