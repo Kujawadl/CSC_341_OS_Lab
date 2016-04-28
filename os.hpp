@@ -22,18 +22,18 @@
 extern FSYS fileSystem;
 
 extern FrameTable framesInUse;
-extern FrameTable framesLocked;
+//extern FrameTable framesLocked;
 #define LOCKED true
 #define UNLOCKED false
 
 // Define the user struct
-enum userID {sys, u1, u2, noid};
+enum userID {sys, u1, u2, noID};
 
 struct User {
   userID id;
   int time;
 
-  User() : id(noid), time(0) {}
+  User() : id(noID), time(0) {}
   User(userID uid) : id(uid), time(0) {}
 };
 struct Process {
@@ -47,16 +47,17 @@ struct Process {
     running(false), regs(registers(0, 0, 0, 0, 61440, 0, 0)) {}
   string toString() {
     stringstream ss;
-    ss << "Dumping Registers for RUN process with PID : " << pid << endl;
+    ss << (uid == 0 ? "SYS" : ("U" + itos(uid))) << " \"" << pname
+       << "\" process with PID : " << pid << endl;
     ss << "\trA: " << regs.rA << ", r1: " << regs.r1 \
-    		 << ", r2: " << regs.r2 << ", r3: " << regs.r3 << endl;
+         << ", r2: " << regs.r2 << ", r3: " << regs.r3 << endl;
     ss << "\tIR: " << regs.IR << ", PC: " << regs.PC \
-    		 << ", CR: " << regs.CR << endl;
+         << ", CR: " << regs.CR << endl;
     ss << "\tRunning: " << boolalpha << running << endl << endl;
 
     if (regs.PTBR) {
       ss << endl << "Page Table:" << endl;
-    	ss << regs.PTBR->toString() << endl << endl;
+      ss << regs.PTBR->toString() << endl << endl;
     }
 
     return ss.str();
@@ -73,18 +74,22 @@ extern Process* currentProcess;
 // Dump contents of main memory and all registers
 void dump();
 
-// Dump everything (to be called on STP)
+// Dump everything (to be called only on STP)
 void fulldump();
 
 // Print the contents of a queue, with a header containing the queue name
-void printQueue(string queueName, queue<User> &q,int num);
+//void printQueue(string queueName, queue<User> &q,int num);
 
 // Print the contents of a queue
-void printQueue(queue<User> &q,int num);
+//void printQueue(queue<User> &q,int num);
 
-// Loads the two user programs from disk into main memory, paging them as
-// appropriate. Currently takes no args, returns no vals, everything hardcoded.
-void loader();
+// Print all process control blocks
+void printAllProcs();
+
+// Loads the file into a new PCB and returns a pointer to the new Process.
+// Takes the user by reference, as well as the cmdline entry the user entered.
+// cmdline entry is split into cmd and args on the first encountered whitespace.
+Process* loader(User& currentUser, string pname);
 
 // Round-robin scheduler, 3 ticks per user
 void scheduler();

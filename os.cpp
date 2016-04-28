@@ -11,7 +11,7 @@
 FSYS fileSystem;
 
 FrameTable framesInUse;
-FrameTable framesLocked;
+//FrameTable framesLocked;
 
 User U1, U2, SYS;
 
@@ -36,38 +36,11 @@ void dump()
   cout << "SQ1: " << qtos(SQ1) << endl;
   cout << "SQ2: " << qtos(SQ2) << endl;
 
-  cout << textbox("Dumping user process states in order of anticipated execution");
-  for (int i = 0; i < int(RQ1.size()); i++) {
-    cout << RQ1.front()->toString();
-    Process *tmp = RQ1.front();
-    RQ1.pop();
-    RQ1.push(tmp);
-  }
-  for (int i = 0; i < int(RQ2.size()); i++) {
-    cout << RQ2.front()->toString();
-    Process *tmp = RQ2.front();
-    RQ2.pop();
-    RQ2.push(tmp);
-  }
-  for (int i = 0; i < int(SQ1.size()); i++) {
-    cout << SQ1.front()->toString();
-    Process *tmp = SQ1.front();
-    SQ1.pop();
-    SQ1.push(tmp);
-  }
-  for (int i = 0; i < int(SQ2.size()); i++) {
-    cout << SQ2.front()->toString();
-    Process *tmp = SQ2.front();
-    SQ2.pop();
-    SQ2.push(tmp);
-  }
-  if (RQ1.size() + RQ2.size() + SQ1.size() + SQ2.size() == 0) {
-    cout << "No user processes running at this time..." << endl;
-  }
-
+  printAllProcs();
 
   // Dump memory
-  cout << textbox("Dumping memory" + padding(80) + "(only displaying allocated frames)");
+  cout << textbox("Compact Memory Dump" + padding(80) + \
+                  "(only displaying in-use frames)");
   // Print table header
   cout << setfill('0');
   cout << "*" << padding(78, '-') << "*" << endl;
@@ -107,6 +80,36 @@ void fulldump() {
   cout << "SQ1: " << qtos(SQ1) << endl;
   cout << "SQ2: " << qtos(SQ2) << endl;
 
+  printAllProcs();
+
+  // Dump memory
+  cout << textbox("Complete Memory Dump" + padding(80) + "(displaying all frames)");
+  // Print table header
+  cout << setfill('0');
+  cout << "*" << padding(78, '-') << "*" << endl;
+  cout << "|" << padding(32) << "Memory contents" << padding(31) << "|" << endl;
+  cout << "*" << padding(78, '-') << "*" << endl;
+  cout << "|   Frame  |"; for (int i = 0; i < 4; i++) cout << "|  Addr: Value  |";
+  cout << endl << "*" << padding(78, '-') << "*" << endl;
+
+  // Print table contents
+  for (int i = 0; i < 64; i++) {
+    cout << "|    " << setw(2) << i << "    |";
+    cout << hex;
+    for (int j = 0; j < 4; j++) {
+      cout << "|  0x" << setw(2) << (i*4)+j
+           << ": 0x" << setw(4) << main_memory[(i*4)+j] << " |";
+    }
+    cout << dec << endl;
+  }
+  cout << "*" << padding(78, '-') << "*" << endl;
+  cout << setfill(' ');
+
+  //TODO: print contents of disk
+}
+
+// Print all process control blocks
+void printAllProcs() {
   cout << textbox("Dumping user process states in order of anticipated execution");
   for (int i = 0; i < int(RQ1.size()); i++) {
     cout << RQ1.front()->toString();
@@ -135,35 +138,9 @@ void fulldump() {
   if (RQ1.size() + RQ2.size() + SQ1.size() + SQ2.size() == 0) {
     cout << "No user processes running at this time..." << endl;
   }
-
-
-  // Dump memory
-  cout << textbox("Dumping memory" + padding(80) + "(displaying all frames)");
-  // Print table header
-  cout << setfill('0');
-  cout << "*" << padding(78, '-') << "*" << endl;
-  cout << "|" << padding(32) << "Memory contents" << padding(31) << "|" << endl;
-  cout << "*" << padding(78, '-') << "*" << endl;
-  cout << "|   Frame  |"; for (int i = 0; i < 4; i++) cout << "|  Addr: Value  |";
-  cout << endl << "*" << padding(78, '-') << "*" << endl;
-
-  // Print table contents
-  for (int i = 0; i < 64; i++) {
-    cout << "|    " << setw(2) << i << "    |";
-    cout << hex;
-    for (int j = 0; j < 4; j++) {
-      cout << "|  0x" << setw(2) << (i*4)+j
-           << ": 0x" << setw(4) << main_memory[(i*4)+j] << " |";
-    }
-    cout << dec << endl;
-  }
-  cout << "*" << padding(78, '-') << "*" << endl;
-  cout << setfill(' ');
-
-  //TODO: print contents of disk
 }
 
-// Loads the a file into a new PCB and returns a pointer to the new Process.
+// Loads the file into a new PCB and returns a pointer to the new Process.
 // Takes the user by reference, as well as the cmdline entry the user entered.
 // cmdline entry is split into cmd and args on the first encountered whitespace.
 Process* loader(User &currentUser, string pname)
@@ -197,7 +174,6 @@ void scheduler() {
   while (true) {
     currentProcess = NULL;
 
-
     // Elevate priority of priority-2 proc's with 0 time so far
     for (int i = 0; i < int(RQ2.size()); i++) {
       if (RQ2.front()->user->time == 0) {
@@ -209,13 +185,11 @@ void scheduler() {
     }
     // Just a quick print of the queue for Verification
     #ifdef DEBUG_VERBOSE
-    cout << blue;
     cout << textbox("Dumping scheduler queues");
     cout << "RQ1: " << qtos(RQ1) << endl;
     cout << "RQ2: " << qtos(RQ2) << endl;
     cout << "SQ1: " << qtos(SQ1) << endl;
     cout << "SQ2: " << qtos(SQ2) << endl;
-    cout << normal;
     #endif
     // Search the queues for the next process
     if (!RQ1.empty()) {
@@ -224,7 +198,7 @@ void scheduler() {
     } else if (!RQ2.empty()) {
       currentProcess = RQ2.front();
       RQ2.pop();
-    // If no next process, set RQs to SQs
+    // If no next process, move SQs' contents to RQs
     } else {
       while (!SQ1.empty()) {
         RQ1.push(SQ1.front());
@@ -284,11 +258,11 @@ void scheduler() {
             if (!success || machine.IR == 61440) {
               currentProcess->running = false;
 
-              if (!success) {
-                cerr << red;
-                cerr << "\nError condition signaled! Killing process...\n";
-                cerr << normal;
-              }
+              // if (!success) {
+              //   cerr << red;
+              //   cerr << "\nError condition signaled! Killing process...\n";
+              //   cerr << normal;
+              // }
             }
             // Return process to the shadow queue
             // If normal user process, return to S2
@@ -300,7 +274,8 @@ void scheduler() {
             }
             break;
           case 4: //time
-            cout << "U" << uid << " clock is at "<< currentProcess->user->time << " ticks" << endl;
+            cout << "U" << uid << " clock is at "
+                 << currentProcess->user->time << " ticks" << endl;
             break;
         }
       }
@@ -326,7 +301,6 @@ void userinterface() {
 
     // Process the input
     switch (cmdToInt(cmd)) {
-      //TODO: run should now be able to accept cmdline args specifying a program
       case 0: // "run"
         if (u == 0) {
           cout << red << "Invalid system command!" << normal << endl;
@@ -334,7 +308,8 @@ void userinterface() {
           string filename;
           FileBuffer buffer;
           try {
-            filename = cmd.substr(cmd.find_first_of(" ") + 1, cmd.size() - cmd.find_first_of(" "));
+            filename = cmd.substr(cmd.find_first_of(" ") + 1,
+                                  cmd.size() - cmd.find_first_of(" "));
             cout << filename << endl;
             buffer = fileSystem[filename];
             if (buffer.size() < 1) throw out_of_range("");
@@ -385,9 +360,10 @@ void userinterface() {
 
         if (u == 0) {
           RQ1.push(newProcess);
-          cout << "Process with PID " << newProcess->pid << " added to RQ1\n";
+          cout << "Time process (PID: " << newProcess->pid << ") added to RQ1\n";
         } else {
-          cout << "Process with PID " << newProcess->pid << " added to RQ1\n";
+          RQ2.push(newProcess);
+          cout << "Time process (PID: " << newProcess->pid << ") added to RQ2\n";
         }
         break;
       default:
@@ -445,7 +421,7 @@ void init()
 }
 
 // Main function (starts the OS)
-int main()
+void main()
 {
   // Print OS startup header
   cout << titlebox("CSC 341 OS Lab" + padding(80) + \
@@ -455,7 +431,6 @@ int main()
   init();
   // Start scheduler
   scheduler();
-  return 0;
 }
 
 // Convert process queue to string

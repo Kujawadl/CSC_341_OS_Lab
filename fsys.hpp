@@ -1,5 +1,5 @@
 /*
- * fysy.hpp
+ * fsys.hpp
  *
  * Baker, Ballard, Jager-Kujawa
  * CSC 341.001
@@ -22,7 +22,6 @@ public:
   FSYS();
   void print();
   string toString();
-  void save();
   void load();
   FileBuffer operator[](const string&);
 private:
@@ -32,6 +31,8 @@ private:
     string fileName;
     short int location, size;
     FAT_Record() : fileName(""), location(0), size(0) {}
+    FAT_Record(string f, short int l, short int s) :
+      fileName(f), location(l), size(s) {}
   };
   typedef vector<FAT_Record> FAT;
 

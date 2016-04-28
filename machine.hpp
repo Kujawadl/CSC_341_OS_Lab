@@ -9,12 +9,12 @@
 #ifndef MACHINE
 #define MACHINE
 
-#include <string>		// string
+#include <string>    // string
 #include <iostream> // cout, cerr
-#include <iomanip>	// boolalpha, setw, setfill, dec, hex, endl
+#include <iomanip>  // boolalpha, setw, setfill, dec, hex, endl
 #include <unistd.h> // usleep
 #include "utils.hpp"
-	using namespace std;
+  using namespace std;
 
 #define normal "\033[0m"
 #define red "\033[31m"
@@ -30,9 +30,9 @@
 
 // If DEBUG_VERBOSE, then DEBUG
 #ifdef DEBUG_VERBOSE
-	#ifndef DEBUG
-		#define DEBUG
-	#endif
+  #ifndef DEBUG
+    #define DEBUG
+  #endif
 #endif
 
 /* Define condition codes for hardware functions
@@ -59,12 +59,12 @@
 // Define machine registers type
 // Machine register type also has a condition code register
 struct registers{
-	unsigned short int r1, r2, r3, rA, IR, PC:8;
-	unsigned short int CR:3;
-	PageTable* PTBR;
+  unsigned short int r1, r2, r3, rA, IR, PC:8;
+  unsigned short int CR:3;
+  PageTable* PTBR;
 
-	registers(int pR1, int pR2, int pR3, int pRA, int pIR, int pPC, int pCR) :
-		r1(pR1), r2(pR2), r3(pR3), rA(pRA), IR(pIR), PC(pPC), CR(pCR), PTBR(NULL) {}
+  registers(int pR1, int pR2, int pR3, int pRA, int pIR, int pPC, int pCR) :
+    r1(pR1), r2(pR2), r3(pR3), rA(pRA), IR(pIR), PC(pPC), CR(pCR), PTBR(NULL) {}
 };
 
 extern int *sysclock;

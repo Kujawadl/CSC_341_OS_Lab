@@ -36,7 +36,7 @@ unsigned short int MMU(unsigned short int logicalAddress) {
   #endif
 
   // Dereferenced PTBR pointer = PageTable object
-  // operator[] either returns a fram number (if one is allocated to the page)
+  // operator[] either returns a frame number (if one is allocated to the page)
   // or allocates an empty frame to the page, then returns that frame number
   unsigned short int frame = (*machine.PTBR)[page];
 
@@ -175,15 +175,15 @@ bool ADD() {
   // If overflow occurs, return false
   if (over == (int)machine.rA) {
     machine.CR = getCondCode(machine.rA);
-    return true;
   } else {
-    #ifdef DEBUG
+    #ifdef DEBUG_VERBOSE
     cerr << red;
     cerr << "!! OVERFLOW IN ADD()" << endl;
     cerr << normal;
-    #endif
     return false;
+    #endif
   }
+  return true;
 }
 
 // Subtracts the input from rA
@@ -203,15 +203,15 @@ bool SUB() {
   // If overflow occurs, return false
   if (over == (int)machine.rA) {
     machine.CR = getCondCode(machine.rA);
-    return true;
   } else {
-    #ifdef DEBUG
+    #ifdef DEBUG_VERBOSE
     cerr << red;
     cerr << "!! OVERFLOW IN SUB()" << endl;
     cerr << normal;
-    #endif
     return false;
+    #endif
   }
+  return true;
 }
 
 // Adds the input to the specified register
@@ -232,15 +232,15 @@ bool ADR() {
   // Effect condition code; return false if overflow
   if (over == (int)*reg) {
     machine.CR = getCondCode(*reg);
-    return true;
   } else {
-    #ifdef DEBUG
+    #ifdef DEBUG_VERBOSE
     cerr << red;
     cerr << "!! OVERFLOW IN ADR()" << endl;
     cerr << normal;
-    #endif
     return false;
+    #endif
   }
+  return true;
 }
 
 // Subtracts the input from the specified register
@@ -261,15 +261,15 @@ bool SUR() {
   // Effect condition code; return false if overflow
   if (over == (int)*reg) {
     machine.CR = getCondCode(*reg);
-    return true;
   } else {
-    #ifdef DEBUG
+    #ifdef DEBUG_VERBOSE
     cerr << red;
     cerr << "!! OVERFLOW IN SUR()" << endl;
     cerr << normal;
-    #endif
     return false;
+    #endif
   }
+  return true;
 }
 
 // The And fuction will do the bitwise operation AND using the specified
@@ -410,7 +410,7 @@ bool CMP() {
   return true;
 }
 
-// Will clear the specified regiester with 0s
+// Will clear the specified register with 0s
 bool CLR() {
   unsigned short int *reg = getRegister();
   *reg = 0;
@@ -453,11 +453,6 @@ unsigned short int getCondCode(unsigned short int x) {
 // Take a register code and return a pointer to that register
 unsigned short int* getRegister() {
   unsigned short int regCode = getRegCode(machine.IR); // Returns 0-3
-
-  #ifdef DEBUG_VERBOSE
-  cout << "In getRegister(). IR: " << machine.IR << \
-    ", Regcode: %d" << regCode << endl;
-  #endif
 
   switch (regCode) {
     case 1: return &machine.r1; break;

@@ -22,10 +22,6 @@ string FSYS::toString() {
   return "";
 }
 
-// Save all file records out to the actual (non-virtual disk)
-void FSYS::save() {
-
-}
 
 // Load files from the physical disk into the virtual disk
 void FSYS::load() {
@@ -47,12 +43,7 @@ void FSYS::loadFAT() {
       if (!(iss >> name >> position >> size)) { break; } // error
       // printf("\n\t %s, %d, %d \n", name.c_str(), position, size);
 
-      FAT_Record newRec;
-      newRec.fileName = name;
-      newRec.location = position;
-      newRec.size = size;
-
-      cout << name << " " << position << " " << size << endl;
+      FAT_Record newRec = FAT_Record(name, position, size);
 
       fileTable.push_back(newRec);
   }
