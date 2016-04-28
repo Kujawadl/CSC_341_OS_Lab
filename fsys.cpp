@@ -9,7 +9,7 @@
 
 // Constructor
 FSYS::FSYS() : fileTable(FAT()), buffer(FileBuffer()) {
-  load();
+  
 }
 
 // Print method

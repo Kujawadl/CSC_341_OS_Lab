@@ -176,7 +176,7 @@ Process* loader(User &currentUser, string pname)
 
   machine.PTBR = newProcess->regs.PTBR;
 
-  string filename = pname.substr(pname.find_first_of(" "), pname.size() - pname.find_first_of(" "));
+  string filename = pname.substr(pname.find_first_of(" ") + 1, pname.size() - pname.find_first_of(" "));
   FileBuffer buffer = fileSystem[filename];
   if (buffer.size() < 1) throw out_of_range("No such filename: " + filename);
 
@@ -333,7 +333,8 @@ void userinterface() {
           string filename;
           FileBuffer buffer;
           try {
-            filename = cmd.substr(cmd.find_first_of(" "), cmd.size() - cmd.find_first_of(" "));
+            filename = cmd.substr(cmd.find_first_of(" ") + 1, cmd.size() - cmd.find_first_of(" "));
+            cout << filename << endl;
             buffer = fileSystem[filename];
             if (buffer.size() < 1) throw out_of_range("");
             newProcess = loader((u == 1 ? U1 : U2), cmd);
@@ -413,6 +414,7 @@ int cmdToInt(string cmd)
 void init()
 {
   fileSystem = FSYS();
+  fileSystem.load();
 
   // Initialize main_memory
   for (int i = 0; i < 255; i++) {
