@@ -9,7 +9,7 @@
 
 // Constructor
 FSYS::FSYS() : fileTable(FAT()), buffer(FileBuffer()) {
-  
+
 }
 
 // Print method
@@ -37,7 +37,8 @@ void FSYS::load() {
 
 void FSYS::loadFAT() {
   string line;
-  ifstream infile("FAT.dat");
+  ifstream infile;
+  infile.open("FAT.dat".c_str());
   while (getline(infile, line)) {
       istringstream iss(line);
       short int position, size;
@@ -60,7 +61,8 @@ void FSYS::loadFAT() {
 void FSYS::loadFile(FAT_Record record) {
   string line;
   char * end;
-  ifstream infile(record.fileName);
+  ifstream infile;
+  infile.open(record.fileName.c_str());
   int i = 0;
   while (getline(infile, line)) {
     disk[record.location + i] = strtol(line.c_str(), &end, 2);
