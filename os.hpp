@@ -44,7 +44,7 @@ struct Process {
   registers regs;
 
   Process(string name, int id, User *uid) : pid(id), pname(name), user(uid),
-    running(false), regs(0, 0, 0, 0, 61440, 0, 0) {}
+    running(false), regs(registers(0, 0, 0, 0, 61440, 0, 0)) {}
   string toString() {
     stringstream ss;
     ss << "Dumping Registers for RUN process with PID : " << pid << endl;
@@ -54,8 +54,10 @@ struct Process {
     		 << ", CR: " << regs.CR << endl;
     ss << "\tRunning: " << boolalpha << running << endl << endl;
 
-    ss << endl << "Page Table:" << endl;
-  	ss << regs.PTBR->toString() << endl << endl;
+    if (regs.PTBR) {
+      ss << endl << "Page Table:" << endl;
+    	ss << regs.PTBR->toString() << endl << endl;
+    }
 
     return ss.str();
   }
