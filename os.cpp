@@ -70,7 +70,6 @@ void dump()
   cout << setfill(' ');
   // call the print disk method only in use.
   fileSystem.printDisk(1);
-  // printf("\nBALLS");
 }
 
 // Dump everything (to be called only on STP)
@@ -110,7 +109,8 @@ void fulldump() {
   cout << "*" << padding(78, '-') << "*" << endl;
   cout << setfill(' ');
 
-  //TODO: print contents of disk
+  // call the print disk method; all blocks.
+  fileSystem.printDisk(0);
 }
 
 // Print all process control blocks

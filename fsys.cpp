@@ -39,11 +39,11 @@ void FSYS::printDisk(int x) {
     cout << "*" << padding(78, '-') << "*" << endl;
     cout << "|   Block  |"; for (int i = 0; i < 4; i++) cout << "|   Word Value  |";
     cout << endl << "*" << padding(78, '-') << "*" << endl;
-    for (int i = 0; i < 64; i++) {
-        cout << "|    " << setw(2) << i << "    |";
+    for (int i = 0; i < 128; i++) {
+        cout << "|    " << setw(3) << i << "   |";
         cout << hex;
         for (int j = 0; j < 4; j++) {
-          cout << "|  0x" << setw(2) << (i*4)+j
+          cout << "| 0x" << setw(3) << (i*4)+j
                << ": 0x" << setw(4) << disk[(i*4)+j] << " |";
         }
         cout << dec << endl;
@@ -61,7 +61,7 @@ void FSYS::printDisk(int x) {
     cout << endl << "*" << padding(78, '-') << "*" << endl;
     string output;
     bool print;
-    for (int i = 0; i < 64; i++) {
+    for (int i = 0; i < 128; i++) {
         print = false;
         for (int j = 0; j < 4; j++) {
           if (disk[(i*4)+j] != 0)
