@@ -8,9 +8,7 @@
 #include "fsys.hpp"
 
 // Constructor
-FSYS::FSYS() {
-  buffer = vector<unsigned short int>();
-  fileTable = FAT();
+FSYS::FSYS() : fileTable(FAT()), buffer(FileBuffer()) {
   load();
 }
 

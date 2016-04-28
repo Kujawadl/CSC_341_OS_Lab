@@ -27,13 +27,13 @@ extern FrameTable framesLocked;
 #define UNLOCKED false
 
 // Define the user struct
-enum userID {sys, u1, u2};
+enum userID {sys, u1, u2, noid};
 
 struct User {
   userID id;
   int time;
 
-  User() {}
+  User() : id(noid), time(0) {}
   User(userID uid) : id(uid), time(0) {}
 };
 struct Process {

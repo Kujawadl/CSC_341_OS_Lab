@@ -31,6 +31,7 @@ private:
   struct FAT_Record {
     string fileName;
     short int location, size;
+    FAT_Record() : fileName(""), location(0), size(0) {}
   };
   typedef vector<FAT_Record> FAT;
 
