@@ -8,7 +8,7 @@
 
 #include "machine.hpp"
 
-int sysclock;          // Keep track of absolute time
+int *sysclock;          // Keep track of absolute time
 int timer_interrupt;  // Send interrupt every QUANTUM ticks
 
 // Initialize machine registers
@@ -78,7 +78,7 @@ bool interpreter() {
       default: success = false; break;
     }
     usleep(1000000); // Sleep 1 second to allow easier instruction tracing
-    sysclock++;
+    (*sysclock)++;
     timer_interrupt++;
   }
   timer_interrupt = 0;

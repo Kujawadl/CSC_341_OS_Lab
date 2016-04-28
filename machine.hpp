@@ -67,7 +67,7 @@ struct registers{
 		r1(pR1), r2(pR2), r3(pR3), rA(pRA), IR(pIR), PC(pPC), CR(pCR), PTBR(NULL) {}
 };
 
-extern int sysclock;
+extern int *sysclock;
 extern int timer_interrupt;
 
 // Declare machine registers

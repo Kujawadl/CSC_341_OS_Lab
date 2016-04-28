@@ -40,9 +40,7 @@ struct Process {
   bool running;
   registers regs;
 
-  Process(int id, User *uid) : pid(id), pname(""), user(uid), running(false),
-    regs(0, 0, 0, 0, 61440, 0, 0) {}
-  Process(int id, User *uid, string name) : pid(id), pname(name), user(uid),
+  Process(string name, int id, User *uid) : pid(id), pname(name), user(uid),
     running(false), regs(0, 0, 0, 0, 61440, 0, 0) {}
   string toString() {
     stringstream ss;
