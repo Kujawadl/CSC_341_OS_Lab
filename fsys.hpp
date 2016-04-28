@@ -22,8 +22,8 @@ public:
   FSYS();
   void print();
   string toString();
-  bool save();
-  bool load();
+  void save();
+  void load();
   FileBuffer operator[](const string&);
 private:
   // Records will contain all pertinent information to find files
@@ -38,5 +38,8 @@ private:
   unsigned short int disk[512];
   FAT fileTable;
   FileBuffer buffer;
+
+  void loadFAT();
+  void loadFile(FAT_Record);
 
 };

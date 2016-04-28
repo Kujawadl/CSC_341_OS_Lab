@@ -19,21 +19,26 @@ void FSYS::print() {
 
 // Represent the FAT table as a string
 string FSYS::toString() {
-
+  return "";
 }
 
 // Save all file records out to the actual (non-virtual disk)
-bool FSYS::save() {
+void FSYS::save() {
 
 }
 
 // Load files from the physical disk into the virtual disk
-bool FSYS::load() {
-  // First we should open up the FAT.dat file and intialize the FAT_Record
+void FSYS::load() {
+  loadFAT();
+  for (int i = 0; (unsigned long)i < fileTable.size(); i++) {
+    loadFile(fileTable[i]);
+  }
+}
+
+void FSYS::loadFAT() {
   string line;
   ifstream infile("FAT.dat");
-  while (getline(infile, line))
-  {
+  while (getline(infile, line)) {
       istringstream iss(line);
       short int position, size;
       string name;
@@ -45,8 +50,22 @@ bool FSYS::load() {
       newRec.location = position;
       newRec.size = size;
 
+      cout << name << " " << position << " " << size << endl;
+
       fileTable.push_back(newRec);
   }
+  infile.close();
+}
+
+void FSYS::loadFile(FAT_Record record) {
+  string line;
+  char * end;
+  ifstream infile(record.fileName);
+  int i = 0;
+  while (getline(infile, line)) {
+    disk[record.location + i] = strtol(line.c_str(), &end, 2);
+  }
+  infile.close();
 }
 
 // Index the FAT using string keys (filenames)
