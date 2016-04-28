@@ -19,6 +19,8 @@
 #ifndef OS
 #define OS
 
+extern FSYS fileSystem;
+
 extern FrameTable framesInUse;
 extern FrameTable framesLocked;
 #define LOCKED true

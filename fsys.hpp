@@ -22,7 +22,7 @@ public:
   string toString();
   bool save();
   bool load();
-  FileBuffer operator[](const string&);
+  FileBuffer* operator[](const string&);
 private:
   unsigned short int disk[512];
   // Records will contain all pertinent information to find files

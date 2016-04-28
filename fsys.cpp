@@ -15,7 +15,7 @@ FSYS::FSYS() {
 
 // Print method
 void FSYS::print() {
-  cout << this.toString();
+  cout << this->toString() << endl;
 }
 
 // Represent the FAT table as a string
@@ -35,7 +35,6 @@ bool FSYS::load() {
 
 // Index the FAT using string keys (filenames)
 FileBuffer* FSYS::operator[](const string& key) {
-  key = key.trim();
   FAT_Record record;
   for (int i = 0; i < fileTable.size(); i++) {
     if (my_strcasecmp(key, fileTable[i].fileName)) {

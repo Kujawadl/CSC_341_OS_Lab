@@ -8,6 +8,8 @@
 
 #include "os.hpp"
 
+FSYS fileSystem;
+
 FrameTable framesInUse;
 FrameTable framesLocked;
 
@@ -387,6 +389,8 @@ int cmdToInt(string cmd)
 // Initializes all values required by the OS
 void init()
 {
+  fileSystem = FSYS();
+
   // Initialize main_memory
   for (int i = 0; i < 255; i++) {
     main_memory[i] = 0;

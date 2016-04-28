@@ -1,5 +1,5 @@
 all: os.o machine.o fsys.o
-	g++ -std=c++98 -pedantic -ggdb -W -Weffc++ -Wunused .utils.o .machine.o .os.o -o os
+	g++ -std=c++98 -pedantic -ggdb -W -Weffc++ -Wunused .utils.o .machine.o .fsys.o .os.o -o os
 
 os.o: os.hpp os.cpp machine.o fsys.o utils.o
 	g++ -std=c++98 -pedantic -ggdb -c -W -Weffc++ -Wunused os.cpp -o .os.o
