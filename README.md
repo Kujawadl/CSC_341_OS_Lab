@@ -2,34 +2,6 @@
 
 ### by Aaron Baker, Andrew Ballard, and Dylan Jager-Kujawa
 
-#### Submitted under cs341109
-
-# Table of Contents
-
-  - [Project overview](#project-overview)
-    - [Requirements](#requirements)
-    - [Machine](#machine)
-      - [Memory](#memory)
-        - [Paging](#Paging)
-        - [MMU](#mmu)
-    - [OS](#os)
-      - [UI](#ui)
-      - [Data](#data)
-    - [Difficulties Encountered](#difficulties-encountered)
-  - [How to Run](#how-to-run)
-  - [Time Spent](#time-spent)
-  - [Verification](#verification)
-  - [References](#references)
-  - [Project Listing](#project-listing)
-    - [Execution Listing](#out_txt)
-    - [machine.hpp](#listing_machine_hpp)
-    - [machine.cpp](#listing_machine_cpp)
-    - [os.hpp](#listing_os_hpp)
-    - [os.cpp](#listing_os_cpp)
-    - [utils.hpp](#listing_utils_hpp)
-    - [utils.cpp](#listing_utils_cpp)
-    - [makefile](#listing_makefile)
-
 ## Project Overview
 This purpose of this project has been to explore, understand, and implement basic operating system concepts and components. Concepts explored are (in chronological order):
 
