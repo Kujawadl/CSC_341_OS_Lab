@@ -83,6 +83,12 @@ The following is a list of commands that can be entered at the interactive ui co
 
 The scheduler is round-robin, with two priorities: 1 (system) and 2 (user). User processes that have had no execution time thus far are elevated to priority 1 until they have been given time to run. The scheduler collects requests in a set of queues from the UI, and when the UI has finished collecting requests, the requests are run in FIFO order grouped by priority. Each process is allowed a time quantum of 3 "ticks" of the processor.
 
+#### File Management
+
+The file system is a simple FAT, loaded from the file FAT.dat in the project directory. Each entry contains a filename, a starting location on disk, and a size. The file system can be modified directly by modifying this file. Filenames in FAT.dat refer to names of actual files in the project directory. If no such file exists in the project directory, an error occurs.
+
+Users may run programs by specifying their filenames on the command line (see UI above). This loads the file from disk into memory prepares the process control block, and adds the process into the appropriate scheduler queue.
+
 ## How to Run
 
 This will be a quick overview of how to run the program:
